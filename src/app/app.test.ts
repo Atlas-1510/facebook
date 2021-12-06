@@ -24,6 +24,13 @@ describe("GET /users", () => {
       expect(response.statusCode).toBe(200);
     });
 
+    test("should specify json in the content type header", async () => {
+      const response = await request(app).get("/users/1234");
+      expect(response.headers["content-type"]).toEqual(
+        expect.stringContaining("json")
+      );
+    });
+
     test("should respond with a json object containing the user id", async () => {
       for (let i = 0; i < 10; i++) {
         readUser.mockReset();

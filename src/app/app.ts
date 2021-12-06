@@ -8,6 +8,7 @@ export default function (database: any) {
   app.use("/users/:userId", async (req, res, next) => {
     const { userId } = req.params;
     const user = await database.readUser(userId);
+    res.contentType("json");
     res.send(user);
   });
 
