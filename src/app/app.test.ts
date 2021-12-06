@@ -5,9 +5,3 @@ describe("is working", () => {
     expect(true).toBeTruthy();
   });
 });
-
-describe("app", () => {
-  it("returns 5", () => {
-    expect(app()).toBe(5);
-  });
-});

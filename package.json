@@ -4,13 +4,17 @@
   "description": "A facebook clone that I created as the final assignment for The Odin Project nodejs course.",
   "main": "index.js",
   "scripts": {
-    "test": "jest --watch"
+    "test": "jest --watch",
+    "start": "nodemon ./src/server.ts"
   },
   "author": "Jason Aravanis (https://github.com/Atlas-1510)",
   "license": "MIT",
   "devDependencies": {
+    "@types/express": "^4.17.13",
     "@types/jest": "^27.0.3",
+    "@types/node": "^16.11.11",
     "jest": "^27.4.3",
+    "nodemon": "^2.0.15",
     "ts-jest": "^27.1.0",
     "ts-node": "^10.4.0",
     "typescript": "^4.5.2"
