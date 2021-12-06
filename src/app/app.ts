@@ -1,14 +1,13 @@
 import express from "express";
-import { DatabaseInterface } from "../database/database";
 
-export default function (database: DatabaseInterface) {
+export default function (database: any) {
   const app = express();
 
   app.use(express.json());
 
   app.use("/users/:userId", async (req, res, next) => {
     const { userId } = req.params;
-    const user = await database.getUser(userId);
+    const user = await database.readUser(userId);
     res.send(user);
   });
 
