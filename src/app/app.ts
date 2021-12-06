@@ -11,5 +11,9 @@ export default function (database: any) {
     res.send(user);
   });
 
+  app.use("/users", async (req, res, next) => {
+    return res.sendStatus(400);
+  });
+
   return app;
 }
