@@ -2,7 +2,7 @@ import makeApp from "./app";
 import request from "supertest";
 import { jest } from "@jest/globals";
 
-const readUser = jest.fn();
+const readUser: any = jest.fn();
 
 const app = makeApp({
   readUser,
@@ -27,10 +27,12 @@ describe("GET /users", () => {
     test("should respond with a json object containing the user id", async () => {
       for (let i = 0; i < 10; i++) {
         readUser.mockReset();
-        readUser.mockResolvedValue(i);
+        readUser.mockResolvedValue({
+          userId: i,
+        });
+        const response = await request(app).get(`/users/${i}`);
+        expect(response.body.userId).toBe(i);
       }
-
-      const response = await request(app).get("/users/1234");
     });
   });
   describe("if userId missing", () => {
