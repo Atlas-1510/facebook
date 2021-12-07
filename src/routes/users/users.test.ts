@@ -54,14 +54,12 @@ describe("/api/users", () => {
       });
     });
   });
-
   describe("PUT", () => {
     test("returns 404 error for invalid route request", async () => {
       const response = await request(app).put("/users");
       expect(response.statusCode).toBe(404);
     });
   });
-
   describe("DELETE", () => {
     test("returns 404 error for invalid route request", async () => {
       const response = await request(app).delete("/users");
@@ -92,6 +90,12 @@ describe("/api/users", () => {
             __v: 0,
           });
         });
+      });
+    });
+    describe("POST", () => {
+      test("returns 404 error for invalid route request", async () => {
+        const response = await request(app).put("/users/1234");
+        expect(response.statusCode).toBe(404);
       });
     });
 
