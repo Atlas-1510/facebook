@@ -1,20 +1,10 @@
 import express from "express";
+import usersRoute from "../routes/users";
 
-export default function (database: any) {
-  const app = express();
+const app = express();
 
-  app.use(express.json());
+app.use(express.json());
 
-  app.use("/users/:userId", async (req, res, next) => {
-    const { userId } = req.params;
-    const user = await database.readUser(userId);
-    res.contentType("json");
-    res.send(user);
-  });
+app.use("/users", usersRoute);
 
-  app.use("/users", async (req, res, next) => {
-    return res.sendStatus(400);
-  });
-
-  return app;
-}
+export default app;
