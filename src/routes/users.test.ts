@@ -3,6 +3,7 @@ import request from "supertest";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
 import loadTestUsers from "../utils/loadTestUsers";
+import loadSingleTestUser from "../utils/loadSingleTestUser";
 
 describe("/users", () => {
   let mongoServer: MongoMemoryServer;
@@ -10,7 +11,7 @@ describe("/users", () => {
 
   beforeAll(async () => {
     mongoServer = await MongoMemoryServer.create();
-    await mongoose.connect(mongoServer.getUri(), { dbName: "verifyMaster" });
+    await mongoose.connect(mongoServer.getUri());
   });
 
   beforeEach(async () => {
@@ -43,6 +44,25 @@ describe("/users", () => {
       expect.stringContaining("json")
     );
   });
+
+  describe("/users/:uid", () => {
+    describe("given a uid", () => {
+      test("should respond with a json object containing user information", async () => {
+        const uid = await loadSingleTestUser();
+        const response = await request(app).get(`/users/${uid}`);
+        expect(response.statusCode).toBe(200);
+        expect(response.headers["content-type"]).toEqual(
+          expect.stringContaining("json")
+        );
+        expect(response.body).toEqual({
+          _id: `${uid}`,
+          firstName: "Test",
+          lastName: "McTest",
+          __v: 0,
+        });
+      });
+    });
+  });
 });
 
 // const readUser: any = jest.fn();
@@ -62,16 +82,7 @@ describe("/users", () => {
 //       expect(readUser.mock.calls[0][0]).toBe("1234");
 //     });
 
-//     test("should respond with a json object containing the user id", async () => {
-//       for (let i = 0; i < 10; i++) {
-//         readUser.mockReset();
-//         readUser.mockResolvedValue({
-//           userId: i,
-//         });
-//         const response = await request(app).get(`/users/${i}`);
-//         expect(response.body.userId).toBe(i);
-//       }
-//     });
+//
 //   });
 //   describe("if userId missing", () => {
 //     test("should respond with a status code of 400, without interacting with database", async () => {

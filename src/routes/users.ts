@@ -8,4 +8,10 @@ router.get("/", async (req, res) => {
   res.send(users);
 });
 
+router.get("/:uid", async (req, res) => {
+  const { uid } = req.params;
+  const user = await User.findById(uid);
+  res.send(user);
+});
+
 export default router;
