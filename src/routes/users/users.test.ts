@@ -74,7 +74,28 @@ describe("/api/users", () => {
         const response = await request(app).post(`/api/users/${testId}`);
         expect(response.statusCode).toBe(404);
       });
-      test("updates and returns user document if uid is found", () => {});
+    });
+  });
+  describe("/:uid - PUT", () => {
+    describe("given a valid uid", () => {
+      test("updates and returns user document if uid is found", async () => {
+        const response = await request(app)
+          .post(`/api/users/${testUserIds[0]}`)
+          .send({
+            firstName: "Sam",
+            lastName: "Wilson",
+          });
+        expect(response.statusCode).toBe(200);
+        expect(response.headers["content-type"]).toEqual(
+          expect.stringContaining("json")
+        );
+        expect(response.body).toEqual({
+          _id: `${testUserIds[0]}`,
+          firstName: "Sam",
+          lastName: "Wilson",
+          __v: 0,
+        });
+      });
     });
   });
 });
