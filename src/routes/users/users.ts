@@ -2,15 +2,16 @@ import { Router } from "express";
 import User from "../../models/User";
 import { isValidObjectId } from "mongoose";
 import UserInterface from "../../models/UserInterface";
+import createHttpError from "http-errors";
 
 const router = Router();
 
-router.get("/", async (req, res) => {
+router.get("/", async (req, res, next) => {
   const users = await User.find();
   res.send(users);
 });
 
-router.post("/", async (req, res) => {
+router.post("/", async (req, res, next) => {
   const newUser = new User({
     firstName: req.body.firstName,
     lastName: req.body.lastName,
@@ -20,10 +21,10 @@ router.post("/", async (req, res) => {
   return res.send(savedUser);
 });
 
-router.get("/:uid", async (req, res) => {
+router.get("/:uid", async (req, res, next) => {
   const { uid } = req.params;
   if (!isValidObjectId(uid)) {
-    return res.sendStatus(400);
+    return next(createHttpError(400));
   } else {
     const user = await User.findById(uid);
     if (!user) {
@@ -33,15 +34,15 @@ router.get("/:uid", async (req, res) => {
   }
 });
 
-router.put("/:uid", async (req, res) => {
+router.put("/:uid", async (req, res, next) => {
   const { uid } = req.params;
-  // console.log(req.body);
+
   if (!isValidObjectId(uid)) {
-    return res.sendStatus(400);
+    return next(createHttpError(400));
   }
   const user = await User.findById(uid);
   if (!user) {
-    return res.sendStatus(404);
+    return next(createHttpError(404));
   }
   Object.keys(req.body).forEach((key) => {
     user[key as keyof UserInterface] = req.body[key];
