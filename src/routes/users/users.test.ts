@@ -3,16 +3,16 @@ import request from "supertest";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
 import loadTestUsers from "../../utils/loadTestUsers";
-import loadSingleTestUser from "../../utils/loadSingleTestUser";
 
 describe("/api/users", () => {
   let mongoServer: MongoMemoryServer;
+  let testUserIds: string[];
   beforeAll(async () => {
     mongoServer = await MongoMemoryServer.create();
     await mongoose.connect(mongoServer.getUri());
   });
   beforeEach(async () => {
-    await loadTestUsers();
+    testUserIds = await loadTestUsers();
   });
   afterAll(async () => {
     if (mongoose.connection.db) {
@@ -37,28 +37,44 @@ describe("/api/users", () => {
       expect.stringContaining("json")
     );
   });
-  describe("/:uid", () => {
+  describe("/:uid - GET", () => {
     describe("if uid invalid", () => {
       test("should respond with 400 status code", async () => {
         const response = await request(app).get("/api/users/INVALID_UID");
         expect(response.statusCode).toBe(400);
       });
     });
-    describe("given a uid", () => {
+    describe("given a valid uid", () => {
       test("should respond with a json object containing user information", async () => {
-        const uid = await loadSingleTestUser();
-        const response = await request(app).get(`/api/users/${uid}`);
+        const response = await request(app).get(`/api/users/${testUserIds[0]}`);
         expect(response.statusCode).toBe(200);
         expect(response.headers["content-type"]).toEqual(
           expect.stringContaining("json")
         );
         expect(response.body).toEqual({
-          _id: `${uid}`,
-          firstName: "Test",
-          lastName: "McTest",
+          _id: `${testUserIds[0]}`,
+          firstName: "Steve",
+          lastName: "Rogers",
           __v: 0,
         });
       });
+    });
+  });
+
+  describe("/:uid - POST", () => {
+    describe("if uid invalid", () => {
+      test("should respond with 400 status code", async () => {
+        const response = await request(app).post("/api/users/INVALID_UID");
+        expect(response.statusCode).toBe(400);
+      });
+    });
+    describe("given a valid uid", () => {
+      test("returns status 404 if uid is for non-existant user", async () => {
+        const testId = new mongoose.Types.ObjectId();
+        const response = await request(app).post(`/api/users/${testId}`);
+        expect(response.statusCode).toBe(404);
+      });
+      test("updates and returns user document if uid is found", () => {});
     });
   });
 });

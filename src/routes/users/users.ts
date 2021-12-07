@@ -22,4 +22,15 @@ router.get("/:uid", async (req, res) => {
   }
 });
 
+router.post("/:uid", async (req, res) => {
+  const { uid } = req.params;
+  if (!isValidObjectId(uid)) {
+    return res.sendStatus(400);
+  }
+  const user = await User.findById(uid);
+  if (!user) {
+    return res.sendStatus(404);
+  }
+});
+
 export default router;
