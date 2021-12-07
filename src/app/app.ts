@@ -1,10 +1,10 @@
 import express from "express";
-import usersRoute from "../routes/users";
+import routesConfig from "../routes/routesConfig";
 
 const app = express();
 
 app.use(express.json());
 
-app.use("/users", usersRoute);
+app.use("/api", routesConfig);
 
 export default app;
