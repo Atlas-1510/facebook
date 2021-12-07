@@ -1,4 +1,4 @@
-import app from "./app";
+import loadApp from "../utils/loadApp";
 import request from "supertest";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
@@ -6,6 +6,7 @@ import loadTestUsers from "../utils/loadTestUsers";
 
 describe("/users", () => {
   let mongoServer: MongoMemoryServer;
+  const app = loadApp();
 
   beforeAll(async () => {
     mongoServer = await MongoMemoryServer.create();
