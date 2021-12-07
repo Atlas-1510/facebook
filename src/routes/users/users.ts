@@ -10,6 +10,16 @@ router.get("/", async (req, res) => {
   res.send(users);
 });
 
+router.post("/", async (req, res) => {
+  const newUser = new User({
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+  });
+  const savedUser = await newUser.save();
+  res.status(201);
+  return res.send(savedUser);
+});
+
 router.get("/:uid", async (req, res) => {
   const { uid } = req.params;
   if (!isValidObjectId(uid)) {
@@ -23,7 +33,7 @@ router.get("/:uid", async (req, res) => {
   }
 });
 
-router.post("/:uid", async (req, res) => {
+router.put("/:uid", async (req, res) => {
   const { uid } = req.params;
   // console.log(req.body);
   if (!isValidObjectId(uid)) {
