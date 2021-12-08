@@ -3,7 +3,7 @@ import request from "supertest";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
 import loadTestUsers from "../../utils/loadTestUsers";
-import expect404 from "../../utils/expect404";
+import expectErrorCode from "../../utils/expectErrorCode";
 
 describe("/api/users", () => {
   let mongoServer: MongoMemoryServer;
@@ -56,10 +56,10 @@ describe("/api/users", () => {
     });
   });
   describe("PUT", () => {
-    expect404("put", "/users");
+    expectErrorCode("put", "/users", 404);
   });
   describe("DELETE", () => {
-    expect404("delete", "/users");
+    expectErrorCode("delete", "/users", 404);
   });
   describe("/:uid", () => {
     describe("GET", () => {
@@ -88,10 +88,13 @@ describe("/api/users", () => {
       });
     });
     describe("POST", () => {
-      expect404("post", "/users/1234");
+      expectErrorCode("post", "/users/1234", 404);
     });
 
     describe("PUT", () => {
+      describe("if uid invalid", () => {
+        expectErrorCode("put", "/api/users/INVALID_UID", 400);
+      });
       describe("given a valid uid", () => {
         test("updates and returns user document if uid is found", async () => {
           const response = await request(app)

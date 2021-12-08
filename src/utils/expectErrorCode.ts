@@ -2,7 +2,11 @@
 import request from "supertest";
 import app from "../app/app";
 
-export default async function expect404(method: string, route: string) {
+export default async function expectErrorCode(
+  method: string,
+  route: string,
+  statusCode: number
+) {
   test("returns 404 error for invalid route request", async () => {
     let fn;
 
@@ -23,6 +27,6 @@ export default async function expect404(method: string, route: string) {
         throw new Error("invalid method for expect404()");
     }
     const response = await fn();
-    expect(response.statusCode).toBe(404);
+    expect(response.statusCode).toBe(statusCode);
   });
 }
