@@ -28,7 +28,7 @@ router.get("/:uid", async (req, res, next) => {
   } else {
     const user = await User.findById(uid);
     if (!user) {
-      return res.status(404);
+      return next(createHttpError(404));
     }
     return res.send(user);
   }

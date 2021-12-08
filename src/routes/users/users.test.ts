@@ -56,10 +56,15 @@ describe("/api/users", () => {
     });
   });
   describe("PUT", () => {
-    expectErrorCode("put", "/users", 404);
+    expectErrorCode("returns 404 for invalid route", "put", "/api/users", 404);
   });
   describe("DELETE", () => {
-    expectErrorCode("delete", "/users", 404);
+    expectErrorCode(
+      "returns 404 for invalid route",
+      "delete",
+      "/api/users",
+      404
+    );
   });
   describe("/:uid", () => {
     describe("GET", () => {
@@ -70,30 +75,52 @@ describe("/api/users", () => {
         });
       });
       describe("given a valid uid", () => {
-        test("should respond with a json object containing user information", async () => {
-          const response = await request(app).get(
-            `/api/users/${testUserIds[0]}`
-          );
-          expect(response.statusCode).toBe(200);
-          expect(response.headers["content-type"]).toEqual(
-            expect.stringContaining("json")
-          );
-          expect(response.body).toEqual({
-            _id: `${testUserIds[0]}`,
-            firstName: "Steve",
-            lastName: "Rogers",
-            __v: 0,
+        describe("if user exists in database", () => {
+          test("should respond with a json object containing user information", async () => {
+            const response = await request(app).get(
+              `/api/users/${testUserIds[0]}`
+            );
+            expect(response.statusCode).toBe(200);
+            expect(response.headers["content-type"]).toEqual(
+              expect.stringContaining("json")
+            );
+            expect(response.body).toEqual({
+              _id: `${testUserIds[0]}`,
+              firstName: "Steve",
+              lastName: "Rogers",
+              __v: 0,
+            });
           });
+        });
+        describe("if user does not exist in database", () => {
+          const nonExistingUserDocId = new mongoose.Types.ObjectId();
+
+          expectErrorCode(
+            "returns 404 for user not found",
+            "get",
+            `/api/users/${nonExistingUserDocId}`,
+            404
+          );
         });
       });
     });
     describe("POST", () => {
-      expectErrorCode("post", "/users/1234", 404);
+      expectErrorCode(
+        "returns 404 for invalid route",
+        "post",
+        "/api/users/1234",
+        404
+      );
     });
 
     describe("PUT", () => {
       describe("if uid invalid", () => {
-        expectErrorCode("put", "/api/users/INVALID_UID", 400);
+        expectErrorCode(
+          "returns 400 for invalid route",
+          "put",
+          "/api/users/INVALID_UID",
+          400
+        );
       });
       describe("given a valid uid", () => {
         test("updates and returns user document if uid is found", async () => {

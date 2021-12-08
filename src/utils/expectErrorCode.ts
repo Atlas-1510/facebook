@@ -1,13 +1,13 @@
-// Put logic for expecting a 404 response here
 import request from "supertest";
 import app from "../app/app";
 
 export default async function expectErrorCode(
+  testDescription: string,
   method: string,
   route: string,
   statusCode: number
 ) {
-  test("returns 404 error for invalid route request", async () => {
+  test(testDescription, async () => {
     let fn;
 
     switch (method) {
