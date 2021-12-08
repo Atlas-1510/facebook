@@ -1,9 +1,18 @@
-import app from "../../app/app";
+import express from "express";
+import usersRoute from "./users";
+import createHttpError from "http-errors";
 import request from "supertest";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
 import loadTestUsers from "../../utils/loadTestUsers";
 import expectErrorCode from "../../utils/expectErrorCode";
+
+const app = express();
+app.use(express.json());
+app.use("/api/users", usersRoute);
+app.use(function (req, res, next) {
+  next(createHttpError(404));
+});
 
 describe("/api/users", () => {
   let mongoServer: MongoMemoryServer;
