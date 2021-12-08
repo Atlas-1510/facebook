@@ -3,6 +3,7 @@ import request from "supertest";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
 import loadTestUsers from "../../utils/loadTestUsers";
+import expect404 from "../../utils/expect404";
 
 describe("/api/users", () => {
   let mongoServer: MongoMemoryServer;
@@ -55,16 +56,10 @@ describe("/api/users", () => {
     });
   });
   describe("PUT", () => {
-    test("returns 404 error for invalid route request", async () => {
-      const response = await request(app).put("/users");
-      expect(response.statusCode).toBe(404);
-    });
+    expect404("put", "/users");
   });
   describe("DELETE", () => {
-    test("returns 404 error for invalid route request", async () => {
-      const response = await request(app).delete("/users");
-      expect(response.statusCode).toBe(404);
-    });
+    expect404("delete", "/users");
   });
   describe("/:uid", () => {
     describe("GET", () => {
@@ -93,10 +88,7 @@ describe("/api/users", () => {
       });
     });
     describe("POST", () => {
-      test("returns 404 error for invalid route request", async () => {
-        const response = await request(app).put("/users/1234");
-        expect(response.statusCode).toBe(404);
-      });
+      expect404("post", "/users/1234");
     });
 
     describe("PUT", () => {
