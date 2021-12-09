@@ -1,7 +1,7 @@
 import { Router } from "express";
 import User from "../../models/User";
 import { isValidObjectId } from "mongoose";
-import UserInterface from "../../models/UserInterface";
+import { UserInterface } from "../../models/User";
 import createHttpError from "http-errors";
 
 const router = Router();
@@ -13,6 +13,7 @@ router.get("/", async (req, res, next) => {
 
 router.post("/", async (req, res, next) => {
   const newUser = new User({
+    email: req.body.email,
     firstName: req.body.firstName,
     lastName: req.body.lastName,
   });

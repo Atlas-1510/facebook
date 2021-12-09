@@ -53,6 +53,7 @@ describe("/api/users", () => {
     describe("given valid input for a new user", () => {
       test("saves and returns the new user document", async () => {
         const response = await request(app).post("/api/users").send({
+          email: "wanda@maximoff.com",
           firstName: "Wanda",
           lastName: "Maximoff",
         });
@@ -95,6 +96,7 @@ describe("/api/users", () => {
             );
             expect(response.body).toEqual({
               _id: `${testUserIds[0]}`,
+              email: "steve@rogers.com",
               firstName: "Steve",
               lastName: "Rogers",
               __v: 0,
@@ -136,6 +138,7 @@ describe("/api/users", () => {
           const response = await request(app)
             .put(`/api/users/${testUserIds[0]}`)
             .send({
+              email: "sam@wilson.com",
               firstName: "Sam",
               lastName: "Wilson",
             });
@@ -145,6 +148,7 @@ describe("/api/users", () => {
           );
           expect(response.body).toEqual({
             _id: `${testUserIds[0]}`,
+            email: "sam@wilson.com",
             firstName: "Sam",
             lastName: "Wilson",
             __v: 0,
