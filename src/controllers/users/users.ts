@@ -9,13 +9,17 @@ const getAllUsers = async (req: any, res: any, next: any) => {
 };
 
 const createNewUser = async (req: any, res: any, next: any) => {
-  const newUser = await User.create({
-    email: req.body.email,
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-  });
-  res.status(201);
-  return res.send(newUser);
+  try {
+    const newUser = await User.create({
+      email: req.body.email,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+    });
+    res.status(201);
+    return res.send(newUser);
+  } catch (err) {
+    next(err);
+  }
 };
 
 const getUser = async (req: any, res: any, next: any) => {

@@ -1,4 +1,4 @@
-import { getAllUsers, createNewUser } from "./users";
+import { getAllUsers, createNewUser, getUser } from "./users";
 import { getMockReq, getMockRes } from "@jest-mock/express";
 import User from "../../models/User";
 
@@ -19,7 +19,7 @@ describe("usersController", () => {
     test("makes read request to database", async () => {
       UserFind.mockReturnValue("some result");
       const req = getMockReq();
-      const { res, next, clearMockRes } = getMockRes();
+      const { res, next } = getMockRes();
       await getAllUsers(req, res, next);
       expect(User.find).toHaveBeenCalledTimes(1);
       expect(User.find).toHaveBeenCalledWith();
@@ -57,6 +57,44 @@ describe("usersController", () => {
         await createNewUser(req, res, next);
         expect(res.status).toHaveBeenCalledWith(201);
       });
+    });
+    describe("given invalid input", () => {
+      let req: any, res: any, next: any;
+      const mockError = new Error("Invalid input");
+      beforeEach(() => {
+        req = getMockReq();
+        UserCreate.mockImplementation(() => {
+          throw mockError;
+        });
+        res = getMockRes().res;
+        next = getMockRes().next;
+      });
+      test("calls next() with error object", async () => {
+        await createNewUser(req, res, next);
+        expect(next).toHaveBeenCalledTimes(1);
+        expect(next).toHaveBeenCalledWith(mockError);
+      });
+    });
+  });
+});
+describe("getUser", () => {
+  describe("given invalid input", () => {
+    let req: any, res: any, next: any;
+    beforeEach(() => {
+      req = getMockReq({
+        params: {
+          uid: "invalidUID",
+        },
+      });
+      res = getMockRes().res;
+      next = getMockRes().next;
+    });
+    test("returns error with 400 status code", async () => {
+      await getUser(req, res, next);
+      expect(next).toHaveBeenCalledTimes(1);
+      const err = next.mock.calls[0][0];
+      expect(err).toBeInstanceOf(Error);
+      expect(err.statusCode).toBe(400);
     });
   });
 });
