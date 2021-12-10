@@ -26,31 +26,34 @@ describe("usersController", () => {
       expect(res.send).toHaveBeenCalledWith("some result");
     });
   });
+
   describe("createNewUser", () => {
     describe("given valid input", () => {
+      let req: any, res: any, next: any;
+      const testUser = {
+        email: "kate@bishop.com",
+        firstName: "Kate",
+        lastName: "Bishop",
+      };
+
+      beforeEach(() => {
+        req = getMockReq({
+          body: testUser,
+        });
+        UserCreate.mockReturnValue(testUser);
+        res = getMockRes().res;
+        next = getMockRes().next;
+      });
+
       test("makes create request to database", async () => {
-        const req = getMockReq();
-        const { res, next } = getMockRes();
         await createNewUser(req, res, next);
         expect(User.create).toHaveBeenCalledTimes(1);
       });
       test("returns new user document", async () => {
-        const testUser = {
-          email: "kate@bishop.com",
-          firstName: "Kate",
-          lastName: "Bishop",
-        };
-        UserCreate.mockReturnValue(testUser);
-        const req = getMockReq({
-          body: testUser,
-        });
-        const { res, next } = getMockRes();
         await createNewUser(req, res, next);
         expect(res.send).toHaveBeenCalledWith(testUser);
       });
       test("returns 201 status code", async () => {
-        const req = getMockReq();
-        const { res, next } = getMockRes();
         await createNewUser(req, res, next);
         expect(res.status).toHaveBeenCalledWith(201);
       });
