@@ -16,7 +16,7 @@ describe("usersController", () => {
   });
   describe("getAllUsers", () => {
     test("makes read request to database", async () => {
-      // @ts-ignore
+      // @ts-ignore User.find is a mock for testing purposes
       User.find.mockResolvedValueOnce("some result");
       const req = getMockReq();
       const { res, next } = getMockRes();
@@ -40,7 +40,7 @@ describe("usersController", () => {
         req = getMockReq({
           body: testUser,
         });
-        // @ts-ignore
+        // @ts-ignore User.create is a mock for testing purposes
         User.create.mockReturnValue(testUser);
         res = getMockRes().res;
         next = getMockRes().next;
@@ -64,7 +64,7 @@ describe("usersController", () => {
       const mockError = new Error("Invalid input");
       beforeEach(() => {
         req = getMockReq();
-        // @ts-ignore
+        // @ts-ignore User.create is a mock for testing purposes
         User.create.mockImplementation(() => {
           throw mockError;
         });
@@ -83,7 +83,7 @@ describe("usersController", () => {
     describe("given invalid input", () => {
       let req: any, res: any, next: any;
       beforeEach(() => {
-        // @ts-ignore
+        // @ts-ignore mongoose.isValidObjectId is a mock for testing purposes
         mongoose.isValidObjectId.mockReturnValue(false);
         req = getMockReq({
           params: {
@@ -104,9 +104,9 @@ describe("usersController", () => {
     describe("given valid input", () => {
       let req: any, res: any, next: any;
       beforeEach(() => {
-        // @ts-ignore
+        // @ts-ignore mongoose.isValidObjectId is a mock for testing purposes
         mongoose.isValidObjectId.mockReturnValue(true);
-        // @ts-ignore
+        // @ts-ignore User.findById is a mock for testing purposes
         User.findById.mockReturnValue("some result");
 
         req = getMockReq({
@@ -123,7 +123,7 @@ describe("usersController", () => {
       });
       describe("if no user found in db to match valid uid query", () => {
         test("returns error with 404 status code", async () => {
-          // @ts-ignore
+          // @ts-ignore User.findById is a mock for testing purposes
           User.findById.mockReturnValue(null);
           await getUser(req, res, next);
           const err = next.mock.calls[0][0];
