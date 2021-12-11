@@ -3,25 +3,21 @@ import { getMockReq, getMockRes } from "@jest-mock/express";
 import User from "../../models/User";
 import mongoose from "mongoose";
 
-const isValidObjectIdMock = jest.spyOn(mongoose, "isValidObjectId");
+// Note: To set mock return values of spies below, needed to disable typescript checking using '@ts-ignore'
 
-const UserFindMock = jest.spyOn(User, "find");
-const UserCreateMock = jest.spyOn(User, "create");
-const UserFind = jest.fn();
-const UserCreate = jest.fn();
-const isValidObjectId = jest.fn();
-
-jest.mock("../../models/User");
+jest.spyOn(User, "find");
+jest.spyOn(User, "findById");
+jest.spyOn(User, "create");
+jest.spyOn(mongoose, "isValidObjectId");
 
 describe("usersController", () => {
   beforeEach(() => {
     jest.resetAllMocks();
-    UserFindMock.mockImplementation(UserFind);
-    UserCreateMock.mockImplementation(UserCreate);
   });
   describe("getAllUsers", () => {
     test("makes read request to database", async () => {
-      UserFind.mockReturnValue("some result");
+      // @ts-ignore
+      User.find.mockResolvedValueOnce("some result");
       const req = getMockReq();
       const { res, next } = getMockRes();
       await getAllUsers(req, res, next);
@@ -44,7 +40,8 @@ describe("usersController", () => {
         req = getMockReq({
           body: testUser,
         });
-        UserCreate.mockReturnValue(testUser);
+        // @ts-ignore
+        User.create.mockReturnValue(testUser);
         res = getMockRes().res;
         next = getMockRes().next;
       });
@@ -67,7 +64,8 @@ describe("usersController", () => {
       const mockError = new Error("Invalid input");
       beforeEach(() => {
         req = getMockReq();
-        UserCreate.mockImplementation(() => {
+        // @ts-ignore
+        User.create.mockImplementation(() => {
           throw mockError;
         });
         res = getMockRes().res;
@@ -80,50 +78,59 @@ describe("usersController", () => {
       });
     });
   });
-});
-describe("getUser", () => {
-  describe("given invalid input", () => {
-    let req: any, res: any, next: any;
-    beforeEach(() => {
-      jest.resetAllMocks();
-      isValidObjectIdMock.mockImplementation(isValidObjectId);
-      isValidObjectId.mockReturnValue(false);
-      req = getMockReq({
-        params: {
-          uid: "invalid UID",
-        },
+
+  describe("getUser", () => {
+    describe("given invalid input", () => {
+      let req: any, res: any, next: any;
+      beforeEach(() => {
+        // @ts-ignore
+        mongoose.isValidObjectId.mockReturnValue(false);
+        req = getMockReq({
+          params: {
+            uid: "invalid UID",
+          },
+        });
+        res = getMockRes().res;
+        next = getMockRes().next;
       });
-      res = getMockRes().res;
-      next = getMockRes().next;
-    });
-    test("returns error with 400 status code", async () => {
-      await getUser(req, res, next);
-      expect(next).toHaveBeenCalledTimes(1);
-      const err = next.mock.calls[0][0];
-      expect(err).toBeInstanceOf(Error);
-      expect(err.statusCode).toBe(400);
-    });
-  });
-  describe("given valid input", () => {
-    let req: any, res: any, next: any;
-    beforeEach(() => {
-      jest.resetAllMocks();
-      isValidObjectIdMock.mockImplementation(isValidObjectId);
-      isValidObjectId.mockReturnValue(true);
-      UserFindMock.mockImplementation(UserFind);
-      req = getMockReq({
-        params: {
-          uid: "valid UID",
-        },
+      test("returns error with 400 status code", async () => {
+        await getUser(req, res, next);
+        expect(next).toHaveBeenCalledTimes(1);
+        const err = next.mock.calls[0][0];
+        expect(err).toBeInstanceOf(Error);
+        expect(err.statusCode).toBe(400);
       });
-      res = getMockRes().res;
-      next = getMockRes().next;
     });
-    test("makes get request to database", async () => {
-      await getUser(req, res, next);
-      expect(true).toBe(true);
-      // Have successfully mocked mongoose.isValidObjectId to set true/false in tests.
-      // Now, want to streamline User mocks so don't need to manually spyOn and mock each function.
+    describe("given valid input", () => {
+      let req: any, res: any, next: any;
+      beforeEach(() => {
+        // @ts-ignore
+        mongoose.isValidObjectId.mockReturnValue(true);
+        // @ts-ignore
+        User.findById.mockReturnValue("some result");
+
+        req = getMockReq({
+          params: {
+            uid: "valid UID",
+          },
+        });
+        res = getMockRes().res;
+        next = getMockRes().next;
+      });
+      test("makes get request to database", async () => {
+        await getUser(req, res, next);
+        expect(res.send).toHaveBeenCalledWith("some result");
+      });
+      describe("if no user found in db to match valid uid query", () => {
+        test("returns error with 404 status code", async () => {
+          // @ts-ignore
+          User.findById.mockReturnValue(null);
+          await getUser(req, res, next);
+          const err = next.mock.calls[0][0];
+          expect(err).toBeInstanceOf(Error);
+          expect(err.statusCode).toBe(404);
+        });
+      });
     });
   });
 });
