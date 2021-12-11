@@ -25,8 +25,10 @@ const createNewUser = async (req: any, res: any, next: any) => {
 const getUser = async (req: any, res: any, next: any) => {
   const { uid } = req.params;
   if (!isValidObjectId(uid)) {
+    console.log("invalid UID");
     return next(createHttpError(400));
   } else {
+    console.log("valid UID");
     const user = await User.findById(uid);
     if (!user) {
       return next(createHttpError(404));
