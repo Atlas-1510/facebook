@@ -1,12 +1,7 @@
 import { Router } from "express";
-import passport from "passport";
-
+import { tryLogin } from "../../controllers/authentication/authentication";
 const router = Router();
 
-router.post("/", (req, res, next) => {
-  passport.authenticate("local", function (err, user, info) {
-    return res.send(user);
-  })(req, res, next);
-});
+router.post("/", tryLogin);
 
 export default router;
