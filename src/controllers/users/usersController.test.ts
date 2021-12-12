@@ -1,4 +1,4 @@
-import { getAllUsers, createNewUser, getUser } from "./users";
+import { getAllUsers, createNewUser, getUser, updateUser } from "./users";
 import { getMockReq, getMockRes } from "@jest-mock/express";
 import User from "../../models/User";
 import mongoose from "mongoose";
@@ -126,6 +126,64 @@ describe("usersController", () => {
           // @ts-ignore User.findById is a mock for testing purposes
           User.findById.mockReturnValue(null);
           await getUser(req, res, next);
+          const err = next.mock.calls[0][0];
+          expect(err).toBeInstanceOf(Error);
+          expect(err.statusCode).toBe(404);
+        });
+      });
+    });
+  });
+
+  describe("updateUser", () => {
+    describe("given invalid uid", () => {
+      let req: any, res: any, next: any;
+      beforeEach(() => {
+        res = getMockRes().res;
+        next = getMockRes().next;
+      });
+      test("returns error with 400 status code", async () => {
+        // @ts-ignore mongoose.isValidObjectId is a mock for testing purposes
+        mongoose.isValidObjectId.mockReturnValue(false);
+        req = getMockReq({
+          params: {
+            uid: "invalid UID",
+          },
+        });
+
+        await updateUser(req, res, next);
+        expect(next).toHaveBeenCalledTimes(1);
+        const err = next.mock.calls[0][0];
+        expect(err).toBeInstanceOf(Error);
+        expect(err.statusCode).toBe(400);
+      });
+    });
+    describe("given valid input", () => {
+      let req: any, res: any, next: any;
+      beforeEach(() => {
+        // @ts-ignore mongoose.isValidObjectId is a mock for testing purposes
+        mongoose.isValidObjectId.mockReturnValue(true);
+        // @ts-ignore User.findById is a mock for testing purposes
+        User.findById.mockReturnValue({
+          save: jest.fn(),
+        });
+
+        req = getMockReq({
+          params: {
+            uid: "valid UID",
+          },
+        });
+        res = getMockRes().res;
+        next = getMockRes().next;
+      });
+      test("makes get request to database", async () => {
+        await updateUser(req, res, next);
+        expect(User.findById).toHaveBeenCalledWith("valid UID");
+      });
+      describe("if no user found in db to match valid uid query", () => {
+        test("returns error with 404 status code", async () => {
+          // @ts-ignore User.findById is a mock for testing purposes
+          User.findById.mockReturnValue(null);
+          await updateUser(req, res, next);
           const err = next.mock.calls[0][0];
           expect(err).toBeInstanceOf(Error);
           expect(err.statusCode).toBe(404);
