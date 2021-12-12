@@ -1,5 +1,6 @@
 const LocalStrategy = require("passport-local").Strategy;
-import User from "../models/User";
+const debug = require("debug")("facebook:passportConfig");
+import User from "./models/User";
 
 export default function (passport: any) {
   passport.use(
@@ -8,6 +9,9 @@ export default function (passport: any) {
         usernameField: "email",
       },
       async (email: any, password: any, done: any) => {
+        debug("inside passport localstrategy");
+        debug(`email: ${email}`);
+        debug(`password: ${password}`);
         try {
           const user = await User.findOne({ email: email });
           if (!user) {

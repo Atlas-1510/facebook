@@ -1,7 +1,7 @@
 import express from "express";
 import loginRouter from "./login";
 import passport from "passport";
-import passportConfig from "../../authentication/passportConfig";
+import passportConfig from "../../passportConfig";
 import createHttpError from "http-errors";
 import request from "supertest";
 import { MongoMemoryServer } from "mongodb-memory-server";

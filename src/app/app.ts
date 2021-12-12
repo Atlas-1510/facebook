@@ -2,7 +2,7 @@ import express from "express";
 import routesConfig from "../routes/routesConfig";
 import createHttpError from "http-errors";
 import passport from "passport";
-import passportConfig from "../authentication/passportConfig";
+import passportConfig from "../passportConfig";
 
 const app = express();
 
