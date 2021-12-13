@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { ensureAuthenticated } from "../../controllers/authentication/authentication";
 import {
   getAllUsers,
   createNewUser,
@@ -8,7 +9,7 @@ import {
 
 const router = Router();
 
-router.get("/", getAllUsers);
+router.get("/", ensureAuthenticated, getAllUsers);
 
 router.post("/", createNewUser);
 

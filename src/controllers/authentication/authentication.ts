@@ -1,11 +1,22 @@
 import passport from "passport";
-const debug = require("debug")("facebook:controllers:authentication:tryLogin");
+import createHttpError from "http-errors";
+const debug = require("debug")("facebook:controllers:authentication");
 
 const tryLogin = (req: any, res: any, next: any) => {
-  debug("request recieved");
+  debug("tryLogin request recieved");
   passport.authenticate("local", function (err, user, info) {
     return res.send(user);
   })(req, res, next);
 };
 
-export { tryLogin };
+const ensureAuthenticated = (req: any, res: any, next: any) => {
+  debug("ensureAuthenticated request recieved");
+  if (req.isAuthenticated()) {
+    return next();
+  } else {
+    const error = createHttpError(401, "Please login to view this");
+    return res.send(error);
+  }
+};
+
+export { tryLogin, ensureAuthenticated };
