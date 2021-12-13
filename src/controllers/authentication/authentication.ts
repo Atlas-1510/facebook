@@ -5,7 +5,13 @@ const debug = require("debug")("facebook:controllers:authentication");
 const tryLogin = (req: any, res: any, next: any) => {
   debug("tryLogin request recieved");
   passport.authenticate("local", function (err, user, info) {
-    return res.send(user);
+    debug(user);
+    req.logIn(user, function (err: any) {
+      if (err) {
+        return next(err);
+      }
+      return res.send(user);
+    });
   })(req, res, next);
 };
 
