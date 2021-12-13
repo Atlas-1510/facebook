@@ -11,10 +11,10 @@ const router = Router();
 
 router.get("/", ensureAuthenticated, getAllUsers);
 
-router.post("/", createNewUser);
+router.post("/", ensureAuthenticated, createNewUser);
 
-router.get("/:uid", getUser);
+router.get("/:uid", ensureAuthenticated, getUser);
 
-router.put("/:uid", updateUser);
+router.put("/:uid", ensureAuthenticated, updateUser);
 
 export default router;
