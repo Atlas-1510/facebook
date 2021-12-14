@@ -105,6 +105,7 @@ describe("/api/users", () => {
                 email: "steve@rogers.com",
                 firstName: "Steve",
                 lastName: "Rogers",
+                friends: [],
                 __v: 0,
               });
             });
@@ -154,6 +155,7 @@ describe("/api/users", () => {
               email: "sam@wilson.com",
               firstName: "Sam",
               lastName: "Wilson",
+              friends: [],
               __v: 0,
             });
           });
