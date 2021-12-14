@@ -4,4 +4,4 @@ export interface CommentInterface {}
 
 export const CommentSchema = new Schema<CommentInterface>({});
 
-export default mongoose.model("User", CommentSchema);
+export default mongoose.model("Comment", CommentSchema);
