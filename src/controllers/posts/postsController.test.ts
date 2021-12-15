@@ -1,4 +1,4 @@
-import { getNewsfeedPosts } from "./posts";
+import { getNewsfeedPosts, getPost } from "./posts";
 import { getMockReq, getMockRes } from "@jest-mock/express";
 import Post from "../../models/Post";
 import User from "../../models/User";
@@ -10,10 +10,8 @@ jest.mock("../../models/Post");
 jest.mock("../../models/User");
 
 describe("postsController", () => {
+  let req: any, res: any, next: any;
   beforeAll(() => {
-    Post.find = jest.fn();
-    User.find = jest.fn();
-
     // Note: generating userQueryBuilder and postQueryBuilder via a factory function to prevent repetition
     // leads to unexplainable bugs. Easier to keep seperate like this.
     const userQueryBuilder: any = {
@@ -45,6 +43,8 @@ describe("postsController", () => {
   });
   beforeEach(() => {
     jest.clearAllMocks();
+    res = getMockRes().res;
+    next = getMockRes().next;
   });
   describe("testing mocks", () => {
     test("testing User import", () => {
@@ -80,42 +80,61 @@ describe("postsController", () => {
       expect(result).toBe("abc");
     });
   });
-  describe("postsController", () => {
-    let req: any, res: any, next: any;
-    beforeEach(() => {
-      res = getMockRes().res;
-      next = getMockRes().next;
-    });
-    describe("getNewsfeedPosts", () => {
-      describe("if invalid uid", () => {
-        test("returns 400 error and message asking for valid uid", async () => {
-          req = getMockReq({ params: { uid: "invalid_uid" } });
-          await getNewsfeedPosts(req, res, next);
-          const err = next.mock.calls[0][0];
-          expect(err).toBeInstanceOf(Error);
-          expect(err.statusCode).toBe(400);
-          expect(err.message).toBe("Provided UID is invalid");
-        });
-      });
 
-      describe("if valid uid ", () => {
-        test("looks up user friends, and returns relevant posts", async () => {
-          const mockFriends = ["friend1", "friend2"];
-          const mockPosts = ["post 1", "post 2"];
-          const testUID = new mongoose.Types.ObjectId();
-          req = getMockReq({ params: { uid: testUID } });
-          //@ts-ignore
-          User.find().select().exec.mockReturnValue(mockFriends);
-          //@ts-ignore
-          Post.find().where().in().exec.mockReturnValue(mockPosts);
-          await getNewsfeedPosts(req, res, next);
-          //@ts-ignore
-          expect(User.find).toHaveBeenCalledWith(testUID);
-          //@ts-ignore
-          expect(Post.find().where().in).toHaveBeenCalledWith(mockFriends);
-          expect(res.send).toHaveBeenCalledWith(mockPosts);
-        });
+  describe("getNewsfeedPosts", () => {
+    describe("if invalid uid", () => {
+      test("returns 400 error and message asking for valid uid", async () => {
+        req = getMockReq({ params: { uid: "invalid_uid" } });
+        await getNewsfeedPosts(req, res, next);
+        const err = next.mock.calls[0][0];
+        expect(err).toBeInstanceOf(Error);
+        expect(err.statusCode).toBe(400);
+        expect(err.message).toBe("Provided UID is invalid");
       });
+    });
+
+    describe("if valid uid ", () => {
+      test("looks up user friends, and returns relevant posts", async () => {
+        const mockFriends = ["friend1", "friend2"];
+        const mockPosts = ["post 1", "post 2"];
+        const testUID = new mongoose.Types.ObjectId();
+        req = getMockReq({ params: { uid: testUID } });
+        //@ts-ignore
+        User.find().select().exec.mockReturnValue(mockFriends);
+        //@ts-ignore
+        Post.find().where().in().exec.mockReturnValue(mockPosts);
+        await getNewsfeedPosts(req, res, next);
+        //@ts-ignore
+        expect(User.find).toHaveBeenCalledWith(testUID);
+        //@ts-ignore
+        expect(Post.find().where().in).toHaveBeenCalledWith(mockFriends);
+        expect(res.send).toHaveBeenCalledWith(mockPosts);
+      });
+    });
+  });
+  describe("getPost", () => {
+    test("if no post ID provided, return error", async () => {
+      req = getMockReq();
+      await getPost(req, res, next);
+      const err = next.mock.calls[0][0];
+      expect(err).toBeInstanceOf(Error);
+      expect(err.statusCode).toBe(400);
+      expect(err.message).toBe("Please provide a valid post ID");
+    });
+    test("makes call to database", async () => {
+      const pid = new mongoose.Types.ObjectId();
+      req = getMockReq({ params: { pid: pid } });
+      await getPost(req, res, next);
+      expect(Post.findById).toHaveBeenCalledTimes(1);
+    });
+    test("returns post with status code 200", async () => {
+      const testPost = "some post";
+      const pid = new mongoose.Types.ObjectId();
+      //@ts-ignore
+      Post.findById.mockResolvedValue(testPost);
+      req = getMockReq({ params: { pid: pid } });
+      await getPost(req, res, next);
+      expect(res.send).toHaveBeenCalledWith(testPost);
     });
   });
 });

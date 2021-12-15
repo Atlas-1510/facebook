@@ -18,4 +18,18 @@ const getNewsfeedPosts = async (req: any, res: any, next: any) => {
   }
 };
 
-export { getNewsfeedPosts };
+const getPost = async (req: any, res: any, next: any) => {
+  try {
+    const { pid } = req.params;
+    if (!pid || !isValidObjectId(pid)) {
+      const err = createHttpError(400, "Please provide a valid post ID");
+      throw err;
+    }
+    const post = await Post.findById(pid);
+    return res.send(post);
+  } catch (err) {
+    return next(err);
+  }
+};
+
+export { getNewsfeedPosts, getPost };
