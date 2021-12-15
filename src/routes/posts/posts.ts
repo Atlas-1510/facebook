@@ -1,9 +1,8 @@
 import { Router } from "express";
+import { getNewsfeedPosts } from "../../controllers/posts/posts";
 
 const router = Router();
 
-router.get("/", (req, res, next) => {
-  console.log("placeholder");
-});
+router.get("/newsfeed/:uid", getNewsfeedPosts);
 
 export default router;
