@@ -10,32 +10,21 @@ jest.mock("../../models/User");
 Post.find = jest.fn();
 User.find = jest.fn();
 
-const userQueryBuilder: any = {
-  select: jest.fn().mockReturnThis(),
-  sort: jest.fn().mockReturnThis(),
-  limit: jest.fn().mockReturnThis(),
-  where: jest.fn().mockReturnThis(),
-  in: jest.fn().mockReturnThis(),
-  exec: jest.fn().mockReturnThis(),
-};
-
-const postQueryBuilder: any = {
-  select: jest.fn().mockReturnThis(),
-  sort: jest.fn().mockReturnThis(),
-  limit: jest.fn().mockReturnThis(),
-  where: jest.fn().mockReturnThis(),
-  in: jest.fn().mockReturnThis(),
-  exec: jest.fn().mockReturnThis(),
+const generateQueryBuilder = () => {
+  return {
+    select: jest.fn().mockReturnThis(),
+    sort: jest.fn().mockReturnThis(),
+    limit: jest.fn().mockReturnThis(),
+    where: jest.fn().mockReturnThis(),
+    in: jest.fn().mockReturnThis(),
+    exec: jest.fn().mockReturnThis(),
+  };
 };
 
 //@ts-ignore
-Post.find.mockImplementation(() => {
-  return postQueryBuilder;
-});
+Post.find.mockImplementation(() => generateQueryBuilder());
 //@ts-ignore
-User.find.mockImplementation(() => {
-  return userQueryBuilder;
-});
+User.find.mockImplementation(() => generateQueryBuilder());
 
 describe("postsController", () => {
   beforeAll(() => {
