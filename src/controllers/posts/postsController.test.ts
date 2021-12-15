@@ -4,40 +4,25 @@ import Post from "../../models/Post";
 import User from "../../models/User";
 import mongoose from "mongoose";
 
+// TODO: Remove mock tests
+
 jest.mock("../../models/Post");
 jest.mock("../../models/User");
-
-Post.find = jest.fn();
-User.find = jest.fn();
-
-const generateQueryBuilder = () => {
-  return {
-    select: jest.fn().mockReturnThis(),
-    sort: jest.fn().mockReturnThis(),
-    limit: jest.fn().mockReturnThis(),
-    where: jest.fn().mockReturnThis(),
-    in: jest.fn().mockReturnThis(),
-    exec: jest.fn().mockReturnThis(),
-  };
-};
-
-//@ts-ignore
-Post.find.mockImplementation(() => generateQueryBuilder());
-//@ts-ignore
-User.find.mockImplementation(() => generateQueryBuilder());
 
 describe("postsController", () => {
   beforeAll(() => {
     Post.find = jest.fn();
     User.find = jest.fn();
 
+    // Note: generating userQueryBuilder and postQueryBuilder via a factory function to prevent repetition
+    // leads to unexplainable bugs. Easier to keep seperate like this.
     const userQueryBuilder: any = {
       select: jest.fn().mockReturnThis(),
       sort: jest.fn().mockReturnThis(),
       limit: jest.fn().mockReturnThis(),
       where: jest.fn().mockReturnThis(),
       in: jest.fn().mockReturnThis(),
-      exec: jest.fn(),
+      exec: jest.fn(), // exec() should be called at the end of a query, so no chaining after this.
     };
 
     const postQueryBuilder: any = {
