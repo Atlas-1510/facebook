@@ -1,10 +1,16 @@
 import { Router } from "express";
-import { getNewsfeedPosts, getPost } from "../../controllers/posts/posts";
+import {
+  editPost,
+  getNewsfeedPosts,
+  getPost,
+} from "../../controllers/posts/posts";
 
 const router = Router();
 
 router.get("/newsfeed/:uid", getNewsfeedPosts);
 
 router.get("/:pid", getPost);
+
+router.put("/:pid", editPost);
 
 export default router;

@@ -1,8 +1,9 @@
-import { getNewsfeedPosts, getPost } from "./posts";
+import { getNewsfeedPosts, getPost, editPost } from "./posts";
 import { getMockReq, getMockRes } from "@jest-mock/express";
 import Post from "../../models/Post";
 import User from "../../models/User";
 import mongoose from "mongoose";
+import expectErrorCode from "../../utils/expectErrorCode";
 
 // TODO: Remove mock tests
 
@@ -135,6 +136,31 @@ describe("postsController", () => {
       req = getMockReq({ params: { pid: pid } });
       await getPost(req, res, next);
       expect(res.send).toHaveBeenCalledWith(testPost);
+    });
+  });
+  describe("editPost", () => {
+    test("if no post ID provided, return error", async () => {
+      req = getMockReq();
+      await editPost(req, res, next);
+      const err = next.mock.calls[0][0];
+      expect(err).toBeInstanceOf(Error);
+      expect(err.statusCode).toBe(400);
+      expect(err.message).toBe("Please provide a valid post ID");
+    });
+    test("make put request to database", async () => {
+      const pid = new mongoose.Types.ObjectId();
+      req = getMockReq({ params: { pid: pid } });
+      await editPost(req, res, next);
+      expect(Post.findByIdAndUpdate).toHaveBeenCalledTimes(1);
+    });
+    test("returns post with status code 200", async () => {
+      const testPost = "some post";
+      const pid = new mongoose.Types.ObjectId();
+      //@ts-ignore
+      Post.findByIdAndUpdate.mockResolvedValue(testPost);
+      req = getMockReq({ params: { pid: pid } });
+      await editPost(req, res, next);
+      expect(res.send.mock.calls[0][0]).toBe(testPost);
     });
   });
 });

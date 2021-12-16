@@ -32,4 +32,25 @@ const getPost = async (req: any, res: any, next: any) => {
   }
 };
 
-export { getNewsfeedPosts, getPost };
+const editPost = async (req: any, res: any, next: any) => {
+  try {
+    const { pid } = req.params;
+    if (!pid || !isValidObjectId(pid)) {
+      const err = createHttpError(400, "Please provide a valid post ID");
+      throw err;
+    }
+    const updates: any = {};
+    const postFields = Object.keys(Post.schema.paths);
+    postFields.map((field) => {
+      if (field in req.body) {
+        updates[field] = req.body[field];
+      }
+    });
+    const doc = await Post.findByIdAndUpdate(pid, updates);
+    return res.send(doc);
+  } catch (err) {
+    return next(err);
+  }
+};
+
+export { getNewsfeedPosts, getPost, editPost };
