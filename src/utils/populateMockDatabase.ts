@@ -8,24 +8,24 @@ import mongoose from "mongoose";
 export default async function populateMockDatabase() {
   const mockUsers: UserInterface[] = [
     {
-      email: "george@clooney.com",
-      firstName: "George",
-      lastName: "Clooney",
+      email: "steve@rogers.com",
+      firstName: "Steve",
+      lastName: "Rogers",
     },
     {
-      email: "emma@stone.com",
-      firstName: "Emma",
-      lastName: "Stone",
+      email: "tony@stark.com",
+      firstName: "Tony",
+      lastName: "Stark",
     },
     {
-      email: "brad@pitt.com",
-      firstName: "Brad",
-      lastName: "Pitt",
+      email: "peter@parker.com",
+      firstName: "Peter",
+      lastName: "Parker",
     },
     {
-      email: "angelina@jolie.com",
-      firstName: "Angelina",
-      lastName: "Jolie",
+      email: "bruce@banner.com",
+      firstName: "Bruce",
+      lastName: "Banner",
     },
   ];
 
@@ -37,35 +37,35 @@ export default async function populateMockDatabase() {
   const mockPosts: PostInterface[] = [
     {
       author: mockUserIds[0],
-      content: "george - 1",
+      content: "steve - 1",
       comments: [],
     },
     {
       author: mockUserIds[0],
-      content: "george - 2",
+      content: "steve - 2",
       comments: [],
     },
     {
       author: mockUserIds[0],
-      content: "george - 3",
+      content: "steve - 3",
       comments: [],
     },
     {
       author: mockUserIds[0],
-      content: "george - 4",
+      content: "steve - 4",
       comments: [],
     },
   ];
 
   await Post.insertMany(mockPosts);
 
-  // make george and emma friends
-  const george = await User.findById(mockUserIds[0]);
-  const emma = await User.findById(mockUserIds[1]);
-  emma?.friends?.push(mockUserIds[0]);
-  george?.friends?.push(mockUserIds[1]);
-  emma?.save();
-  george?.save();
+  // make steve and tony friends
+  const steve = await User.findById(mockUserIds[0]);
+  const tony = await User.findById(mockUserIds[1]);
+  steve?.friends?.push(mockUserIds[1]);
+  tony?.friends?.push(mockUserIds[0]);
+  steve?.save();
+  tony?.save();
 
   return mockUserIds;
 }

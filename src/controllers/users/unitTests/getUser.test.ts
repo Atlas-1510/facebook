@@ -39,9 +39,9 @@ describe("given valid input", () => {
     expect(response.statusCode).toBe(200);
     expect(response.body).toEqual(
       expect.objectContaining({
-        email: "george@clooney.com",
-        firstName: "George",
-        lastName: "Clooney",
+        email: "steve@rogers.com",
+        firstName: "Steve",
+        lastName: "Rogers",
       })
     );
   });

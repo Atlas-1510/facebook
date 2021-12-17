@@ -1,7 +1,7 @@
 import request from "supertest";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
-import loadMockUsers from "./loadMockUsers";
+import populateMockDatabase from "../../utils/populateMockDatabase";
 import expectErrorCode from "../../utils/expectErrorCode";
 import app from "../../app/app";
 
@@ -14,7 +14,7 @@ describe("/api/users", () => {
   });
   beforeEach(async () => {
     mongoose.connection.dropDatabase();
-    mockUserIds = await loadMockUsers();
+    mockUserIds = await populateMockDatabase();
   });
   afterAll(async () => {
     if (mongoose.connection.db) {
@@ -101,14 +101,13 @@ describe("/api/users", () => {
               expect(response.headers["content-type"]).toEqual(
                 expect.stringContaining("json")
               );
-              expect(response.body).toEqual({
-                _id: `${mockUserIds[0]}`,
-                email: "steve@rogers.com",
-                firstName: "Steve",
-                lastName: "Rogers",
-                friends: [],
-                __v: 0,
-              });
+              expect(response.body).toEqual(
+                expect.objectContaining({
+                  email: "steve@rogers.com",
+                  firstName: "Steve",
+                  lastName: "Rogers",
+                })
+              );
             });
           });
           describe("if user does not exist in database", () => {
@@ -140,25 +139,19 @@ describe("/api/users", () => {
         });
         describe("given a valid uid", () => {
           test("updates and returns user document if uid is found", async () => {
+            const newUserData = {
+              email: "sam@wilson.com",
+              firstName: "Sam",
+              lastName: "Wilson",
+            };
             const response = await agent
               .put(`/api/users/${mockUserIds[0]}`)
-              .send({
-                email: "sam@wilson.com",
-                firstName: "Sam",
-                lastName: "Wilson",
-              });
+              .send(newUserData);
             expect(response.statusCode).toBe(200);
             expect(response.headers["content-type"]).toEqual(
               expect.stringContaining("json")
             );
-            expect(response.body).toEqual({
-              _id: `${mockUserIds[0]}`,
-              email: "sam@wilson.com",
-              firstName: "Sam",
-              lastName: "Wilson",
-              friends: [],
-              __v: 0,
-            });
+            expect(response.body).toEqual(expect.objectContaining(newUserData));
           });
         });
       });
