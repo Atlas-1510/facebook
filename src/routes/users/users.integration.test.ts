@@ -1,19 +1,20 @@
 import request from "supertest";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
-import loadTestUsers from "../../utils/loadTestUsers";
+import loadMockUsers from "./loadMockUsers";
 import expectErrorCode from "../../utils/expectErrorCode";
 import app from "../../app/app";
 
 describe("/api/users", () => {
   let mongoServer: MongoMemoryServer;
-  let testUserIds: string[];
+  let mockUserIds: string[];
   beforeAll(async () => {
     mongoServer = await MongoMemoryServer.create();
     await mongoose.connect(mongoServer.getUri());
   });
   beforeEach(async () => {
-    testUserIds = await loadTestUsers();
+    mongoose.connection.dropDatabase();
+    mockUserIds = await loadMockUsers();
   });
   afterAll(async () => {
     if (mongoose.connection.db) {
@@ -95,13 +96,13 @@ describe("/api/users", () => {
         describe("given a valid uid", () => {
           describe("if user exists in database", () => {
             test("should respond with a json object containing user information", async () => {
-              const response = await agent.get(`/api/users/${testUserIds[0]}`);
+              const response = await agent.get(`/api/users/${mockUserIds[0]}`);
               expect(response.statusCode).toBe(200);
               expect(response.headers["content-type"]).toEqual(
                 expect.stringContaining("json")
               );
               expect(response.body).toEqual({
-                _id: `${testUserIds[0]}`,
+                _id: `${mockUserIds[0]}`,
                 email: "steve@rogers.com",
                 firstName: "Steve",
                 lastName: "Rogers",
@@ -140,7 +141,7 @@ describe("/api/users", () => {
         describe("given a valid uid", () => {
           test("updates and returns user document if uid is found", async () => {
             const response = await agent
-              .put(`/api/users/${testUserIds[0]}`)
+              .put(`/api/users/${mockUserIds[0]}`)
               .send({
                 email: "sam@wilson.com",
                 firstName: "Sam",
@@ -151,7 +152,7 @@ describe("/api/users", () => {
               expect.stringContaining("json")
             );
             expect(response.body).toEqual({
-              _id: `${testUserIds[0]}`,
+              _id: `${mockUserIds[0]}`,
               email: "sam@wilson.com",
               firstName: "Sam",
               lastName: "Wilson",
