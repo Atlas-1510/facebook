@@ -1,11 +1,21 @@
 import mongoose, { Date, Schema } from "mongoose";
 import { CommentSchema } from "./Comment";
 
-const PostSchema = new Schema({
-  author: { type: Schema.Types.ObjectId, required: true },
-  createdAt: { type: Schema.Types.Date, required: true },
-  content: { type: String, required: true },
-  comments: [CommentSchema],
-});
+export interface PostInterface {
+  author: Schema.Types.ObjectId | string;
+  content: string;
+  comments: typeof CommentSchema[];
+}
+
+const PostSchema = new Schema<PostInterface>(
+  {
+    author: { type: Schema.Types.ObjectId, required: true },
+    content: { type: String, required: true },
+    comments: [CommentSchema],
+  },
+  {
+    timestamps: true,
+  }
+);
 
 export default mongoose.model("Post", PostSchema);
