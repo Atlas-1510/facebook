@@ -13,6 +13,7 @@ jest.mock("../../models/User");
 describe("postsController", () => {
   let req: any, res: any, next: any;
   beforeAll(() => {
+    // userQueryBuilder and postQueryBuilder are mocks of how the mongoose 'Model.find()' query system works.
     // Note: generating userQueryBuilder and postQueryBuilder via a factory function to prevent repetition
     // leads to unexplainable bugs. Easier to keep seperate like this.
     const userQueryBuilder: any = {
@@ -96,19 +97,24 @@ describe("postsController", () => {
 
     describe("if valid uid ", () => {
       test("looks up user friends, and returns relevant posts", async () => {
-        const mockFriends = ["friend1", "friend2"];
+        const user = {
+          friends: ["friend1", "friend2"],
+        };
         const mockPosts = ["post 1", "post 2"];
         const testUID = new mongoose.Types.ObjectId();
         req = getMockReq({ params: { uid: testUID } });
         //@ts-ignore
-        User.find().select().exec.mockReturnValue(mockFriends);
+        User.find().select().exec.mockReturnValue(user);
         //@ts-ignore
         Post.find().where().in().exec.mockReturnValue(mockPosts);
         await getNewsfeedPosts(req, res, next);
         //@ts-ignore
-        expect(User.find).toHaveBeenCalledWith(testUID);
+        expect(User.findById).toHaveBeenCalledWith(testUID);
         //@ts-ignore
-        expect(Post.find().where().in).toHaveBeenCalledWith(mockFriends);
+        expect(Post.find().where().in).toHaveBeenCalledWith([
+          "friend1",
+          "friend2",
+        ]);
         expect(res.send).toHaveBeenCalledWith(mockPosts);
       });
     });

@@ -6,7 +6,7 @@ import createHttpError from "http-errors";
 import request from "supertest";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
-import loadTestUsers from "../../utils/loadTestUsers";
+import loadMockUsers from "../users/loadMockUsers";
 
 const app = express();
 app.use(express.urlencoded({ extended: false }));
@@ -24,7 +24,7 @@ describe("/login", () => {
     await mongoose.connect(mongoServer.getUri());
   });
   beforeEach(async () => {
-    testUserIds = await loadTestUsers();
+    testUserIds = await loadMockUsers();
   });
   afterAll(async () => {
     if (mongoose.connection.db) {
