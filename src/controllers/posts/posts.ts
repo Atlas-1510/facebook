@@ -2,21 +2,60 @@ import createHttpError from "http-errors";
 import Post from "../../models/Post";
 import User from "../../models/User";
 import { isValidObjectId } from "mongoose";
+import { param, validationResult } from "express-validator";
+import express from "express";
 
-const getNewsfeedPosts = async (req: any, res: any, next: any) => {
-  try {
-    const { uid } = req.params;
-    if (!isValidObjectId(uid)) {
-      const err = createHttpError(400, "Provided UID is invalid");
-      throw err;
+const getNewsfeedPosts = [
+  param("uid", "Must provide a valid uid")
+    .exists()
+    .custom((uid) => isValidObjectId(uid)),
+  (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    } else {
+      next();
     }
-    const friends = await User.find(uid).select("friends").exec();
-    const results = await Post.find().where("author").in(friends).exec();
-    return res.send(results);
-  } catch (err: any) {
-    return next(err);
-  }
-};
+  },
+  // async (req: any, res: any, next: any) => {
+  //   try {
+  //     const { uid } = req.params;
+
+  //     if (!isValidObjectId(uid)) {
+  //       const err = createHttpError(400, "Provided UID is invalid");
+  //       throw err;
+  //     }
+
+  //     const user = await User.findById(uid).select("friends").exec();
+  //     console.log(user);
+  //     const results = await Post.find()
+  //       .where("author")
+  //       .in(user!.friends!)
+  //       .exec();
+  //     return res.send(results);
+  //   } catch (err: any) {
+  //     return next(err);
+  //   }
+  // },
+];
+
+// const getNewsfeedPosts = async (req: any, res: any, next: any) => {
+//   try {
+//     const { uid } = req.params;
+
+//     if (!isValidObjectId(uid)) {
+//       const err = createHttpError(400, "Provided UID is invalid");
+//       throw err;
+//     }
+
+//     const user = await User.findById(uid).select("friends").exec();
+//     console.log(user);
+//     const results = await Post.find().where("author").in(user!.friends!).exec();
+//     return res.send(results);
+//   } catch (err: any) {
+//     return next(err);
+//   }
+// };
 
 const getPost = async (req: any, res: any, next: any) => {
   try {
