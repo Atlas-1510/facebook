@@ -5,6 +5,11 @@ import populateMockDatabase from "../../utils/populateMockDatabase";
 import expectErrorCode from "../../utils/expectErrorCode";
 import app from "../../app/app";
 
+// What am I testing here?
+// user controller methods already covered
+// authentication? Don't need to test that.
+// this seems like a duplicate, don't need to redo for other API routes.
+
 describe("/api/users", () => {
   let mongoServer: MongoMemoryServer;
   let mockUserIds: string[];
