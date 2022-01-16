@@ -45,12 +45,12 @@ describe("given valid input", () => {
       })
     );
   });
-  describe("if user does not exist in database", () => {
-    const nonExistingUserDocId = new mongoose.Types.ObjectId();
-    test("returns 200 status code and warns user not found", async () => {
-      const response = await request(app).get(`/${nonExistingUserDocId}`);
-      expect(response.statusCode).toBe(404);
-      expect(response.body.message).toBe("User not found in database");
-    });
+});
+describe("if user does not exist in database", () => {
+  const nonExistingUserDocId = new mongoose.Types.ObjectId();
+  test("returns 200 status code and warns user not found", async () => {
+    const response = await request(app).get(`/${nonExistingUserDocId}`);
+    expect(response.statusCode).toBe(404);
+    expect(response.body.message).toBe("User not found in database");
   });
 });
