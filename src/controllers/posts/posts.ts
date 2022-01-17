@@ -31,19 +31,35 @@ const getNewsfeedPosts = [
   },
 ];
 
-const getPost = async (req: any, res: any, next: any) => {
-  try {
-    const { pid } = req.params;
-    if (!pid || !isValidObjectId(pid)) {
-      const err = createHttpError(400, "Please provide a valid post ID");
-      throw err;
+const getPost = [
+  param("pid", "A valid PID must be provided")
+    .exists()
+    .custom((pid) => isValidObjectId(pid)),
+  (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    } else {
+      return next();
     }
-    const post = await Post.findById(pid);
-    return res.send(post);
-  } catch (err) {
-    return next(err);
-  }
-};
+  },
+  async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    try {
+      const { pid } = req.params;
+      const post = await Post.findById(pid);
+      if (post === null) {
+        return res.sendStatus(404);
+      }
+      return res.send(post);
+    } catch (err) {
+      return next(err);
+    }
+  },
+];
 
 const editPost = async (req: any, res: any, next: any) => {
   try {
