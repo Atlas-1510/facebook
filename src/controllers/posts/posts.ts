@@ -1,5 +1,5 @@
 import createHttpError from "http-errors";
-import Post from "../../models/Post";
+import Post, { PostInterface } from "../../models/Post";
 import User from "../../models/User";
 import { isValidObjectId } from "mongoose";
 import { param, validationResult } from "express-validator";
@@ -61,25 +61,40 @@ const getPost = [
   },
 ];
 
-const editPost = async (req: any, res: any, next: any) => {
-  try {
-    const { pid } = req.params;
-    if (!pid || !isValidObjectId(pid)) {
-      const err = createHttpError(400, "Please provide a valid post ID");
-      throw err;
+const editPost = [
+  param("pid", "A valid PID must be provided")
+    .exists()
+    .custom((pid) => isValidObjectId(pid)),
+  (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    } else {
+      return next();
     }
-    const updates: any = {};
-    const postFields = Object.keys(Post.schema.paths);
-    postFields.map((field) => {
-      if (field in req.body) {
-        updates[field] = req.body[field];
+  },
+  async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    try {
+      const { pid } = req.params;
+      const post = await Post.findById(pid);
+      if (!post) {
+        return res.sendStatus(404);
       }
-    });
-    const doc = await Post.findByIdAndUpdate(pid, updates);
-    return res.send(doc);
-  } catch (err) {
-    return next(err);
-  }
-};
+      Object.keys(req.body).forEach((key) => {
+        post[key as keyof PostInterface] = req.body[key];
+      });
+
+      const updatedDocument = await post.save();
+
+      return res.send(updatedDocument);
+    } catch (err) {
+      return next(err);
+    }
+  },
+];
 
 export { getNewsfeedPosts, getPost, editPost };
