@@ -1,7 +1,6 @@
-import User from "../../models/User";
+import User, { UserInterface } from "../../models/User";
 import { isValidObjectId } from "mongoose";
 import createHttpError from "http-errors";
-import { UserInterface } from "../../models/User";
 import { body, param, validationResult } from "express-validator";
 import express from "express";
 
