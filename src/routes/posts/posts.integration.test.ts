@@ -7,6 +7,7 @@ import app from "../../app/app";
 describe("/api/posts", () => {
   let mongoServer: MongoMemoryServer;
   let mockUserIds: string[];
+  let mockPostIds: string[];
   let agent: any;
   agent = request.agent(app);
   beforeAll(async () => {
@@ -15,7 +16,7 @@ describe("/api/posts", () => {
   });
   beforeEach(async () => {
     mongoose.connection.dropDatabase();
-    ({ mockUserIds } = await populateMockDatabase());
+    ({ mockUserIds, mockPostIds } = await populateMockDatabase());
   });
   afterAll(async () => {
     if (mongoose.connection.db) {
@@ -56,6 +57,55 @@ describe("/api/posts", () => {
               content: "1st post by Peter",
             })
           );
+        });
+      });
+    });
+  });
+  describe("/:pid", () => {
+    describe("if not logged in", () => {
+      describe("GET", () => {
+        test("asks client to login and retry", async () => {
+          const response = await agent.get(`/api/posts/${mockPostIds[0]}`);
+          expect(response.body).toMatchObject({
+            message: "Please login to view this",
+          });
+        });
+      });
+    });
+    describe("if logged in", () => {
+      beforeEach(async () => {
+        await agent
+          .post("/login")
+          .send({
+            email: "steve@rogers.com",
+            password: 12345,
+          })
+          .type("form");
+      });
+      describe("GET", () => {
+        describe("if invalid pid", () => {
+          test("returns 400 error", async () => {
+            const response = await agent.get("/api/posts/INVALID_PID");
+            expect(response.body.errors.length).toBe(1);
+            expect(response.statusCode).toBe(400);
+          });
+        });
+        describe("if valid pid", () => {
+          test("returns post", async () => {
+            const response = await agent.get(`/api/posts/${mockPostIds[0]}`);
+            expect(response.body).toMatchObject({
+              content: "1st post by Steve",
+            });
+          });
+        });
+        describe("if valid pid but post does not exist", () => {
+          test("returns 404 error", async () => {
+            const idOfNonExistantPost = new mongoose.Types.ObjectId();
+            const response = await agent.get(
+              `/api/posts/${idOfNonExistantPost}`
+            );
+            expect(response.statusCode).toBe(404);
+          });
         });
       });
     });

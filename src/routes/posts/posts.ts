@@ -10,7 +10,7 @@ const router = Router();
 
 router.get("/newsfeed", ensureAuthenticated, getNewsfeedPosts);
 
-router.get("/:pid", getPost);
+router.get("/:pid", ensureAuthenticated, getPost);
 
 router.put("/:pid", editPost);
 
