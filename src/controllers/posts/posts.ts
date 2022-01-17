@@ -17,45 +17,19 @@ const getNewsfeedPosts = [
       next();
     }
   },
-  // async (req: any, res: any, next: any) => {
-  //   try {
-  //     const { uid } = req.params;
-
-  //     if (!isValidObjectId(uid)) {
-  //       const err = createHttpError(400, "Provided UID is invalid");
-  //       throw err;
-  //     }
-
-  //     const user = await User.findById(uid).select("friends").exec();
-  //     console.log(user);
-  //     const results = await Post.find()
-  //       .where("author")
-  //       .in(user!.friends!)
-  //       .exec();
-  //     return res.send(results);
-  //   } catch (err: any) {
-  //     return next(err);
-  //   }
-  // },
+  async (req: any, res: any, next: any) => {
+    try {
+      const { uid } = req.params;
+      const user = await User.findById(uid).exec();
+      const results = await Post.find({
+        author: { $in: [...user!.friends!, uid] },
+      }).exec();
+      return res.send(results);
+    } catch (err: any) {
+      return next(err);
+    }
+  },
 ];
-
-// const getNewsfeedPosts = async (req: any, res: any, next: any) => {
-//   try {
-//     const { uid } = req.params;
-
-//     if (!isValidObjectId(uid)) {
-//       const err = createHttpError(400, "Provided UID is invalid");
-//       throw err;
-//     }
-
-//     const user = await User.findById(uid).select("friends").exec();
-//     console.log(user);
-//     const results = await Post.find().where("author").in(user!.friends!).exec();
-//     return res.send(results);
-//   } catch (err: any) {
-//     return next(err);
-//   }
-// };
 
 const getPost = async (req: any, res: any, next: any) => {
   try {

@@ -34,3 +34,16 @@ describe("if invalid uid", () => {
     expect(response.statusCode).toBe(400);
   });
 });
+
+describe("if valid uid", () => {
+  test("returns only own posts and posts by friends", async () => {
+    const response = await request(app).get(`/newsfeed/${mockUserIds[0]}`);
+    expect(response.body.length).toBe(3);
+    // Steve and Peter are not friends (see populateMockDatabase)
+    expect(response.body).not.toContainEqual(
+      expect.objectContaining({
+        content: "1st post by Peter",
+      })
+    );
+  });
+});

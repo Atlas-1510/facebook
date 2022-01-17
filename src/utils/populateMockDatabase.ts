@@ -37,22 +37,22 @@ export default async function populateMockDatabase() {
   const mockPosts: PostInterface[] = [
     {
       author: mockUserIds[0],
-      content: "steve - 1",
+      content: "1st post by Steve",
+      comments: [],
+    },
+    {
+      author: mockUserIds[1],
+      content: "1st post by Tony",
       comments: [],
     },
     {
       author: mockUserIds[0],
-      content: "steve - 2",
+      content: "2nd post by Steve",
       comments: [],
     },
     {
-      author: mockUserIds[0],
-      content: "steve - 3",
-      comments: [],
-    },
-    {
-      author: mockUserIds[0],
-      content: "steve - 4",
+      author: mockUserIds[2],
+      content: "1st post by Peter",
       comments: [],
     },
   ];
