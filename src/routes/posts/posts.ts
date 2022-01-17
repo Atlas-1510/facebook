@@ -12,6 +12,6 @@ router.get("/newsfeed", ensureAuthenticated, getNewsfeedPosts);
 
 router.get("/:pid", ensureAuthenticated, getPost);
 
-router.put("/:pid", editPost);
+router.put("/:pid", ensureAuthenticated, editPost);
 
 export default router;

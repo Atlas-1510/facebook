@@ -71,6 +71,20 @@ describe("/api/posts", () => {
           });
         });
       });
+      describe("PUT", () => {
+        test("asks client to login and retry", async () => {
+          const newPostData = {
+            content: "This is the newly updated post content",
+          };
+
+          const response = await agent
+            .put(`/api/posts/${mockPostIds[0]}`)
+            .send(newPostData);
+          expect(response.body).toMatchObject({
+            message: "Please login to view this",
+          });
+        });
+      });
     });
     describe("if logged in", () => {
       beforeEach(async () => {
@@ -105,6 +119,33 @@ describe("/api/posts", () => {
               `/api/posts/${idOfNonExistantPost}`
             );
             expect(response.statusCode).toBe(404);
+          });
+        });
+      });
+      describe("PUT", () => {
+        describe("if invalid pid", () => {
+          test("returns 400 error", async () => {
+            const newPostData = {
+              content: "This is the newly updated post content",
+            };
+            const response = await agent
+              .put("/api/posts/INVALID_PID")
+              .send(newPostData);
+            expect(response.body.errors.length).toBe(1);
+            expect(response.statusCode).toBe(400);
+          });
+        });
+        describe("if valid pid", () => {
+          test("returns updated post", async () => {
+            const newPostData = {
+              content: "This is the newly updated post content",
+            };
+
+            const response = await agent
+              .put(`/api/posts/${mockPostIds[0]}`)
+              .send(newPostData);
+            expect(response.statusCode).toBe(200);
+            expect(response.body).toEqual(expect.objectContaining(newPostData));
           });
         });
       });
