@@ -5,31 +5,21 @@ import { isValidObjectId } from "mongoose";
 import { param, validationResult } from "express-validator";
 import express from "express";
 
-const getNewsfeedPosts = [
-  param("uid", "Must provide a valid uid")
-    .exists()
-    .custom((uid) => isValidObjectId(uid)),
-  (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    } else {
-      next();
-    }
-  },
-  async (req: any, res: any, next: any) => {
-    try {
-      const { uid } = req.params;
-      const user = await User.findById(uid).exec();
+const getNewsfeedPosts = async (req: any, res: any, next: any) => {
+  try {
+    if (req.user) {
+      const user = req.user;
       const results = await Post.find({
-        author: { $in: [...user!.friends!, uid] },
+        author: { $in: [...user!.friends!, user._id] },
       }).exec();
       return res.send(results);
-    } catch (err: any) {
-      return next(err);
+    } else {
+      throw new Error("req.user is not defined in getNewsfeedPosts");
     }
-  },
-];
+  } catch (err: any) {
+    return next(err);
+  }
+};
 
 const getPost = [
   param("pid", "A valid PID must be provided")
