@@ -46,7 +46,6 @@ describe("if valid pid", () => {
       .put(`/${mockPostIds[0]}`)
       .send(newPostData);
     expect(response.statusCode).toBe(200);
-    console.log(response.body);
     expect(response.body).toEqual(expect.objectContaining(newPostData));
   });
 });
