@@ -1,6 +1,5 @@
 import User, { UserInterface } from "../models/User";
 import Post, { PostInterface } from "../models/Post";
-import mongoose from "mongoose";
 
 // This function populates mongodb-memory-server for testing.
 // Note: Database should be dropped in a beforeEach() in test file before calling this function.
@@ -59,6 +58,9 @@ export default async function populateMockDatabase() {
 
   await Post.insertMany(mockPosts);
 
+  const posts = await Post.find({});
+  const mockPostIds: string[] = posts.map((objId) => objId.id);
+
   // make steve and tony friends
   const steve = await User.findById(mockUserIds[0]);
   const tony = await User.findById(mockUserIds[1]);
@@ -67,5 +69,5 @@ export default async function populateMockDatabase() {
   steve?.save();
   tony?.save();
 
-  return mockUserIds;
+  return { mockUserIds, mockPostIds };
 }

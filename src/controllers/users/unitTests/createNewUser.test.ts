@@ -16,7 +16,7 @@ beforeAll(async () => {
 });
 beforeEach(async () => {
   mongoose.connection.dropDatabase();
-  mockUserIds = await populateMockDatabase();
+  ({ mockUserIds } = await populateMockDatabase());
 });
 afterAll(async () => {
   if (mongoose.connection.db) {
