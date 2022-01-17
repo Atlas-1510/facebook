@@ -4,7 +4,6 @@ import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
 import populateMockDatabase from "../../../utils/populateMockDatabase";
 import generateTestApp from "../../../utils/generateTestApp";
-import Post from "../../../models/Post";
 
 const app = generateTestApp("get", "/newsfeed/:uid", getNewsfeedPosts);
 
