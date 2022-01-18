@@ -3,9 +3,7 @@ import createHttpError from "http-errors";
 const debug = require("debug")("facebook:controllers:authentication");
 
 const tryLogin = (req: any, res: any, next: any) => {
-  debug("tryLogin request recieved");
   passport.authenticate("local", function (err, user, info) {
-    debug(user);
     req.logIn(user, function (err: any) {
       if (err) {
         return next(err);
@@ -16,7 +14,6 @@ const tryLogin = (req: any, res: any, next: any) => {
 };
 
 const ensureAuthenticated = (req: any, res: any, next: any) => {
-  debug("ensureAuthenticated request recieved");
   if (req.isAuthenticated()) {
     return next();
   } else {

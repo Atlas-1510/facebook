@@ -4,7 +4,7 @@
   "description": "A facebook clone that I created as the final assignment for The Odin Project nodejs course.",
   "main": "index.js",
   "scripts": {
-    "test": "jest --watch",
+    "test": "DEBUG=facebook:* DEBUG_HIDE_DATE=yes jest --watch",
     "start": "DEBUG=facebook:* nodemon ./src/server.ts"
   },
   "author": "Jason Aravanis (https://github.com/Atlas-1510)",
@@ -18,6 +18,7 @@
     "@types/jest": "^27.0.3",
     "@types/node": "^16.11.11",
     "@types/passport": "^1.0.7",
+    "@types/superagent": "^4.1.14",
     "@types/supertest": "^2.0.11",
     "jest": "^27.4.3",
     "mongodb-memory-server": "^8.0.4",

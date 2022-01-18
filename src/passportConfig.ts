@@ -9,9 +9,6 @@ export default function (passport: any) {
         usernameField: "email",
       },
       async (email: any, password: any, done: any) => {
-        debug("inside passport localstrategy");
-        debug(`email: ${email}`);
-        debug(`password: ${password}`);
         try {
           const user = await User.findOne({ email: email });
           if (!user) {
