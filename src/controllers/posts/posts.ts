@@ -3,7 +3,7 @@ import Post, { PostInterface } from "../../models/Post";
 import Comment, { CommentInterface } from "../../models/Comment";
 import User from "../../models/User";
 import { isValidObjectId } from "mongoose";
-import { checkSchema, param, validationResult } from "express-validator";
+import { body, param, validationResult } from "express-validator";
 import express from "express";
 import { HydratedDocument } from "mongoose";
 const debug = require("debug")("facebook:controllers/posts");
@@ -54,6 +54,38 @@ const getPost = [
   },
 ];
 
+const createPost = [
+  body("author").isMongoId(),
+  body("content").isString(),
+  (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    } else {
+      next();
+    }
+  },
+  async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    try {
+      const post: HydratedDocument<PostInterface> = new Post({
+        author: req.body.author,
+        content: req.body.content,
+        comments: [],
+      });
+
+      post.save();
+      res.status(201);
+      return res.send(post);
+    } catch (err) {
+      next(err);
+    }
+  },
+];
+
 const editPost = [
   param("pid", "A valid PID must be provided")
     .exists()
@@ -91,23 +123,9 @@ const editPost = [
 ];
 
 const addComment = [
-  (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    checkSchema({
-      pid: {
-        in: ["params"],
-        isMongoId: true,
-      },
-      author: {
-        in: ["body"],
-        isMongoId: true,
-      },
-      content: {
-        in: ["body"],
-        isString: true,
-      },
-    });
-    next();
-  },
+  param("pid").isMongoId(),
+  body("author").isMongoId(),
+  body("content").isString(),
   (req: express.Request, res: express.Response, next: express.NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -141,4 +159,4 @@ const addComment = [
   },
 ];
 
-export { getNewsfeedPosts, getPost, editPost, addComment };
+export { getNewsfeedPosts, getPost, createPost, editPost, addComment };

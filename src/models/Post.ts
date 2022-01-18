@@ -18,4 +18,6 @@ const PostSchema = new Schema<PostInterface>(
   }
 );
 
-export default mongoose.model("Post", PostSchema);
+const PostModel = mongoose.model<PostInterface>("Post", PostSchema);
+
+export default PostModel;

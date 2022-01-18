@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import populateMockDatabase from "../../utils/populateMockDatabase";
 import app from "../../app/app";
 import Comment, { CommentInterface } from "../../models/Comment";
+import { PostInterface } from "../../models/Post";
 
 describe("/api/posts", () => {
   let mongoServer: MongoMemoryServer;
@@ -26,6 +27,59 @@ describe("/api/posts", () => {
       await mongoServer.stop();
     }
   });
+
+  describe("if not logged in", () => {
+    describe("POST", () => {
+      test("asks client to login and retry", async () => {
+        const response = await agent.get("/api/posts/newsfeed");
+        expect(response.body).toMatchObject({
+          message: "Please login to view this",
+        });
+      });
+    });
+  });
+  describe("if logged in", () => {
+    beforeEach(async () => {
+      await agent
+        .post("/login")
+        .send({
+          email: "steve@rogers.com",
+          password: 12345,
+        })
+        .type("form");
+    });
+    describe("POST", () => {
+      describe("given valid input", () => {
+        test("Returns newly created post", async () => {
+          const post: PostInterface = {
+            author: mockUserIds[0],
+            content: "This is some post content",
+            comments: [],
+          };
+          const response = await agent.post("/api/posts").send(post);
+          expect(response.body).toMatchObject({
+            content: "This is some post content",
+            comments: [],
+          });
+        });
+      });
+      describe("given invalid input", () => {
+        test("returns 400 error", async () => {
+          const post = {
+            author: mockUserIds[0],
+            content: null, // must be a string
+            comments: [],
+          };
+          const response = await agent.post("/api/posts").send(post);
+          expect(response.statusCode).toBe(400);
+          expect(response.body.errors).toContainEqual(
+            expect.objectContaining({ msg: "Invalid value" })
+          );
+        });
+      });
+    });
+  });
+
   describe("/newsfeed", () => {
     describe("if not logged in", () => {
       describe("GET", () => {

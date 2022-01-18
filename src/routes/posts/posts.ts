@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  createPost,
   editPost,
   getNewsfeedPosts,
   getPost,
@@ -12,6 +13,8 @@ const router = Router();
 router.get("/newsfeed", ensureAuthenticated, getNewsfeedPosts);
 
 router.get("/:pid", ensureAuthenticated, getPost);
+
+router.post("/", ensureAuthenticated, createPost);
 
 router.put("/:pid", ensureAuthenticated, editPost);
 
