@@ -68,6 +68,35 @@ describe("/api/users", () => {
           expect(response.body.firstName).toBe("Wanda");
         });
       });
+      describe("given invalid input for a new user", () => {
+        test("missing email - throws error", async () => {
+          const response = await agent.post("/api/users").send({
+            // email: "wanda@maximoff.com",
+            firstName: "Wanda",
+            lastName: "Maximoff",
+          });
+          expect(response.body.errors.length).toBe(1);
+          expect(response.statusCode).toBe(400);
+        });
+        test("missing firstName - throws error", async () => {
+          const response = await agent.post("/api/users").send({
+            email: "wanda@maximoff.com",
+            // firstName: "Wanda",
+            lastName: "Maximoff",
+          });
+          expect(response.body.errors.length).toBe(1);
+          expect(response.statusCode).toBe(400);
+        });
+        test("missing lastName - throws error", async () => {
+          const response = await agent.post("/api/users").send({
+            email: "wanda@maximoff.com",
+            firstName: "Wanda",
+            // lastName: "Maximoff",
+          });
+          expect(response.body.errors.length).toBe(1);
+          expect(response.statusCode).toBe(400);
+        });
+      });
     });
     describe("PUT", () => {
       expectErrorCode(
@@ -117,6 +146,7 @@ describe("/api/users", () => {
                 `/api/users/${nonExistingUserDocId}`
               );
               expect(response.statusCode).toBe(404);
+              expect(response.body.message).toBe("User not found in database");
             });
           });
         });
@@ -152,6 +182,16 @@ describe("/api/users", () => {
               expect.stringContaining("json")
             );
             expect(response.body).toEqual(expect.objectContaining(newUserData));
+          });
+          describe("if user does not exist in database", () => {
+            const nonExistingUserDocId = new mongoose.Types.ObjectId();
+            test("returns 200 status code and warns user not found", async () => {
+              const response = await agent.put(
+                `/api/users/${nonExistingUserDocId}`
+              );
+              expect(response.statusCode).toBe(404);
+              expect(response.body.message).toBe("User not found in database");
+            });
           });
         });
       });
