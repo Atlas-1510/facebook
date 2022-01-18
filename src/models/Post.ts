@@ -1,10 +1,10 @@
 import mongoose, { Date, Schema } from "mongoose";
-import { CommentSchema } from "./Comment";
+import { CommentInterface, CommentSchema } from "./Comment";
 
 export interface PostInterface {
   author: Schema.Types.ObjectId | string;
   content: string;
-  comments: typeof CommentSchema[];
+  comments: CommentInterface[];
 }
 
 const PostSchema = new Schema<PostInterface>(

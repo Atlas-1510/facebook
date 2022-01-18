@@ -1,15 +1,15 @@
-import request, { agent } from "supertest";
+import request, { agent, SuperAgentTest } from "supertest";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
 import populateMockDatabase from "../../utils/populateMockDatabase";
 import app from "../../app/app";
+import Comment, { CommentInterface } from "../../models/Comment";
 
 describe("/api/posts", () => {
   let mongoServer: MongoMemoryServer;
   let mockUserIds: string[];
   let mockPostIds: string[];
-  let agent: any;
-  agent = request.agent(app);
+  let agent: SuperAgentTest = request.agent(app);
   beforeAll(async () => {
     mongoServer = await MongoMemoryServer.create();
     await mongoose.connect(mongoServer.getUri());
@@ -146,6 +146,39 @@ describe("/api/posts", () => {
               .send(newPostData);
             expect(response.statusCode).toBe(200);
             expect(response.body).toEqual(expect.objectContaining(newPostData));
+          });
+        });
+      });
+    });
+  });
+  describe("/:pid/comments", () => {
+    describe("if logged in", () => {
+      beforeEach(async () => {
+        await agent
+          .post("/login")
+          .send({
+            email: "steve@rogers.com",
+            password: 12345,
+          })
+          .type("form");
+      });
+      describe("POST", () => {
+        describe("given valid pid and comment content", () => {
+          test("Returns post with added comment", async () => {
+            const newComment = {
+              author: mockUserIds[0],
+              content: "This is some comment content",
+            };
+            const response = await agent
+              .post(`/api/posts/${mockPostIds[0]}/comments`)
+              .send(newComment);
+            expect(response.body.comments).toEqual(
+              expect.arrayContaining([
+                expect.objectContaining({
+                  content: "This is some comment content",
+                }),
+              ])
+            );
           });
         });
       });
