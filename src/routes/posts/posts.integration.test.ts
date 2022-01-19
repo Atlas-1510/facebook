@@ -205,6 +205,25 @@ describe("/api/posts", () => {
           });
         });
       });
+      describe("DELETE", () => {
+        describe("if client is post author", () => {
+          test("deletes post and returns confirmation", async () => {
+            const response = await agent.delete(`/api/posts/${mockPostIds[0]}`);
+            expect(response.statusCode).toBe(200);
+            expect(response.body).toMatchObject(
+              expect.objectContaining({
+                message: "Post has been deleted",
+              })
+            );
+          });
+        });
+        describe("if client is not post author", () => {
+          test("returns 403 error", async () => {
+            const response = await agent.delete(`/api/posts/${mockPostIds[1]}`);
+            expect(response.statusCode).toBe(403);
+          });
+        });
+      });
     });
   });
   describe("/:pid/comments", () => {

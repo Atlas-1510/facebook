@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   createPost,
   editPost,
+  deletePost,
   getNewsfeedPosts,
   getPost,
   addComment,
@@ -18,6 +19,8 @@ router.get("/:pid", ensureAuthenticated, getPost);
 router.post("/", ensureAuthenticated, createPost);
 
 router.put("/:pid", ensureAuthenticated, editPost);
+
+router.delete("/:pid", ensureAuthenticated, deletePost);
 
 router.post("/:pid/comments", ensureAuthenticated, addComment);
 

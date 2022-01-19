@@ -1,4 +1,3 @@
-import createHttpError from "http-errors";
 import Post, { PostInterface } from "../../models/Post";
 import Comment, { CommentInterface } from "../../models/Comment";
 import { isValidObjectId, Mongoose } from "mongoose";
@@ -103,6 +102,28 @@ const editPost = [
   },
 ];
 
+const deletePost = [
+  param("pid", "Please provide a valid pid.").isMongoId(),
+  processValidation,
+  async (req: any, res: express.Response, next: express.NextFunction) => {
+    try {
+      const post = await Post.findById(req.params.pid);
+      if (!req.user._id.equals(post?.author)) {
+        return res.status(403).json({
+          error: "Only the author can delete this content.",
+        });
+      }
+      await post?.delete();
+
+      return res.status(200).json({
+        message: "Post has been deleted",
+      });
+    } catch (err) {
+      return next(err);
+    }
+  },
+];
+
 const addComment = [
   param("pid").isMongoId(),
   body("author").isMongoId(),
@@ -132,7 +153,7 @@ const addComment = [
     }
   },
 ];
-// need to implement editComment logic below
+
 const editComment = [
   param("pid", "Please provide a valid pid").isMongoId(),
   param("cid", "Please provide a valid cid").isMongoId(),
@@ -162,6 +183,7 @@ export {
   getPost,
   createPost,
   editPost,
+  deletePost,
   addComment,
   editComment,
 };
