@@ -1,7 +1,6 @@
 import createHttpError from "http-errors";
 import Post, { PostInterface } from "../../models/Post";
 import Comment, { CommentInterface } from "../../models/Comment";
-import User from "../../models/User";
 import { isValidObjectId, Mongoose } from "mongoose";
 import { body, param } from "express-validator";
 import express from "express";
@@ -139,14 +138,16 @@ const editComment = [
   param("cid", "Please provide a valid cid").isMongoId(),
   body("content", "Please provide comment content").exists().isString(),
   processValidation,
-  async (
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-  ) => {
+  async (req: any, res: express.Response, next: express.NextFunction) => {
     try {
       const post = await Post.findById(req.params.pid);
       const comment = post?.comments.id(req.params.cid);
+      if (!req.user._id.equals(comment?.author)) {
+        return res.status(403).json({
+          error: "Only the author can edit this content.",
+        });
+      }
+
       comment?.set(req.body);
       post?.save();
       return res.status(200).send(post);

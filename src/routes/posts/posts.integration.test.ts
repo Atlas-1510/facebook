@@ -256,7 +256,7 @@ describe("/api/posts", () => {
 
       describe("PUT", () => {
         describe("given valid pid, cid, and comment content", () => {
-          test("responds with post including updating comment", async () => {
+          test("responds with post including updated comment", async () => {
             const newCommentContent = {
               content: "This is UPDATED comment content",
             };
@@ -266,6 +266,18 @@ describe("/api/posts", () => {
             expect(response.body.comments).toContainEqual(
               expect.objectContaining(newCommentContent)
             );
+          });
+          test("only allow comment author to edit comment", async () => {
+            const newCommentContent = {
+              content: "Steve is trying to update Tony's comment",
+            };
+            const response = await agent
+              .put(`/api/posts/${mockPostIds[0]}/comments/${mockCommentIds[1]}`)
+              .send(newCommentContent);
+            expect(response.statusCode).toBe(403);
+            expect(response.body).toMatchObject({
+              error: "Only the author can edit this content.",
+            });
           });
         });
       });
