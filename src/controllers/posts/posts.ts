@@ -178,6 +178,29 @@ const editComment = [
   },
 ];
 
+const deleteComment = [
+  param("pid", "Please provide a valid pid").isMongoId(),
+  param("cid", "Please provide a valid cid").isMongoId(),
+  processValidation,
+  async (req: any, res: express.Response, next: express.NextFunction) => {
+    try {
+      const post = await Post.findById(req.params.pid);
+      const comment = post?.comments.id(req.params.cid);
+      if (!req.user._id.equals(comment?.author)) {
+        return res.status(403).json({
+          error: "Only the author can delete this content.",
+        });
+      }
+
+      await comment?.remove();
+      post?.save();
+      return res.status(200).send(post);
+    } catch (err) {
+      return next(err);
+    }
+  },
+];
+
 export {
   getNewsfeedPosts,
   getPost,
@@ -186,4 +209,5 @@ export {
   deletePost,
   addComment,
   editComment,
+  deleteComment,
 };

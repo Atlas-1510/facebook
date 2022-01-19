@@ -7,6 +7,7 @@ import {
   getPost,
   addComment,
   editComment,
+  deleteComment,
 } from "../../controllers/posts/posts";
 import { ensureAuthenticated } from "../../controllers/authentication/authentication";
 
@@ -25,5 +26,7 @@ router.delete("/:pid", ensureAuthenticated, deletePost);
 router.post("/:pid/comments", ensureAuthenticated, addComment);
 
 router.put("/:pid/comments/:cid", ensureAuthenticated, editComment);
+
+router.delete("/:pid/comments/:cid", ensureAuthenticated, deleteComment);
 
 export default router;

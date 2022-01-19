@@ -5,6 +5,7 @@ import populateMockDatabase from "../../utils/populateMockDatabase";
 import app from "../../app/app";
 import Comment, { CommentInterface } from "../../models/Comment";
 import { PostInterface } from "../../models/Post";
+import { debug } from "console";
 
 describe("/api/posts", () => {
   let mongoServer: MongoMemoryServer;
@@ -296,6 +297,38 @@ describe("/api/posts", () => {
             expect(response.statusCode).toBe(403);
             expect(response.body).toMatchObject({
               error: "Only the author can edit this content.",
+            });
+          });
+        });
+      });
+
+      describe("DELETE", () => {
+        describe("given valid pid, cid, and comment content", () => {
+          test("responds with post after deleting comment", async () => {
+            const comment = {
+              content: "1st comment - author[0] - post[0]",
+            };
+            const response = await agent.delete(
+              `/api/posts/${mockPostIds[0]}/comments/${mockCommentIds[0]}`
+            );
+            expect(response.statusCode).toBe(200);
+
+            expect(response.body.comments).not.toContainEqual(
+              expect.objectContaining(comment)
+            );
+          });
+          test("only allow comment author to edit comment", async () => {
+            const newCommentContent = {
+              content: "2nd comment - author[1] - post[0]",
+            };
+            const response = await agent
+              .delete(
+                `/api/posts/${mockPostIds[0]}/comments/${mockCommentIds[1]}`
+              )
+              .send(newCommentContent);
+            expect(response.statusCode).toBe(403);
+            expect(response.body).toMatchObject({
+              error: "Only the author can delete this content.",
             });
           });
         });
