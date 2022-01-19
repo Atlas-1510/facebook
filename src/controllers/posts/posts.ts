@@ -2,10 +2,11 @@ import createHttpError from "http-errors";
 import Post, { PostInterface } from "../../models/Post";
 import Comment, { CommentInterface } from "../../models/Comment";
 import User from "../../models/User";
-import { isValidObjectId } from "mongoose";
-import { body, param, validationResult } from "express-validator";
+import { isValidObjectId, Mongoose } from "mongoose";
+import { body, param } from "express-validator";
 import express from "express";
-import { HydratedDocument } from "mongoose";
+import { HydratedDocument, Types } from "mongoose";
+import processValidation from "../../utils/processValidation";
 const debug = require("debug")("facebook:controllers/posts");
 
 const getNewsfeedPosts = async (req: any, res: any, next: any) => {
@@ -28,14 +29,7 @@ const getPost = [
   param("pid", "A valid PID must be provided")
     .exists()
     .custom((pid) => isValidObjectId(pid)),
-  (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    } else {
-      return next();
-    }
-  },
+  processValidation,
   async (
     req: express.Request,
     res: express.Response,
@@ -57,14 +51,7 @@ const getPost = [
 const createPost = [
   body("author").isMongoId(),
   body("content").isString(),
-  (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    } else {
-      next();
-    }
-  },
+  processValidation,
   async (
     req: express.Request,
     res: express.Response,
@@ -90,14 +77,7 @@ const editPost = [
   param("pid", "A valid PID must be provided")
     .exists()
     .custom((pid) => isValidObjectId(pid)),
-  (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    } else {
-      return next();
-    }
-  },
+  processValidation,
   async (
     req: express.Request,
     res: express.Response,
@@ -105,17 +85,19 @@ const editPost = [
   ) => {
     try {
       const { pid } = req.params;
-      const post = await Post.findById(pid);
+      const post: HydratedDocument<PostInterface> | null = await Post.findById(
+        pid
+      );
       if (!post) {
         return res.sendStatus(404);
+      } else {
+        Object.keys(req.body).forEach((key) => {
+          post[key as keyof PostInterface] = req.body[key];
+        });
+
+        const updatedDocument = await post?.save();
+        return res.send(updatedDocument);
       }
-      Object.keys(req.body).forEach((key) => {
-        post[key as keyof PostInterface] = req.body[key];
-      });
-
-      const updatedDocument = await post.save();
-
-      return res.send(updatedDocument);
     } catch (err) {
       return next(err);
     }
@@ -126,14 +108,7 @@ const addComment = [
   param("pid").isMongoId(),
   body("author").isMongoId(),
   body("content").isString(),
-  (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    } else {
-      next();
-    }
-  },
+  processValidation,
   async (
     req: express.Request,
     res: express.Response,
@@ -158,5 +133,34 @@ const addComment = [
     }
   },
 ];
+// need to implement editComment logic below
+const editComment = [
+  param("pid", "Please provide a valid pid").isMongoId(),
+  param("cid", "Please provide a valid cid").isMongoId(),
+  body("content", "Please provide comment content").exists().isString(),
+  processValidation,
+  async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    try {
+      const post = await Post.findById(req.params.pid);
+      const comment = post?.comments.id(req.params.cid);
+      comment?.set(req.body);
+      post?.save();
+      return res.status(200).send(post);
+    } catch (err) {
+      return next(err);
+    }
+  },
+];
 
-export { getNewsfeedPosts, getPost, createPost, editPost, addComment };
+export {
+  getNewsfeedPosts,
+  getPost,
+  createPost,
+  editPost,
+  addComment,
+  editComment,
+};

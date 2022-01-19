@@ -1,6 +1,6 @@
 import request, { agent, SuperAgentTest } from "supertest";
 import { MongoMemoryServer } from "mongodb-memory-server";
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import populateMockDatabase from "../../utils/populateMockDatabase";
 import app from "../../app/app";
 import Comment, { CommentInterface } from "../../models/Comment";
@@ -10,6 +10,7 @@ describe("/api/posts", () => {
   let mongoServer: MongoMemoryServer;
   let mockUserIds: string[];
   let mockPostIds: string[];
+  let mockCommentIds: string[];
   let agent: SuperAgentTest = request.agent(app);
   beforeAll(async () => {
     mongoServer = await MongoMemoryServer.create();
@@ -17,7 +18,8 @@ describe("/api/posts", () => {
   });
   beforeEach(async () => {
     mongoose.connection.dropDatabase();
-    ({ mockUserIds, mockPostIds } = await populateMockDatabase());
+    ({ mockUserIds, mockPostIds, mockCommentIds } =
+      await populateMockDatabase());
   });
   afterAll(async () => {
     if (mongoose.connection.db) {
@@ -51,7 +53,7 @@ describe("/api/posts", () => {
     describe("POST", () => {
       describe("given valid input", () => {
         test("Returns newly created post", async () => {
-          const post: PostInterface = {
+          const post = {
             author: mockUserIds[0],
             content: "This is some post content",
             comments: [],
@@ -247,6 +249,22 @@ describe("/api/posts", () => {
             expect(response.statusCode).toBe(400);
             expect(response.body.errors).toContainEqual(
               expect.objectContaining({ msg: "Invalid value" })
+            );
+          });
+        });
+      });
+
+      describe("PUT", () => {
+        describe("given valid pid, cid, and comment content", () => {
+          test("responds with post including updating comment", async () => {
+            const newCommentContent = {
+              content: "This is UPDATED comment content",
+            };
+            const response = await agent
+              .put(`/api/posts/${mockPostIds[0]}/comments/${mockCommentIds[0]}`)
+              .send(newCommentContent);
+            expect(response.body.comments).toContainEqual(
+              expect.objectContaining(newCommentContent)
             );
           });
         });

@@ -1,6 +1,6 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema, Types } from "mongoose";
 
-export interface CommentInterface {
+export interface CommentInterface extends Types.Subdocument {
   author: Schema.Types.ObjectId | string;
   content: string;
   postID: Schema.Types.ObjectId | string;

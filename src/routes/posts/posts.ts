@@ -5,6 +5,7 @@ import {
   getNewsfeedPosts,
   getPost,
   addComment,
+  editComment,
 } from "../../controllers/posts/posts";
 import { ensureAuthenticated } from "../../controllers/authentication/authentication";
 
@@ -20,6 +21,6 @@ router.put("/:pid", ensureAuthenticated, editPost);
 
 router.post("/:pid/comments", ensureAuthenticated, addComment);
 
-// router.put("/:pid/comments/:cid, ensureAuthenticated, editComment");
+router.put("/:pid/comments/:cid", ensureAuthenticated, editComment);
 
 export default router;

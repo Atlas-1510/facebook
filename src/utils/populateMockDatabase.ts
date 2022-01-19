@@ -1,7 +1,7 @@
 import User, { UserInterface } from "../models/User";
 import Post, { PostInterface } from "../models/Post";
 import Comment, { CommentInterface } from "../models/Comment";
-import { HydratedDocument } from "mongoose";
+import { HydratedDocument, Types } from "mongoose";
 const debug = require("debug")("facebook:utils/populateMockDatabase");
 
 // This function populates mongodb-memory-server for testing.
@@ -52,22 +52,22 @@ export default async function populateMockDatabase() {
     {
       author: mockUserIds[0],
       content: "1st post by Steve",
-      comments: [],
+      comments: new Types.DocumentArray([]),
     },
     {
       author: mockUserIds[1],
       content: "1st post by Tony",
-      comments: [],
+      comments: new Types.DocumentArray([]),
     },
     {
       author: mockUserIds[0],
       content: "2nd post by Steve",
-      comments: [],
+      comments: new Types.DocumentArray([]),
     },
     {
       author: mockUserIds[2],
       content: "1st post by Peter",
-      comments: [],
+      comments: new Types.DocumentArray([]),
     },
   ];
 
