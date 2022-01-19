@@ -235,6 +235,21 @@ describe("/api/posts", () => {
             );
           });
         });
+        describe("given valid pid and invalid comment content", () => {
+          test("returns 400 error", async () => {
+            const newComment = {
+              author: mockUserIds[0],
+              content: null,
+            };
+            const response = await agent
+              .post(`/api/posts/${mockPostIds[0]}/comments`)
+              .send(newComment);
+            expect(response.statusCode).toBe(400);
+            expect(response.body.errors).toContainEqual(
+              expect.objectContaining({ msg: "Invalid value" })
+            );
+          });
+        });
       });
     });
   });
