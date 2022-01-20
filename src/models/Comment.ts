@@ -3,7 +3,7 @@ import mongoose, { Schema, Types } from "mongoose";
 export interface CommentInterface extends Types.Subdocument {
   author: Schema.Types.ObjectId | string;
   content: string;
-  postID: Schema.Types.ObjectId | string;
+  postID: Schema.Types.ObjectId;
 }
 
 export const CommentSchema = new Schema<CommentInterface>(

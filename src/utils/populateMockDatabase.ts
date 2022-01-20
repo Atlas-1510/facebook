@@ -86,17 +86,17 @@ export default async function populateMockDatabase() {
     new Comment({
       author: mockUserIds[0],
       content: "1st comment - author[0] - post[0]",
-      postID: mockPostIds[0],
+      postID: posts[0]._id,
     }),
     new Comment({
       author: mockUserIds[1],
       content: "2nd comment - author[1] - post[0]",
-      postID: mockPostIds[0],
+      postID: posts[0]._id,
     }),
     new Comment({
       author: mockUserIds[2],
       content: "3rd comment - author[2] - post[0]",
-      postID: mockPostIds[0],
+      postID: posts[0]._id,
     }),
   ];
 
