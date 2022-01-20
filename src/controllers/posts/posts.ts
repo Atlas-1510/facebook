@@ -124,8 +124,6 @@ const deletePost = [
   },
 ];
 
-// TODO: Currently a user could supply a different uid in the body to comment as someone else. Change this to use req.user
-// instead of an 'author' property in the body
 const addComment = [
   param("pid").isMongoId(),
   body("content").isString(),
