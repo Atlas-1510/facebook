@@ -84,17 +84,17 @@ export default async function populateMockDatabase() {
 
   const mockComments: HydratedDocument<CommentInterface>[] = [
     new Comment({
-      author: mockUserIds[0],
+      author: users[0]._id,
       content: "1st comment - author[0] - post[0]",
       postID: posts[0]._id,
     }),
     new Comment({
-      author: mockUserIds[1],
+      author: users[1]._id,
       content: "2nd comment - author[1] - post[0]",
       postID: posts[0]._id,
     }),
     new Comment({
-      author: mockUserIds[2],
+      author: users[2]._id,
       content: "3rd comment - author[2] - post[0]",
       postID: posts[0]._id,
     }),

@@ -1,7 +1,7 @@
 import mongoose, { Schema, Types } from "mongoose";
 
 export interface CommentInterface extends Types.Subdocument {
-  author: Schema.Types.ObjectId | string;
+  author: Schema.Types.ObjectId;
   content: string;
   postID: Schema.Types.ObjectId;
 }
