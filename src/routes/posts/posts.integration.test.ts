@@ -241,7 +241,6 @@ describe("/api/posts", () => {
         describe("given valid pid and comment content", () => {
           test("Returns post with added comment", async () => {
             const newComment = {
-              author: mockUserIds[0],
               content: "This is some comment content",
             };
             const response = await agent
@@ -259,7 +258,6 @@ describe("/api/posts", () => {
         describe("given valid pid and invalid comment content", () => {
           test("returns 400 error", async () => {
             const newComment = {
-              author: mockUserIds[0],
               content: null,
             };
             const response = await agent

@@ -128,19 +128,14 @@ const deletePost = [
 // instead of an 'author' property in the body
 const addComment = [
   param("pid").isMongoId(),
-  body("author").isMongoId(),
   body("content").isString(),
   processValidation,
-  async (
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-  ) => {
+  async (req: any, res: express.Response, next: express.NextFunction) => {
     try {
       const post = await Post.findById(req.params.pid);
 
       const comment: CommentInterface = new Comment({
-        author: req.body.author,
+        author: req.user.id,
         content: req.body.content,
         postID: req.params.pid,
       });
