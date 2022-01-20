@@ -124,6 +124,8 @@ const deletePost = [
   },
 ];
 
+// TODO: Currently a user could supply a different uid in the body to comment as someone else. Change this to use req.user
+// instead of an 'author' property in the body
 const addComment = [
   param("pid").isMongoId(),
   body("author").isMongoId(),
@@ -201,6 +203,26 @@ const deleteComment = [
   },
 ];
 
+const likePost = [
+  param("pid", "Please provide a valid pid"),
+  processValidation,
+  async (req: any, res: express.Response, next: express.NextFunction) => {
+    try {
+      const post = await Post.findById(req.params.pid);
+      if (!post) {
+        res.status(404);
+        throw new Error("Post not found");
+      }
+      post?.likes.push(req.user.id);
+      await post.save();
+      res.status(201);
+      return res.json(post);
+    } catch (err) {
+      return next(err);
+    }
+  },
+];
+
 export {
   getNewsfeedPosts,
   getPost,
@@ -210,4 +232,5 @@ export {
   addComment,
   editComment,
   deleteComment,
+  likePost,
 };

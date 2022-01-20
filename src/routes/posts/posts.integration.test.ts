@@ -5,7 +5,6 @@ import populateMockDatabase from "../../utils/populateMockDatabase";
 import app from "../../app/app";
 import Comment, { CommentInterface } from "../../models/Comment";
 import { PostInterface } from "../../models/Post";
-import { debug } from "console";
 
 describe("/api/posts", () => {
   let mongoServer: MongoMemoryServer;
@@ -333,6 +332,45 @@ describe("/api/posts", () => {
           });
         });
       });
+    });
+  });
+  describe("/:pid/likes", () => {
+    describe("if logged in", () => {
+      beforeEach(async () => {
+        await agent
+          .post("/login")
+          .send({
+            email: "steve@rogers.com",
+            password: 12345,
+          })
+          .type("form");
+      });
+      describe("POST", () => {
+        describe("given valid pid", () => {
+          test("update and return post with new like", async () => {
+            const response = await agent.post(
+              `/api/posts/${mockPostIds[0]}/likes`
+            );
+            expect(response.statusCode).toBe(201);
+            expect(response.body.likes).toContain(mockUserIds[0]);
+          });
+        });
+        describe("given valid but non-existant pid", () => {
+          test("returns 404 error", async () => {
+            const nonExistantPost = new mongoose.Types.ObjectId();
+            const response = await agent.post(
+              `/api/posts/${nonExistantPost}/likes`
+            );
+            expect(response.statusCode).toBe(404);
+          });
+        });
+      });
+
+      // describe("DELETE", () => {
+      //   describe("given valid pid, cid, and comment content", () => {
+
+      //   });
+      // });
     });
   });
 });

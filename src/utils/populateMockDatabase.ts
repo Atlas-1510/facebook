@@ -53,21 +53,25 @@ export default async function populateMockDatabase() {
       author: mockUserIds[0],
       content: "1st post by Steve",
       comments: new Types.DocumentArray([]),
+      likes: [],
     },
     {
       author: mockUserIds[1],
       content: "1st post by Tony",
       comments: new Types.DocumentArray([]),
+      likes: [],
     },
     {
       author: mockUserIds[0],
       content: "2nd post by Steve",
       comments: new Types.DocumentArray([]),
+      likes: [],
     },
     {
       author: mockUserIds[2],
       content: "1st post by Peter",
       comments: new Types.DocumentArray([]),
+      likes: [],
     },
   ];
 
