@@ -1,9 +1,8 @@
 import Post, { PostInterface } from "../../models/Post";
 import Comment, { CommentInterface } from "../../models/Comment";
-import { isValidObjectId, Mongoose } from "mongoose";
+import { isValidObjectId, Types, HydratedDocument } from "mongoose";
 import { body, param } from "express-validator";
 import express from "express";
-import { HydratedDocument, Types } from "mongoose";
 import processValidation from "../../utils/processValidation";
 const debug = require("debug")("facebook:controllers/posts");
 
@@ -236,10 +235,10 @@ const unlikePost = [
           message: "The post has not been liked by this user.",
         });
       }
-      const likes: string[] = post.likes;
+      const likes: Types.ObjectId[] = post.likes;
       const uid: string = req.user.id;
 
-      post.likes = likes.filter((id) => id !== uid);
+      post.likes = likes.filter((id) => id.toString() !== uid);
       await post.save();
       res.status(201);
       return res.json(post);
