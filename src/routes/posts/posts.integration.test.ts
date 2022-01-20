@@ -349,7 +349,7 @@ describe("/api/posts", () => {
         describe("given valid pid", () => {
           test("update and return post with new like", async () => {
             const response = await agent.post(
-              `/api/posts/${mockPostIds[0]}/likes`
+              `/api/posts/${mockPostIds[1]}/likes`
             );
             expect(response.statusCode).toBe(201);
             expect(response.body.likes).toContain(mockUserIds[0]);
@@ -366,11 +366,26 @@ describe("/api/posts", () => {
         });
       });
 
-      // describe("DELETE", () => {
-      //   describe("given valid pid, cid, and comment content", () => {
-
-      //   });
-      // });
+      describe("DELETE", () => {
+        describe("given valid pid", () => {
+          test("update and return post without the deleted like", async () => {
+            const response = await agent.delete(
+              `/api/posts/${mockPostIds[0]}/likes`
+            );
+            expect(response.statusCode).toBe(201);
+            expect(response.body.likes.length).toBe(0);
+          });
+        });
+        describe("given valid but non-existant pid", () => {
+          test("returns 404 error", async () => {
+            const nonExistantPost = new mongoose.Types.ObjectId();
+            const response = await agent.delete(
+              `/api/posts/${nonExistantPost}/likes`
+            );
+            expect(response.statusCode).toBe(404);
+          });
+        });
+      });
     });
   });
 });

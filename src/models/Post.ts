@@ -6,7 +6,7 @@ export interface PostInterface {
   author: Schema.Types.ObjectId | string;
   content: string;
   comments: Types.DocumentArray<CommentInterface>;
-  likes: Types.ObjectId[];
+  likes: string[];
 }
 
 const PostSchema = new Schema<PostInterface>(
@@ -14,7 +14,7 @@ const PostSchema = new Schema<PostInterface>(
     author: { type: Schema.Types.ObjectId, required: true },
     content: { type: String, required: true },
     comments: [CommentSchema],
-    likes: [Schema.Types.ObjectId],
+    likes: [Schema.Types.String],
   },
   {
     timestamps: true,

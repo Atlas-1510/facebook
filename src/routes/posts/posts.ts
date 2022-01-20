@@ -9,6 +9,7 @@ import {
   editComment,
   deleteComment,
   likePost,
+  unlikePost,
 } from "../../controllers/posts/posts";
 import { ensureAuthenticated } from "../../controllers/authentication/authentication";
 
@@ -31,5 +32,7 @@ router.put("/:pid/comments/:cid", ensureAuthenticated, editComment);
 router.delete("/:pid/comments/:cid", ensureAuthenticated, deleteComment);
 
 router.post("/:pid/likes", ensureAuthenticated, likePost);
+
+router.delete("/:pid/likes", ensureAuthenticated, unlikePost);
 
 export default router;

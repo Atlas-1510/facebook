@@ -213,7 +213,40 @@ const likePost = [
         res.status(404);
         throw new Error("Post not found");
       }
+      if (post.likes.includes(req.user.id)) {
+        res.status(200);
+        return res.send({ message: "This post has already been liked." });
+      }
       post?.likes.push(req.user.id);
+      await post.save();
+      res.status(201);
+      return res.json(post);
+    } catch (err) {
+      return next(err);
+    }
+  },
+];
+
+const unlikePost = [
+  param("pid", "Please provide a valid pid"),
+  processValidation,
+  async (req: any, res: express.Response, next: express.NextFunction) => {
+    try {
+      const post = await Post.findById(req.params.pid);
+      if (!post) {
+        res.status(404);
+        throw new Error("Post not found");
+      }
+      if (!post.likes.includes(req.user.id)) {
+        res.status(200);
+        return res.send({
+          message: "The post has not been liked by this user.",
+        });
+      }
+      const likes: string[] = post.likes;
+      const uid: string = req.user.id;
+
+      post.likes = likes.filter((id) => id !== uid);
       await post.save();
       res.status(201);
       return res.json(post);
@@ -233,4 +266,5 @@ export {
   editComment,
   deleteComment,
   likePost,
+  unlikePost,
 };
