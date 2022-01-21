@@ -1,13 +1,20 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
 
-export interface UserInterface {
+export interface UserInput {
   email: string;
   firstName: string;
   lastName: string;
   friends?: string[];
 }
 
-const UserSchema = new Schema<UserInterface>({
+export interface UserDocument extends UserInput, Document {
+  email: string;
+  firstName: string;
+  lastName: string;
+  friends?: string[];
+}
+
+const UserSchema = new Schema<UserDocument>({
   email: { type: String, required: true },
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },

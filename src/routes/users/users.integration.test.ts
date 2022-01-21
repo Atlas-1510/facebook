@@ -4,17 +4,18 @@ import mongoose from "mongoose";
 import populateMockDatabase from "../../utils/populateMockDatabase";
 import expectErrorCode from "../../utils/expectErrorCode";
 import app from "../../app/app";
+import { UserDocument } from "../../models/User";
 
 describe("/api/users", () => {
   let mongoServer: MongoMemoryServer;
-  let mockUserIds: string[];
+  let users: UserDocument[];
   beforeAll(async () => {
     mongoServer = await MongoMemoryServer.create();
     await mongoose.connect(mongoServer.getUri());
   });
   beforeEach(async () => {
     mongoose.connection.dropDatabase();
-    ({ mockUserIds } = await populateMockDatabase());
+    ({ users } = await populateMockDatabase());
   });
   afterAll(async () => {
     if (mongoose.connection.db) {
@@ -125,7 +126,7 @@ describe("/api/users", () => {
         describe("given a valid uid", () => {
           describe("if user exists in database", () => {
             test("should respond with a json object containing user information", async () => {
-              const response = await agent.get(`/api/users/${mockUserIds[0]}`);
+              const response = await agent.get(`/api/users/${users[0]._id}`);
               expect(response.statusCode).toBe(200);
               expect(response.headers["content-type"]).toEqual(
                 expect.stringContaining("json")
@@ -175,7 +176,7 @@ describe("/api/users", () => {
               lastName: "Wilson",
             };
             const response = await agent
-              .put(`/api/users/${mockUserIds[0]}`)
+              .put(`/api/users/${users[0]._id}`)
               .send(newUserData);
             expect(response.statusCode).toBe(200);
             expect(response.headers["content-type"]).toEqual(

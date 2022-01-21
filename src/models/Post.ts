@@ -1,15 +1,22 @@
 import mongoose, { Schema } from "mongoose";
-import { CommentInterface, CommentSchema } from "./Comment";
-import { Types } from "mongoose";
+import { CommentDocument, CommentSchema } from "./Comment";
+import { Types, Document } from "mongoose";
 
-export interface PostInterface {
-  author: Schema.Types.ObjectId | string;
+export interface PostInput {
+  author: Types.ObjectId;
   content: string;
-  comments: Types.DocumentArray<CommentInterface>;
+  comments: CommentDocument[];
   likes: Types.ObjectId[];
 }
 
-const PostSchema = new Schema<PostInterface>(
+export interface PostDocument extends PostInput, Document {
+  author: Types.ObjectId;
+  content: string;
+  comments: Types.DocumentArray<CommentDocument>;
+  likes: Types.ObjectId[];
+}
+
+const PostSchema = new Schema<PostDocument>(
   {
     author: { type: Schema.Types.ObjectId, required: true },
     content: { type: String, required: true },
@@ -21,6 +28,6 @@ const PostSchema = new Schema<PostInterface>(
   }
 );
 
-const PostModel = mongoose.model<PostInterface>("Post", PostSchema);
+const PostModel = mongoose.model<PostDocument>("Post", PostSchema);
 
 export default PostModel;

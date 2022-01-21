@@ -1,4 +1,4 @@
-import User, { UserInterface } from "../../models/User";
+import User, { UserDocument, UserInput } from "../../models/User";
 import { isValidObjectId } from "mongoose";
 import createHttpError from "http-errors";
 import { body, param, validationResult } from "express-validator";
@@ -89,18 +89,23 @@ const updateUser = [
     next: express.NextFunction
   ) => {
     const { uid } = req.params;
-    const user = await User.findById(uid);
+
+    const update: any = {};
+
+    Object.keys(req.body).forEach((key) => {
+      update[key] = req.body[key];
+    });
+
+    const user = await User.findByIdAndUpdate(uid, update, {
+      returnOriginal: false,
+    });
+
     if (!user) {
       const err = createHttpError(404, "User not found in database");
       return res.status(err.status).send(err);
     }
-    Object.keys(req.body).forEach((key) => {
-      user[key as keyof UserInterface] = req.body[key];
-    });
 
-    const updatedDocument = await user.save();
-
-    return res.send(updatedDocument);
+    return res.send(user);
   },
 ];
 

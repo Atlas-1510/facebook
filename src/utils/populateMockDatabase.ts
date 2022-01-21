@@ -1,6 +1,6 @@
-import User, { UserInterface } from "../models/User";
-import Post, { PostInterface } from "../models/Post";
-import Comment, { CommentInterface } from "../models/Comment";
+import User, { UserInput, UserDocument } from "../models/User";
+import Post, { PostInput, PostDocument } from "../models/Post";
+import Comment, { CommentInput, CommentDocument } from "../models/Comment";
 import { HydratedDocument, Types } from "mongoose";
 const debug = require("debug")("facebook:utils/populateMockDatabase");
 
@@ -10,7 +10,7 @@ const debug = require("debug")("facebook:utils/populateMockDatabase");
 export default async function populateMockDatabase() {
   // ***** USERS *****
 
-  const mockUsers: UserInterface[] = [
+  const mockUsers: UserInput[] = [
     {
       email: "steve@rogers.com",
       firstName: "Steve",
@@ -33,56 +33,50 @@ export default async function populateMockDatabase() {
     },
   ];
 
-  await User.insertMany(mockUsers);
-
-  const users = await User.find({});
-  const mockUserIds: string[] = users.map((objId) => objId.id);
+  const users: UserDocument[] = await User.insertMany(mockUsers);
 
   // make steve and tony friends
-  const steve = await User.findById(mockUserIds[0]);
-  const tony = await User.findById(mockUserIds[1]);
-  steve?.friends?.push(mockUserIds[1]);
-  tony?.friends?.push(mockUserIds[0]);
+  const steve = await User.findById(users[0]._id);
+  const tony = await User.findById(users[1]._id);
+  steve?.friends?.push(users[1]._id);
+  tony?.friends?.push(users[0]._id);
   steve?.save();
   tony?.save();
 
   // ***** POSTS *****
 
-  const mockPosts: PostInterface[] = [
+  const mockPosts: PostInput[] = [
     {
-      author: mockUserIds[0],
+      author: users[0]._id,
       content: "1st post by Steve",
-      comments: new Types.DocumentArray([]),
+      comments: [],
       likes: [users[0]._id],
     },
     {
-      author: mockUserIds[1],
+      author: users[1]._id,
       content: "1st post by Tony",
-      comments: new Types.DocumentArray([]),
+      comments: [],
       likes: [],
     },
     {
-      author: mockUserIds[0],
+      author: users[0]._id,
       content: "2nd post by Steve",
-      comments: new Types.DocumentArray([]),
+      comments: [],
       likes: [],
     },
     {
-      author: mockUserIds[2],
+      author: users[2]._id,
       content: "1st post by Peter",
-      comments: new Types.DocumentArray([]),
+      comments: [],
       likes: [],
     },
   ];
 
-  await Post.insertMany(mockPosts);
-
-  const posts = await Post.find({});
-  const mockPostIds: string[] = posts.map((objId) => objId.id);
+  const posts: PostDocument[] = await Post.insertMany(mockPosts);
 
   // ***** COMMENTS *****
 
-  const mockComments: HydratedDocument<CommentInterface>[] = [
+  const comments: HydratedDocument<CommentDocument>[] = [
     new Comment({
       author: users[0]._id,
       content: "1st comment - author[0] - post[0]",
@@ -100,14 +94,11 @@ export default async function populateMockDatabase() {
     }),
   ];
 
-  const mockCommentIds = [];
-
-  for (const comment of mockComments) {
-    mockCommentIds.push(comment.id);
+  for (const comment of comments) {
     let post = await Post.findById(comment.postID);
     post?.comments.push(comment);
     await post?.save();
   }
 
-  return { mockUserIds, mockPostIds, mockCommentIds };
+  return { users, posts, comments };
 }

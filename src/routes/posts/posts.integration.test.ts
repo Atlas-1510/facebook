@@ -3,14 +3,19 @@ import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose, { Types } from "mongoose";
 import populateMockDatabase from "../../utils/populateMockDatabase";
 import app from "../../app/app";
-import Comment, { CommentInterface } from "../../models/Comment";
-import { PostInterface } from "../../models/Post";
+import Comment, {
+  CommentInput,
+  CommentDocument,
+  CommentSchema,
+} from "../../models/Comment";
+import { PostInput, PostDocument } from "../../models/Post";
+import { UserInput, UserDocument } from "../../models/User";
 
 describe("/api/posts", () => {
   let mongoServer: MongoMemoryServer;
-  let mockUserIds: string[];
-  let mockPostIds: string[];
-  let mockCommentIds: string[];
+  let users: UserDocument[];
+  let posts: PostDocument[];
+  let comments: CommentDocument[];
   let agent: SuperAgentTest = request.agent(app);
   beforeAll(async () => {
     mongoServer = await MongoMemoryServer.create();
@@ -18,8 +23,7 @@ describe("/api/posts", () => {
   });
   beforeEach(async () => {
     mongoose.connection.dropDatabase();
-    ({ mockUserIds, mockPostIds, mockCommentIds } =
-      await populateMockDatabase());
+    ({ users, posts, comments } = await populateMockDatabase());
   });
   afterAll(async () => {
     if (mongoose.connection.db) {
@@ -53,10 +57,11 @@ describe("/api/posts", () => {
     describe("POST", () => {
       describe("given valid input", () => {
         test("Returns newly created post", async () => {
-          const post = {
-            author: mockUserIds[0],
+          const post: PostInput = {
+            author: users[0]._id,
             content: "This is some post content",
             comments: [],
+            likes: [],
           };
           const response = await agent.post("/api/posts").send(post);
           expect(response.body).toMatchObject({
@@ -67,9 +72,10 @@ describe("/api/posts", () => {
       });
       describe("given invalid input", () => {
         test("returns 400 error", async () => {
+          // intentionally left PostInput type definition off this to test
           const post = {
-            author: mockUserIds[0],
-            content: null, // must be a string
+            author: users[0]._id,
+            content: null, // should normally be a string, testing if error is handled
             comments: [],
           };
           const response = await agent.post("/api/posts").send(post);
@@ -121,7 +127,7 @@ describe("/api/posts", () => {
     describe("if not logged in", () => {
       describe("GET", () => {
         test("asks client to login and retry", async () => {
-          const response = await agent.get(`/api/posts/${mockPostIds[0]}`);
+          const response = await agent.get(`/api/posts/${posts[0]._id}`);
           expect(response.body).toMatchObject({
             message: "Please login to view this",
           });
@@ -134,7 +140,7 @@ describe("/api/posts", () => {
           };
 
           const response = await agent
-            .put(`/api/posts/${mockPostIds[0]}`)
+            .put(`/api/posts/${posts[0]._id}`)
             .send(newPostData);
           expect(response.body).toMatchObject({
             message: "Please login to view this",
@@ -162,7 +168,7 @@ describe("/api/posts", () => {
         });
         describe("if valid pid", () => {
           test("returns post", async () => {
-            const response = await agent.get(`/api/posts/${mockPostIds[0]}`);
+            const response = await agent.get(`/api/posts/${posts[0]._id}`);
             expect(response.body).toMatchObject({
               content: "1st post by Steve",
             });
@@ -198,7 +204,7 @@ describe("/api/posts", () => {
             };
 
             const response = await agent
-              .put(`/api/posts/${mockPostIds[0]}`)
+              .put(`/api/posts/${posts[0]._id}`)
               .send(newPostData);
             expect(response.statusCode).toBe(200);
             expect(response.body).toEqual(expect.objectContaining(newPostData));
@@ -208,7 +214,7 @@ describe("/api/posts", () => {
       describe("DELETE", () => {
         describe("if client is post author", () => {
           test("deletes post and returns confirmation", async () => {
-            const response = await agent.delete(`/api/posts/${mockPostIds[0]}`);
+            const response = await agent.delete(`/api/posts/${posts[0]._id}`);
             expect(response.statusCode).toBe(200);
             expect(response.body).toMatchObject(
               expect.objectContaining({
@@ -219,7 +225,7 @@ describe("/api/posts", () => {
         });
         describe("if client is not post author", () => {
           test("returns 403 error", async () => {
-            const response = await agent.delete(`/api/posts/${mockPostIds[1]}`);
+            const response = await agent.delete(`/api/posts/${posts[1]._id}`);
             expect(response.statusCode).toBe(403);
           });
         });
@@ -244,7 +250,7 @@ describe("/api/posts", () => {
               content: "This is some comment content",
             };
             const response = await agent
-              .post(`/api/posts/${mockPostIds[0]}/comments`)
+              .post(`/api/posts/${posts[0]._id}/comments`)
               .send(newComment);
             expect(response.body.comments).toEqual(
               expect.arrayContaining([
@@ -261,7 +267,7 @@ describe("/api/posts", () => {
               content: null,
             };
             const response = await agent
-              .post(`/api/posts/${mockPostIds[0]}/comments`)
+              .post(`/api/posts/${posts[0]._id}/comments`)
               .send(newComment);
             expect(response.statusCode).toBe(400);
             expect(response.body.errors).toContainEqual(
@@ -278,7 +284,7 @@ describe("/api/posts", () => {
               content: "This is UPDATED comment content",
             };
             const response = await agent
-              .put(`/api/posts/${mockPostIds[0]}/comments/${mockCommentIds[0]}`)
+              .put(`/api/posts/${posts[0]._id}/comments/${comments[0]._id}`)
               .send(newCommentContent);
             expect(response.body.comments).toContainEqual(
               expect.objectContaining(newCommentContent)
@@ -289,7 +295,7 @@ describe("/api/posts", () => {
               content: "Steve is trying to update Tony's comment",
             };
             const response = await agent
-              .put(`/api/posts/${mockPostIds[0]}/comments/${mockCommentIds[1]}`)
+              .put(`/api/posts/${posts[0]._id}/comments/${comments[1]._id}`)
               .send(newCommentContent);
             expect(response.statusCode).toBe(403);
             expect(response.body).toMatchObject({
@@ -306,8 +312,9 @@ describe("/api/posts", () => {
               content: "1st comment - author[0] - post[0]",
             };
             const response = await agent.delete(
-              `/api/posts/${mockPostIds[0]}/comments/${mockCommentIds[0]}`
+              `/api/posts/${posts[0]._id}/comments/${comments[0]._id}`
             );
+
             expect(response.statusCode).toBe(200);
 
             expect(response.body.comments).not.toContainEqual(
@@ -315,14 +322,10 @@ describe("/api/posts", () => {
             );
           });
           test("only allow comment author to edit comment", async () => {
-            const newCommentContent = {
-              content: "2nd comment - author[1] - post[0]",
-            };
-            const response = await agent
-              .delete(
-                `/api/posts/${mockPostIds[0]}/comments/${mockCommentIds[1]}`
-              )
-              .send(newCommentContent);
+            const response = await agent.delete(
+              `/api/posts/${posts[0]._id}/comments/${comments[1]._id}`
+            );
+
             expect(response.statusCode).toBe(403);
             expect(response.body).toMatchObject({
               error: "Only the author can delete this content.",
@@ -347,10 +350,11 @@ describe("/api/posts", () => {
         describe("given valid pid", () => {
           test("update and return post with new like", async () => {
             const response = await agent.post(
-              `/api/posts/${mockPostIds[1]}/likes`
+              `/api/posts/${posts[1]._id}/likes`
             );
             expect(response.statusCode).toBe(201);
-            expect(response.body.likes).toContain(mockUserIds[0]);
+            // Note: matches to .id NOT ._id as ObjectID becomes string after being sent via JSON.
+            expect(response.body.likes).toContain(users[0].id);
           });
         });
         describe("given valid but non-existant pid", () => {
@@ -368,8 +372,9 @@ describe("/api/posts", () => {
         describe("given valid pid", () => {
           test("update and return post without the deleted like", async () => {
             const response = await agent.delete(
-              `/api/posts/${mockPostIds[0]}/likes`
+              `/api/posts/${posts[0]._id}/likes`
             );
+
             expect(response.statusCode).toBe(201);
             expect(response.body.likes.length).toBe(0);
           });

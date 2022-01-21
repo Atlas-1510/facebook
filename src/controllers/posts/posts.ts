@@ -1,5 +1,5 @@
-import Post, { PostInterface } from "../../models/Post";
-import Comment, { CommentInterface } from "../../models/Comment";
+import Post, { PostInput, PostDocument } from "../../models/Post";
+import Comment, { CommentInput, CommentDocument } from "../../models/Comment";
 import { isValidObjectId, Types, HydratedDocument } from "mongoose";
 import { body, param } from "express-validator";
 import express from "express";
@@ -55,7 +55,7 @@ const createPost = [
     next: express.NextFunction
   ) => {
     try {
-      const post: HydratedDocument<PostInterface> = new Post({
+      const post: HydratedDocument<PostDocument> = new Post({
         author: req.body.author,
         content: req.body.content,
         comments: [],
@@ -82,19 +82,20 @@ const editPost = [
   ) => {
     try {
       const { pid } = req.params;
-      const post: HydratedDocument<PostInterface> | null = await Post.findById(
-        pid
-      );
+
+      const update: any = {};
+      Object.keys(req.body).forEach((key) => {
+        update[key] = req.body[key];
+      });
+      const post = await Post.findByIdAndUpdate(pid, update, {
+        returnOriginal: false,
+      });
+
       if (!post) {
         return res.sendStatus(404);
-      } else {
-        Object.keys(req.body).forEach((key) => {
-          post[key as keyof PostInterface] = req.body[key];
-        });
-
-        const updatedDocument = await post?.save();
-        return res.send(updatedDocument);
       }
+
+      return res.send(post);
     } catch (err) {
       return next(err);
     }
@@ -131,7 +132,7 @@ const addComment = [
     try {
       const post = await Post.findById(req.params.pid);
 
-      const comment: CommentInterface = new Comment({
+      const comment: CommentDocument = new Comment({
         author: req.user.id,
         content: req.body.content,
         postID: req.params.pid,
@@ -196,7 +197,7 @@ const deleteComment = [
 ];
 
 const likePost = [
-  param("pid", "Please provide a valid pid"),
+  param("pid", "Please provide a valid pid").isMongoId(),
   processValidation,
   async (req: any, res: express.Response, next: express.NextFunction) => {
     try {
@@ -205,11 +206,12 @@ const likePost = [
         res.status(404);
         throw new Error("Post not found");
       }
-      if (post.likes.includes(req.user.id)) {
+
+      if (post.likes.includes(req.user._id)) {
         res.status(200);
         return res.send({ message: "This post has already been liked." });
       }
-      post?.likes.push(req.user.id);
+      post?.likes.push(req.user._id);
       await post.save();
       res.status(201);
       return res.json(post);
@@ -220,7 +222,7 @@ const likePost = [
 ];
 
 const unlikePost = [
-  param("pid", "Please provide a valid pid"),
+  param("pid", "Please provide a valid pid").isMongoId(),
   processValidation,
   async (req: any, res: express.Response, next: express.NextFunction) => {
     try {

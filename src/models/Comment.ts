@@ -1,12 +1,18 @@
 import mongoose, { Schema, Types } from "mongoose";
 
-export interface CommentInterface extends Types.Subdocument {
+export interface CommentInput {
   author: Schema.Types.ObjectId;
   content: string;
   postID: Schema.Types.ObjectId;
 }
 
-export const CommentSchema = new Schema<CommentInterface>(
+export interface CommentDocument extends CommentInput, Types.Subdocument {
+  author: Schema.Types.ObjectId;
+  content: string;
+  postID: Schema.Types.ObjectId;
+}
+
+export const CommentSchema = new Schema<CommentDocument>(
   {
     author: { type: Schema.Types.ObjectId, required: true },
     content: { type: String, required: true },
