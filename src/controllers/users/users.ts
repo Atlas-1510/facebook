@@ -83,29 +83,34 @@ const updateUser = [
       next();
     }
   },
-  async (
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-  ) => {
-    const { uid } = req.params;
+  async (req: any, res: express.Response, next: express.NextFunction) => {
+    try {
+      const { uid } = req.params;
+      if (uid !== req.user._id.toString()) {
+        return res
+          .status(403)
+          .send("You must login as this user to edit this account.");
+      }
 
-    const update: any = {};
+      const update: any = {};
 
-    Object.keys(req.body).forEach((key) => {
-      update[key] = req.body[key];
-    });
+      Object.keys(req.body).forEach((key) => {
+        update[key] = req.body[key];
+      });
 
-    const user = await User.findByIdAndUpdate(uid, update, {
-      returnOriginal: false,
-    });
+      const user = await User.findByIdAndUpdate(uid, update, {
+        returnOriginal: false,
+      });
 
-    if (!user) {
-      const err = createHttpError(404, "User not found in database");
-      return res.status(err.status).send(err);
+      if (!user) {
+        const err = createHttpError(404, "User not found in database");
+        return res.status(err.status).send(err);
+      }
+
+      return res.send(user);
+    } catch (err) {
+      return next(err);
     }
-
-    return res.send(user);
   },
 ];
 

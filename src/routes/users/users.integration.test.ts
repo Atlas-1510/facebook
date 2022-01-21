@@ -184,14 +184,16 @@ describe("/api/users", () => {
             );
             expect(response.body).toEqual(expect.objectContaining(newUserData));
           });
-          describe("if user does not exist in database", () => {
+          describe("if user tries to update an account that is not theirs", () => {
             const nonExistingUserDocId = new mongoose.Types.ObjectId();
-            test("returns 200 status code and warns user not found", async () => {
+            test("returns 403 status code and warns user", async () => {
               const response = await agent.put(
                 `/api/users/${nonExistingUserDocId}`
               );
-              expect(response.statusCode).toBe(404);
-              expect(response.body.message).toBe("User not found in database");
+              expect(response.statusCode).toBe(403);
+              expect(response.text).toBe(
+                "You must login as this user to edit this account."
+              );
             });
           });
         });
