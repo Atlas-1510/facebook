@@ -1,8 +1,14 @@
 import passport from "passport";
 import createHttpError from "http-errors";
+import express from "express";
+
 const debug = require("debug")("facebook:controllers:authentication");
 
-const tryLogin = (req: any, res: any, next: any) => {
+const tryLogin = (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) => {
   passport.authenticate("local", function (err, user, info) {
     req.logIn(user, function (err: any) {
       if (err) {
@@ -13,7 +19,11 @@ const tryLogin = (req: any, res: any, next: any) => {
   })(req, res, next);
 };
 
-const ensureAuthenticated = (req: any, res: any, next: any) => {
+const ensureAuthenticated = (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) => {
   if (req.isAuthenticated()) {
     return next();
   } else {

@@ -36,12 +36,16 @@ export default async function populateMockDatabase() {
   const users: UserDocument[] = await User.insertMany(mockUsers);
 
   // make steve and tony friends
-  const steve = await User.findById(users[0]._id);
-  const tony = await User.findById(users[1]._id);
-  steve?.friends?.push(users[1]._id);
-  tony?.friends?.push(users[0]._id);
-  steve?.save();
-  tony?.save();
+  users[0].friends?.push(users[1]._id);
+  users[1].friends?.push(users[0]._id);
+  users[0].save();
+  // tony (users[1]) is saved below
+
+  // bruce has an unaccepted friend request from tony
+  users[3].inboundFriendRequests?.push(users[1]._id);
+  users[1].outboundFriendRequests?.push(users[3]._id);
+  users[3].save();
+  users[1].save();
 
   // ***** POSTS *****
 
