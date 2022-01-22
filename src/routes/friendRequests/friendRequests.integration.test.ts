@@ -167,6 +167,16 @@ describe("/api/posts", () => {
           });
           expect(response.statusCode).toBe(400);
         });
+        test("If a user tries to accept a non existant friend request, return 400 error", async () => {
+          const response = await agent.post(`/api/friendRequests/handle`).send({
+            fid: users[0]._id,
+            action: "accept",
+          });
+          expect(response.statusCode).toBe(400);
+          expect(response.body.message).toBe(
+            "A friend request could not be found from this user."
+          );
+        });
       });
     });
   });
