@@ -1,4 +1,10 @@
-import mongoose, { Schema, Document, ObjectId } from "mongoose";
+import mongoose, {
+  Schema,
+  Document,
+  ObjectId,
+  Types,
+  SchemaTypes,
+} from "mongoose";
 
 export interface UserInput {
   email: string;
@@ -14,8 +20,8 @@ export interface UserDocument extends UserInput, Document {
   firstName: string;
   lastName: string;
   friends?: ObjectId[];
-  inboundFriendRequests?: ObjectId[];
-  outboundFriendRequests?: ObjectId[];
+  inboundFriendRequests: ObjectId[];
+  outboundFriendRequests: ObjectId[];
 }
 
 const UserSchema = new Schema<UserDocument>({
@@ -23,8 +29,8 @@ const UserSchema = new Schema<UserDocument>({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   friends: { type: Array, default: [] },
-  inboundFriendRequests: { type: Array, default: [] },
-  outboundFriendRequests: { type: Array, default: [] },
+  inboundFriendRequests: { type: [Schema.Types.ObjectId], default: [] },
+  outboundFriendRequests: { type: [Schema.Types.ObjectId], default: [] },
 });
 
 export default mongoose.model("User", UserSchema);

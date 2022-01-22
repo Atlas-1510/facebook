@@ -112,4 +112,62 @@ describe("/api/posts", () => {
       expect(bruceResponse.body.inboundFriendRequests).toBeDistinct();
     });
   });
+  describe("/handle", () => {
+    describe("if not logged in", () => {
+      describe("POST", () => {
+        test("asks client to login and retry", async () => {
+          const response = await agent.get("/api/posts/newsfeed");
+          expect(response.body).toMatchObject({
+            message: "Please login to view this",
+          });
+        });
+      });
+    });
+    describe("if logged in", () => {
+      beforeEach(async () => {
+        await agent
+          .post("/login")
+          .send({
+            email: "bruce@banner.com",
+            password: 12345,
+          })
+          .type("form");
+      });
+      describe("POST", () => {
+        test("if a friend request is ACCEPTED, updates friend arrays and deletes request record", async () => {
+          const response = await agent.post(`/api/friendRequests/handle`).send({
+            fid: users[1]._id,
+            action: "accept",
+          });
+          const bruce = response.body;
+          expect(bruce.friends).toContain(users[1].id);
+          expect(bruce.inboundFriendRequests).not.toContain(users[1].id);
+          const tonyResponse = await agent.get(`/api/users/${users[1]._id}`);
+          const tony = tonyResponse.body;
+          expect(tony.friends).toContain(users[3].id);
+          expect(tony.inboundFriendRequests).not.toContain(users[3].id);
+        });
+        test("if a friend request is REJECTED, updates friend arrays and deletes request record", async () => {
+          const response = await agent.post(`/api/friendRequests/handle`).send({
+            fid: users[1]._id,
+            action: "reject",
+          });
+          const bruce = response.body;
+          expect(bruce.friends).not.toContain(users[1].id);
+          expect(bruce.inboundFriendRequests).not.toContain(users[1].id);
+          const tonyResponse = await agent.get(`/api/users/${users[1]._id}`);
+          const tony = tonyResponse.body;
+          expect(tony.friends).not.toContain(users[3].id);
+          expect(tony.inboundFriendRequests).not.toContain(users[3].id);
+        });
+        test("If invalid action is provided in body, return 400 error", async () => {
+          const response = await agent.post(`/api/friendRequests/handle`).send({
+            fid: users[1]._id,
+            action: "INVALID_ACTION",
+          });
+          expect(response.statusCode).toBe(400);
+        });
+      });
+    });
+  });
 });
