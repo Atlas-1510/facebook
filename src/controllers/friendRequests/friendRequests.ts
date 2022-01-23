@@ -89,22 +89,39 @@ const handleRequest = [
   },
 ];
 
-// to get all recieved friend requests
-const getRequests = [
-  async (
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-  ) => {},
-];
-
 // For a user to cancel an outbound friend request
 const deleteRequest = [
-  async (
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-  ) => {},
+  body("fid").isMongoId(),
+  processValidation,
+  async (req: any, res: express.Response, next: express.NextFunction) => {
+    try {
+      // user is request sender. target is request recipient
+      const user: UserDocument = req.user;
+      const target: UserDocument | null = await User.findById(req.body.fid);
+      if (!target) {
+        return res.status(404).json({
+          message: "The target for this friend request could not be found.",
+        });
+      }
+      if (!user.outboundFriendRequests?.includes(req.body.fid)) {
+        return res.status(400).json({
+          message: "That friend request could not be found.",
+        });
+      }
+      const session = await mongoose.startSession();
+      await session.withTransaction(async () => {
+        removeItem(user.outboundFriendRequests, req.body.fid);
+        removeItem(target.inboundFriendRequests, user._id);
+        await user.save();
+        await target.save();
+      });
+      session.endSession();
+      res.status(201);
+      return res.send(user);
+    } catch (err) {
+      return next(err);
+    }
+  },
 ];
 
-export { sendRequest, deleteRequest, handleRequest, getRequests };
+export { sendRequest, deleteRequest, handleRequest };
