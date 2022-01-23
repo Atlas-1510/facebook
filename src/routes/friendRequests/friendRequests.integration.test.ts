@@ -31,7 +31,7 @@ expect.extend({
   },
 });
 
-describe("/api/posts", () => {
+describe("/api/friendRequests/", () => {
   let mongoServer: MongoMemoryServer;
   let users: UserDocument[];
   let posts: PostDocument[];
@@ -67,7 +67,7 @@ describe("/api/posts", () => {
   describe("if logged in", () => {
     beforeEach(async () => {
       await agent
-        .post("/login")
+        .post("/auth/login")
         .send({
           email: "tony@stark.com",
           password: 12345,
@@ -159,7 +159,7 @@ describe("/api/posts", () => {
     describe("if logged in", () => {
       beforeEach(async () => {
         await agent
-          .post("/login")
+          .post("/auth/login")
           .send({
             email: "bruce@banner.com",
             password: 12345,

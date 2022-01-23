@@ -30,7 +30,7 @@ describe("/api/users", () => {
     beforeEach(async () => {
       agent = request.agent(app);
       await agent
-        .post("/login")
+        .post("/auth/login")
         .send({
           email: "steve@rogers.com",
           password: 12345,

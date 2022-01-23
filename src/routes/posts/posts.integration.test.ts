@@ -47,7 +47,7 @@ describe("/api/posts", () => {
   describe("if logged in", () => {
     beforeEach(async () => {
       await agent
-        .post("/login")
+        .post("/auth/login")
         .send({
           email: "steve@rogers.com",
           password: 12345,
@@ -102,7 +102,7 @@ describe("/api/posts", () => {
     describe("if logged in", () => {
       beforeEach(async () => {
         await agent
-          .post("/login")
+          .post("/auth/login")
           .send({
             email: "steve@rogers.com",
             password: 12345,
@@ -151,7 +151,7 @@ describe("/api/posts", () => {
     describe("if logged in", () => {
       beforeEach(async () => {
         await agent
-          .post("/login")
+          .post("/auth/login")
           .send({
             email: "steve@rogers.com",
             password: 12345,
@@ -236,7 +236,7 @@ describe("/api/posts", () => {
     describe("if logged in", () => {
       beforeEach(async () => {
         await agent
-          .post("/login")
+          .post("/auth/login")
           .send({
             email: "steve@rogers.com",
             password: 12345,
@@ -339,7 +339,7 @@ describe("/api/posts", () => {
     describe("if logged in", () => {
       beforeEach(async () => {
         await agent
-          .post("/login")
+          .post("/auth/login")
           .send({
             email: "steve@rogers.com",
             password: 12345,
