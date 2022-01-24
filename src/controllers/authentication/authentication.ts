@@ -40,7 +40,20 @@ const googleAuth = [
 ];
 
 const googleAuthRedirect = [
+  (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    console.log("ACTIVATED");
+    next();
+  },
   passport.authenticate("google"),
+  (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    return res.send(req.user);
+  },
+];
+
+const facebookAuth = [passport.authenticate("facebook")];
+
+const facebookAuthRedirect = [
+  passport.authenticate("facebook"),
   (req: express.Request, res: express.Response, next: express.NextFunction) => {
     return res.send(req.user);
   },
@@ -62,5 +75,7 @@ export {
   ensureAuthenticated,
   googleAuth,
   googleAuthRedirect,
+  facebookAuth,
+  facebookAuthRedirect,
   logout,
 };

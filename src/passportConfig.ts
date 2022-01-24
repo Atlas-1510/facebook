@@ -1,5 +1,6 @@
 const LocalStrategy = require("passport-local").Strategy;
 const GoogleStrategy = require("passport-google-oauth20");
+const FacebookStrategy = require("passport-facebook");
 const debug = require("debug")("facebook:passportConfig");
 require("dotenv").config();
 import passport from "passport";
@@ -48,6 +49,35 @@ export default function (passport: any) {
         } catch (err) {
           return done(err);
         }
+      }
+    )
+  );
+
+  passport.use(
+    new FacebookStrategy(
+      {
+        clientID: process.env.FACEBOOK_APP_ID,
+        clientSecret: process.env.FACEBOOK_APP_SECRET,
+        callbackURL: "http://localhost:4567/auth/facebook/redirect",
+      },
+      async (accessToken: any, refreshToken: any, profile: any, done: any) => {
+        console.log(profile);
+        // try {
+        //   const currentUser = await User.findOne({ googleId: profile.id });
+        //   if (currentUser) {
+        //     return done(null, currentUser);
+        //   } else {
+        //     const newUser = await new User({
+        //       googleId: profile.id,
+        //       email: profile._json.email,
+        //       firstName: profile.name.givenName,
+        //       lastName: profile.name.familyName,
+        //     }).save();
+        //     return done(null, newUser);
+        //   }
+        // } catch (err) {
+        //   return done(err);
+        // }
       }
     )
   );
