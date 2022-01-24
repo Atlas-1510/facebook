@@ -13,24 +13,27 @@ export interface UserInput {
   friends?: ObjectId[];
   inboundFriendRequests?: ObjectId[];
   outboundFriendRequests?: ObjectId[];
+  googleId?: string;
 }
 
 export interface UserDocument extends UserInput, Document {
   email: string;
   firstName: string;
   lastName: string;
-  friends?: ObjectId[];
+  friends: ObjectId[];
   inboundFriendRequests: ObjectId[];
   outboundFriendRequests: ObjectId[];
+  googleId: string;
 }
 
 const UserSchema = new Schema<UserDocument>({
-  email: { type: String, required: true },
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
-  friends: { type: Array, default: [] },
+  email: { type: Schema.Types.String, required: true },
+  firstName: { type: Schema.Types.String, required: true },
+  lastName: { type: Schema.Types.String, required: true },
+  friends: { type: [Schema.Types.ObjectId], default: [] },
   inboundFriendRequests: { type: [Schema.Types.ObjectId], default: [] },
   outboundFriendRequests: { type: [Schema.Types.ObjectId], default: [] },
+  googleId: { type: Schema.Types.String },
 });
 
 export default mongoose.model("User", UserSchema);

@@ -32,4 +32,35 @@ const ensureAuthenticated = (
   }
 };
 
-export { tryLogin, ensureAuthenticated };
+const googleAuth = [
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+    prompt: "select_account",
+  }),
+];
+
+const googleAuthRedirect = [
+  passport.authenticate("google"),
+  (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    return res.send(req.user);
+  },
+];
+
+const logout = [
+  async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    req.logOut();
+    return res.send("Logged Out");
+  },
+];
+
+export {
+  tryLogin,
+  ensureAuthenticated,
+  googleAuth,
+  googleAuthRedirect,
+  logout,
+};
