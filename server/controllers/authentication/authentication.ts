@@ -32,6 +32,18 @@ const ensureAuthenticated = (
   }
 };
 
+const getAuthStatus = (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) => {
+  if (req.isAuthenticated()) {
+    return res.send(req.user);
+  } else {
+    return res.send(false);
+  }
+};
+
 const googleAuth = [
   passport.authenticate("google", {
     scope: ["profile", "email"],
@@ -60,6 +72,7 @@ const logout = [
 export {
   tryLogin,
   ensureAuthenticated,
+  getAuthStatus,
   googleAuth,
   googleAuthRedirect,
   logout,
