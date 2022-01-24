@@ -42,6 +42,7 @@ export default function (passport: any) {
               email: profile._json.email,
               firstName: profile.name.givenName,
               lastName: profile.name.familyName,
+              thumbnail: profile._json.picture,
             }).save();
             return done(null, newUser);
           }

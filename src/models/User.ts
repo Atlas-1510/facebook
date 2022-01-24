@@ -14,6 +14,7 @@ export interface UserInput {
   inboundFriendRequests?: ObjectId[];
   outboundFriendRequests?: ObjectId[];
   googleId?: string;
+  thumbnail?: string;
 }
 
 export interface UserDocument extends UserInput, Document {
@@ -24,6 +25,7 @@ export interface UserDocument extends UserInput, Document {
   inboundFriendRequests: ObjectId[];
   outboundFriendRequests: ObjectId[];
   googleId: string;
+  thumbnail: string;
 }
 
 const UserSchema = new Schema<UserDocument>({
@@ -34,6 +36,7 @@ const UserSchema = new Schema<UserDocument>({
   inboundFriendRequests: { type: [Schema.Types.ObjectId], default: [] },
   outboundFriendRequests: { type: [Schema.Types.ObjectId], default: [] },
   googleId: { type: Schema.Types.String },
+  thumbnail: { type: Schema.Types.String },
 });
 
 export default mongoose.model("User", UserSchema);
