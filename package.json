@@ -3,8 +3,11 @@
   "version": "1.0.0",
   "description": "A facebook clone that I created as the final assignment for The Odin Project nodejs course.",
   "scripts": {
-    "test": "DEBUG=facebook:* DEBUG_HIDE_DATE=yes jest --watch",
-    "start": "DEBUG=facebook:* nodemon ./server/server.ts"
+    "test": "DEBUG=facebook:* DEBUG_HIDE_DATE=yes jest server --watch",
+    "server": "DEBUG=facebook:* nodemon ./server/server.ts",
+    "start": "node server.js",
+    "client": "cd client && npm start",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "Jason Aravanis (https://github.com/Atlas-1510)",
   "license": "MIT",
@@ -28,6 +31,8 @@
     "typescript": "^4.5.2"
   },
   "dependencies": {
+    "axios": "^0.25.0",
+    "concurrently": "^7.0.0",
     "debug": "^4.3.3",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
