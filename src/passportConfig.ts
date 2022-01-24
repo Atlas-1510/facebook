@@ -2,7 +2,6 @@ const LocalStrategy = require("passport-local").Strategy;
 const GoogleStrategy = require("passport-google-oauth20");
 const debug = require("debug")("facebook:passportConfig");
 require("dotenv").config();
-import passport from "passport";
 import User from "./models/User";
 
 export default function (passport: any) {
