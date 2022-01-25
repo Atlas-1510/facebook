@@ -1,3 +1,18 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: "Klavika";
+    src: url("./fonts/klavika/KlavikaMedium-TF.otf");
+  }
+}
+
+@layer components {
+  .input {
+    @apply mx-3 my-1 p-2 bg-stone-100 font-roboto border shadow-sm border-b-[#0000002e] border-l-[#0000001c] border-r-[#0000001c] border-t-[#00000012] rounded text-sm  placeholder-gray-500;
+  }
+}

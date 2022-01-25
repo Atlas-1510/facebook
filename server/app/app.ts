@@ -18,6 +18,7 @@ app.use(
     saveUninitialized: true,
     cookie: {
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
+      httpOnly: true, // stops client-side JS from seeing the cookie
     },
   })
 );
