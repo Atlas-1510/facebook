@@ -34,11 +34,10 @@ export default async function populateMockDatabase() {
     },
   ];
 
-  await Promise.all(
-    mockUsers.map(async (user) => {
-      user.password = await bcrypt.hash("test", 10);
-    })
-  );
+  const password = await bcrypt.hash("test", 10);
+  mockUsers.map((user) => {
+    user.password = password;
+  });
 
   const users: UserDocument[] = await User.insertMany(mockUsers);
 
