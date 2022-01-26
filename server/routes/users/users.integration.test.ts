@@ -33,7 +33,7 @@ describe("/api/users", () => {
         .post("/auth/login")
         .send({
           email: "steve@rogers.com",
-          password: 12345,
+          password: "test",
         })
         .type("form");
     });
@@ -52,51 +52,6 @@ describe("/api/users", () => {
         expect(response.headers["content-type"]).toEqual(
           expect.stringContaining("json")
         );
-      });
-    });
-    describe("POST", () => {
-      describe("given valid input for a new user", () => {
-        test("saves and returns the new user document", async () => {
-          const response = await agent.post("/api/users").send({
-            email: "wanda@maximoff.com",
-            firstName: "Wanda",
-            lastName: "Maximoff",
-          });
-          expect(response.statusCode).toBe(201);
-          expect(response.headers["content-type"]).toEqual(
-            expect.stringContaining("json")
-          );
-          expect(response.body.firstName).toBe("Wanda");
-        });
-      });
-      describe("given invalid input for a new user", () => {
-        test("missing email - throws error", async () => {
-          const response = await agent.post("/api/users").send({
-            // email: "wanda@maximoff.com",
-            firstName: "Wanda",
-            lastName: "Maximoff",
-          });
-          expect(response.body.errors.length).toBe(1);
-          expect(response.statusCode).toBe(400);
-        });
-        test("missing firstName - throws error", async () => {
-          const response = await agent.post("/api/users").send({
-            email: "wanda@maximoff.com",
-            // firstName: "Wanda",
-            lastName: "Maximoff",
-          });
-          expect(response.body.errors.length).toBe(1);
-          expect(response.statusCode).toBe(400);
-        });
-        test("missing lastName - throws error", async () => {
-          const response = await agent.post("/api/users").send({
-            email: "wanda@maximoff.com",
-            firstName: "Wanda",
-            // lastName: "Maximoff",
-          });
-          expect(response.body.errors.length).toBe(1);
-          expect(response.statusCode).toBe(400);
-        });
       });
     });
     describe("PUT", () => {
