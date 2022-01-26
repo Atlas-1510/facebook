@@ -14,7 +14,7 @@ export default function (passport: any) {
         try {
           const user = await User.findOne({ email: email });
           if (!user) {
-            return done(null, false);
+            return done(null, false, { message: "Username not found" });
           }
           return done(null, user);
         } catch (err) {

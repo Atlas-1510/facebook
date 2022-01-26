@@ -10,7 +10,14 @@ const tryLogin = (
   next: express.NextFunction
 ) => {
   passport.authenticate("local", function (err, user, info) {
+    if (err) {
+      return next(err);
+    }
+    if (info) {
+      return res.send(info);
+    }
     req.logIn(user, function (err: any) {
+      console.log(user);
       if (err) {
         return next(err);
       }

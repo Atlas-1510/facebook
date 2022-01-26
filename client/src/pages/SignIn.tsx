@@ -1,7 +1,49 @@
-import { FC } from "react";
+import { FC, useState, ChangeEvent, SyntheticEvent, useContext } from "react";
 import GitHubLink from "../components/GitHubLink";
+import axios from "axios";
+import { AuthContext } from "../contexts/Auth";
 
 const SignIn: FC = () => {
+  const { setUser } = useContext(AuthContext);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [flash, setFlash] = useState("");
+
+  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    setEmail(e.target.value);
+  };
+  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    setPassword(e.target.value);
+  };
+
+  const handleFormSubmit = async (e: SyntheticEvent): Promise<void> => {
+    e.preventDefault();
+    setFlash("");
+    const target = e.target as typeof e.target & {
+      email: { value: string };
+      password: { value: string };
+    };
+    const email = target.email.value;
+    const password = target.password.value;
+
+    // make login request to server
+    const response = await axios.post("/auth/login", {
+      email,
+      password,
+    });
+
+    const { message, _id }: { message: string; _id: string } = response.data;
+    if (message) {
+      setFlash(message);
+    } else if (_id) {
+      setUser(response.data);
+    } else {
+      throw new Error(
+        "Login error, did not receive error message or successful login result"
+      );
+    }
+  };
+
   return (
     <div className="flex flex-col items-center h-screen bg-neutral-200">
       <main className="w-full flex flex-col md:flex-row items-center p-5 md:p-10 md:justify-around flex-grow max-w-6xl">
@@ -15,13 +57,20 @@ const SignIn: FC = () => {
         </section>
 
         <section className="bg-white rounded-lg w-full max-w-sm md:max-w-md shadow-lg flex flex-col items-center p-4">
-          <form className="flex flex-col item-center w-full">
+          <form
+            className="flex flex-col item-center w-full"
+            onSubmit={handleFormSubmit}
+          >
             <input
               className="input"
               aria-label="email"
               name="email"
               type="email"
               placeholder="Email address"
+              autoComplete="email"
+              value={email}
+              onChange={handleEmailChange}
+              required
             />
             <input
               className="input my-3"
@@ -29,6 +78,10 @@ const SignIn: FC = () => {
               name="password"
               type="password"
               placeholder="Password"
+              autoComplete="current-password"
+              value={password}
+              onChange={handlePasswordChange}
+              required
             />
             <button
               className=" bg-facebook-blue text-white my-1 rounded font-roboto text-lg p-2  hover:shadow-inner"
@@ -37,6 +90,7 @@ const SignIn: FC = () => {
               Log In
             </button>
           </form>
+          <span className="my-2 text-red-500 text-sm">{flash}</span>
           <span className=" my-2 text-facebook-blue text-sm">
             Forgotten password?
           </span>

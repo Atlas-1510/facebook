@@ -1,9 +1,9 @@
 import { FC, useContext } from "react";
-import { UserContext } from "../contexts/User";
+import { AuthContext } from "../contexts/Auth";
 import { Link } from "react-router-dom";
 
 const Profile: FC = () => {
-  const user = useContext(UserContext);
+  const { user } = useContext(AuthContext);
 
   return (
     <div>
