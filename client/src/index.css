@@ -13,6 +13,6 @@
 
 @layer components {
   .input {
-    @apply p-3 font-roboto border border-neutral-300 rounded placeholder-gray-500 focus:outline-blue-500;
+    @apply p-3 font-roboto border border-neutral-300 rounded placeholder-gray-400 focus:outline-blue-500;
   }
 }
