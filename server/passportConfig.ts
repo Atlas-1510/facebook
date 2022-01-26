@@ -1,8 +1,9 @@
+import User from "./models/User";
+import bcrypt from "bcryptjs";
 const LocalStrategy = require("passport-local").Strategy;
 const GoogleStrategy = require("passport-google-oauth20");
 const debug = require("debug")("facebook:passportConfig");
 require("dotenv").config();
-import User from "./models/User";
 
 export default function (passport: any) {
   passport.use(
@@ -15,6 +16,12 @@ export default function (passport: any) {
           const user = await User.findOne({ email: email });
           if (!user) {
             return done(null, false, { message: "Username not found" });
+          }
+          const loginSuccess = await bcrypt.compare(password, user.password);
+          if (loginSuccess) {
+            return done(null, user);
+          } else {
+            return done(null, false, { message: "Incorrect password" });
           }
           return done(null, user);
         } catch (err) {

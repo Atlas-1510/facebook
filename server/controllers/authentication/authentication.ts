@@ -1,6 +1,10 @@
 import passport from "passport";
 import createHttpError from "http-errors";
 import express from "express";
+import { body } from "express-validator";
+import processValidation from "../../utils/processValidation";
+import User, { UserDocument } from "../../models/User";
+import bcrypt from "bcryptjs";
 
 const debug = require("debug")("facebook:controllers:authentication");
 
@@ -17,7 +21,6 @@ const tryLogin = (
       return res.send(info);
     }
     req.logIn(user, function (err: any) {
-      console.log(user);
       if (err) {
         return next(err);
       }
@@ -25,6 +28,44 @@ const tryLogin = (
     });
   })(req, res, next);
 };
+
+// TODO: Add stronger password requirements via express-validator
+const signup = [
+  body("email", "Please provide an email"),
+  body("password", "Please provide a password"),
+  processValidation,
+  async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    try {
+      const existingUser = await User.findOne({
+        email: req.body.email,
+      }).exec();
+
+      if (existingUser) {
+        const info = {
+          statusCode: 200,
+          message: "That email is already in use.",
+        };
+        return res.send(info);
+      }
+      const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+      const user = new User({
+        email: req.body.email,
+        firstName: "placeholder",
+        lastName: "placeholder",
+        password: hashedPassword,
+      });
+      await user.save();
+      return res.status(201).send(user);
+    } catch (err) {
+      return next(err);
+    }
+  },
+];
 
 const ensureAuthenticated = (
   req: express.Request,
@@ -78,6 +119,7 @@ const logout = [
 
 export {
   tryLogin,
+  signup,
   ensureAuthenticated,
   getAuthStatus,
   googleAuth,

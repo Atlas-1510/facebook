@@ -50,7 +50,7 @@ describe("/api/posts", () => {
         .post("/auth/login")
         .send({
           email: "steve@rogers.com",
-          password: 12345,
+          password: "test",
         })
         .type("form");
     });
@@ -105,7 +105,7 @@ describe("/api/posts", () => {
           .post("/auth/login")
           .send({
             email: "steve@rogers.com",
-            password: 12345,
+            password: "test",
           })
           .type("form");
       });
@@ -154,7 +154,7 @@ describe("/api/posts", () => {
           .post("/auth/login")
           .send({
             email: "steve@rogers.com",
-            password: 12345,
+            password: "test",
           })
           .type("form");
       });
@@ -239,7 +239,7 @@ describe("/api/posts", () => {
           .post("/auth/login")
           .send({
             email: "steve@rogers.com",
-            password: 12345,
+            password: "test",
           })
           .type("form");
       });
@@ -342,7 +342,7 @@ describe("/api/posts", () => {
           .post("/auth/login")
           .send({
             email: "steve@rogers.com",
-            password: 12345,
+            password: "test",
           })
           .type("form");
       });

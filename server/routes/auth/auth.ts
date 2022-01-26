@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   tryLogin,
+  signup,
   getAuthStatus,
   googleAuth,
   googleAuthRedirect,
@@ -16,6 +17,8 @@ router.post(
   },
   tryLogin
 );
+
+router.post("/signup", signup);
 
 router.get("/getAuthStatus", getAuthStatus);
 

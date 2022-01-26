@@ -57,7 +57,7 @@ describe("/api/friendRequests/", () => {
   describe("if not logged in", () => {
     describe("POST", () => {
       test("asks client to login and retry", async () => {
-        const response = await agent.get("/api/posts/newsfeed");
+        const response = await agent.get("/api/posts/newsfeed"); // TODO: Should this be a call to newsfeed API?
         expect(response.body).toMatchObject({
           message: "Please login to view this",
         });
@@ -70,7 +70,7 @@ describe("/api/friendRequests/", () => {
         .post("/auth/login")
         .send({
           email: "tony@stark.com",
-          password: 12345,
+          password: "test",
         })
         .type("form");
     });
@@ -162,7 +162,7 @@ describe("/api/friendRequests/", () => {
           .post("/auth/login")
           .send({
             email: "bruce@banner.com",
-            password: 12345,
+            password: "test",
           })
           .type("form");
       });

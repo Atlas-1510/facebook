@@ -2,6 +2,7 @@ import User, { UserInput, UserDocument } from "../models/User";
 import Post, { PostInput, PostDocument } from "../models/Post";
 import Comment, { CommentInput, CommentDocument } from "../models/Comment";
 import { HydratedDocument, Types } from "mongoose";
+import bcrypt from "bcryptjs";
 const debug = require("debug")("facebook:utils/populateMockDatabase");
 
 // This function populates mongodb-memory-server for testing.
@@ -32,6 +33,12 @@ export default async function populateMockDatabase() {
       lastName: "Banner",
     },
   ];
+
+  await Promise.all(
+    mockUsers.map(async (user) => {
+      user.password = await bcrypt.hash("test", 10);
+    })
+  );
 
   const users: UserDocument[] = await User.insertMany(mockUsers);
 
