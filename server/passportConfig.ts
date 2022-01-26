@@ -1,4 +1,4 @@
-import User from "./models/User";
+import User, { UserDocument } from "./models/User";
 import bcrypt from "bcryptjs";
 const LocalStrategy = require("passport-local").Strategy;
 const GoogleStrategy = require("passport-google-oauth20");
@@ -13,7 +13,9 @@ export default function (passport: any) {
       },
       async (email: any, password: any, done: any) => {
         try {
-          const user = await User.findOne({ email: email });
+          const user: UserDocument | null = await User.findOne({
+            email: email,
+          });
           if (!user) {
             return done(null, false, { message: "Username not found" });
           }
