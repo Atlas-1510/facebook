@@ -34,6 +34,7 @@ const AuthProvider: FC<Props> = ({ children }) => {
 
   useEffect(() => {
     async function getAuthStatus() {
+      console.log("api call made");
       const response = await axios.get("/auth/getAuthStatus");
       console.log(response.data);
       setUser(response.data);

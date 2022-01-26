@@ -8,7 +8,14 @@ import {
 } from "../../controllers/authentication/authentication";
 const router = Router();
 
-router.post("/login", tryLogin);
+// TODO: Remove login delay timer middleware below
+router.post(
+  "/login",
+  function (req, res, next) {
+    setTimeout(next, 1000);
+  },
+  tryLogin
+);
 
 router.get("/getAuthStatus", getAuthStatus);
 

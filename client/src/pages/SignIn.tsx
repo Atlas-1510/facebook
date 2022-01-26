@@ -8,6 +8,7 @@ const SignIn: FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [flash, setFlash] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleEmailChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setEmail(e.target.value);
@@ -19,6 +20,7 @@ const SignIn: FC = () => {
   const handleFormSubmit = async (e: SyntheticEvent): Promise<void> => {
     e.preventDefault();
     setFlash("");
+    setLoading(true);
     const target = e.target as typeof e.target & {
       email: { value: string };
       password: { value: string };
@@ -26,12 +28,11 @@ const SignIn: FC = () => {
     const email = target.email.value;
     const password = target.password.value;
 
-    // make login request to server
     const response = await axios.post("/auth/login", {
       email,
       password,
     });
-
+    setLoading(false);
     const { message, _id }: { message: string; _id: string } = response.data;
     if (message) {
       setFlash(message);
@@ -83,11 +84,12 @@ const SignIn: FC = () => {
               onChange={handlePasswordChange}
               required
             />
+
             <button
               className=" bg-facebook-blue text-white my-1 rounded font-roboto text-lg p-2  hover:shadow-inner"
               type="submit"
             >
-              Log In
+              {loading ? "Loading" : "Log In"}
             </button>
           </form>
           <span className="my-2 text-red-500 text-sm">{flash}</span>
