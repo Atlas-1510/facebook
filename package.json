@@ -4,6 +4,7 @@
   "description": "A facebook clone that I created as the final assignment for The Odin Project nodejs course.",
   "scripts": {
     "test": "DEBUG=facebook:* DEBUG_HIDE_DATE=yes jest server --watch",
+    "test-fe": "cd client && npm test",
     "server": "DEBUG=facebook:* nodemon ./server/server.ts",
     "start": "node server.js",
     "client": "cd client && npm start",

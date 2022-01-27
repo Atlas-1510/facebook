@@ -13,7 +13,7 @@ export interface User {
   thumbnail?: string;
 }
 
-type AuthContextType = {
+export type AuthContextType = {
   user: User | null;
   setUser: any;
 };
@@ -34,9 +34,8 @@ const AuthProvider: FC<Props> = ({ children }) => {
 
   useEffect(() => {
     async function getAuthStatus() {
-      console.log("api call made");
       const response = await axios.get("/auth/getAuthStatus");
-      console.log(response.data);
+
       setUser(response.data);
     }
     getAuthStatus();

@@ -18,30 +18,29 @@ const SignIn: FC = () => {
   };
 
   const handleFormSubmit = async (e: SyntheticEvent): Promise<void> => {
-    e.preventDefault();
-    setFlash("");
-    setLoading(true);
-    const target = e.target as typeof e.target & {
-      email: { value: string };
-      password: { value: string };
-    };
-    const email = target.email.value;
-    const password = target.password.value;
+    try {
+      e.preventDefault();
+      setFlash("");
+      setLoading(true);
 
-    const response = await axios.post("/auth/login", {
-      email,
-      password,
-    });
-    setLoading(false);
-    const { message, _id }: { message: string; _id: string } = response.data;
-    if (message) {
-      setFlash(message);
-    } else if (_id) {
-      setUser(response.data);
-    } else {
-      throw new Error(
-        "Login error, did not receive error message or successful login result"
-      );
+      const response = await axios.post("/auth/login", {
+        email,
+        password,
+      });
+
+      const { message, _id }: { message: string; _id: string } = response.data;
+      if (message) {
+        setFlash(message);
+        setLoading(false);
+      } else if (_id) {
+        setUser(response.data);
+      } else {
+        throw new Error(
+          "Login error, did not receive error message or successful login result"
+        );
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
 
