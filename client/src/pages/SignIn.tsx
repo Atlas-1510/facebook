@@ -2,6 +2,7 @@ import { FC, useState, ChangeEvent, SyntheticEvent, useContext } from "react";
 import GitHubLink from "../components/GitHubLink";
 import axios from "axios";
 import { AuthContext } from "../contexts/Auth";
+import Modal from "../components/Modal";
 
 const SignIn: FC = () => {
   const { setUser } = useContext(AuthContext);
@@ -9,6 +10,7 @@ const SignIn: FC = () => {
   const [password, setPassword] = useState("");
   const [flash, setFlash] = useState("");
   const [loading, setLoading] = useState(false);
+  const [signupOpen, setSignupOpen] = useState(false);
 
   const handleEmailChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setEmail(e.target.value);
@@ -85,7 +87,7 @@ const SignIn: FC = () => {
             />
 
             <button
-              className=" bg-facebook-blue text-white my-1 rounded font-roboto text-lg p-2  hover:shadow-inner"
+              className=" bg-facebook-blue hover:bg-blue-600 text-white my-1 rounded font-roboto text-lg p-2  hover:shadow-inner"
               type="submit"
             >
               {loading ? "Loading" : "Log In"}
@@ -103,10 +105,16 @@ const SignIn: FC = () => {
             </span>
             <div className="w-full mr-3 h-px bg-gray-300"></div>
           </div>
-          <button className=" bg-[#00A400] rounded font-roboto p-1 px-3 my-3 text-white hover:shadow-inner">
+          <button
+            onClick={() => setSignupOpen(true)}
+            className=" bg-green-500 hover:bg-green-600 rounded font-roboto p-3 my-3 text-white hover:shadow-inner"
+          >
             Create New Account
           </button>
         </section>
+        <Modal open={signupOpen} onClose={() => setSignupOpen(false)}>
+          Sign Up Modal Content
+        </Modal>
       </main>
 
       <footer className="text-stone-500 text-center text-xs w-full flex flex-col items-center justify-end bg-white p-3">
