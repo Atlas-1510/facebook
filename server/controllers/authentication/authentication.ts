@@ -53,6 +53,7 @@ const signup = [
       }
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
+      // TODO: Remove hashed password from the response back to the client.
       const user = new User({
         email: req.body.email,
         firstName: "placeholder",
