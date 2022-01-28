@@ -1,5 +1,7 @@
 import React, { FC, ReactNode, MouseEvent } from "react";
 import ReactDom from "react-dom";
+import { IconContext } from "react-icons";
+import { IoMdClose } from "react-icons/io";
 
 type Props = {
   children?: ReactNode;
@@ -21,12 +23,12 @@ const Modal: FC<Props> = ({ children, open, onClose, title, subtext }) => {
   const portal: HTMLElement = document.getElementById("portal")!;
   return ReactDom.createPortal(
     <div
-      className="absolute top-0 left-0 right-0 bottom-0 bg-white/40 z-50"
+      className="absolute top-0 left-0 right-0 bottom-0 bg-stone-200/60 z-50"
       onClick={closeModal}
     >
       <div className=" w-full h-full grid place-items-center">
         <section
-          className="bg-white rounded-lg w-full max-w-sm md:max-w-md shadow-lg flex flex-col items-center p-4"
+          className="bg-white rounded-lg w-full max-w-sm md:max-w-md drop-shadow-2xl flex flex-col items-center p-4"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex w-full justify-between">
@@ -36,7 +38,11 @@ const Modal: FC<Props> = ({ children, open, onClose, title, subtext }) => {
                 {subtext}
               </p>
             </div>
-            <button onClick={closeModal}>Close modal</button>
+            <button onClick={closeModal}>
+              <IconContext.Provider value={{ color: "#71717a", size: "2rem" }}>
+                <IoMdClose />
+              </IconContext.Provider>
+            </button>
           </div>
           <div className="w-full my-3 h-px bg-gray-300 box-border"></div>
           {children}
