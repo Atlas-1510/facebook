@@ -18,6 +18,7 @@ const SignIn: FC = () => {
   const [surname, setSurname] = useState("");
   const [signupEmail, setSignupEmail] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
+  const [signinFlash, setSigninFlash] = useState("");
 
   const handleSigninSubmit = async (e: SyntheticEvent): Promise<void> => {
     try {
@@ -34,6 +35,32 @@ const SignIn: FC = () => {
       if (message) {
         setFlash(message);
         setLoading(false);
+      } else if (_id) {
+        setUser(response.data);
+      } else {
+        throw new Error(
+          "Login error, did not receive error message or successful login result"
+        );
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleSignUpSubmit = async (e: SyntheticEvent): Promise<void> => {
+    try {
+      e.preventDefault();
+      setSigninFlash("");
+
+      const response = await axios.post("/auth/signup", {
+        email: signupEmail,
+        password: signupPassword,
+      });
+
+      const { message, _id }: { message: string; _id: string } = response.data;
+      if (message) {
+        setSigninFlash(message);
+        // setLoading(false);
       } else if (_id) {
         setUser(response.data);
       } else {
@@ -73,6 +100,7 @@ const SignIn: FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              autoFocus
             />
             <input
               className="input my-3"
@@ -129,6 +157,7 @@ const SignIn: FC = () => {
               value={givenName}
               onChange={(e) => setGivenName(e.target.value)}
               required
+              autoFocus
             />
             <input
               className="input mb-3"
@@ -143,18 +172,7 @@ const SignIn: FC = () => {
             />
             <input
               className="input mb-3"
-              aria-label="password"
-              name="password"
-              type="password"
-              placeholder="New password"
-              autoComplete="new-password"
-              value={signupPassword}
-              onChange={(e) => setSignupPassword(e.target.value)}
-              required
-            />
-            <input
-              className="input mb-3"
-              aria-label="email"
+              aria-label="New email"
               name="email"
               type="email"
               placeholder="Email address"
@@ -163,7 +181,19 @@ const SignIn: FC = () => {
               onChange={(e) => setSignupEmail(e.target.value)}
               required
             />
-            <PrimaryButton title="Sign Up" />
+            <input
+              className="input mb-3"
+              aria-label="New password"
+              name="password"
+              type="password"
+              placeholder="New password"
+              autoComplete="new-password"
+              value={signupPassword}
+              onChange={(e) => setSignupPassword(e.target.value)}
+              required
+            />
+            <span className="my-2 text-red-500 text-sm">{signinFlash}</span>
+            <PrimaryButton title="Sign Up" onClick={handleSignUpSubmit} />
           </form>
         </Modal>
       </main>

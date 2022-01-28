@@ -42,32 +42,86 @@ describe("App test", () => {
     };
     axiosMock.onGet("/auth/getAuthStatus").reply(200, user);
     setup();
-    const text = await screen.findByText("This is the home page");
-    expect(text).toBeInTheDocument();
+
+    expect(
+      await screen.findByText("This is the home page")
+    ).toBeInTheDocument();
   });
 
   test("Renders sign in page when user context not available", () => {
     axiosMock.onGet("/auth/getAuthStatus").reply(200, null);
     setup();
-    const text = screen.getByText(
-      "Odinbook helps you connect and share with the people in your life."
-    );
-    expect(text).toBeInTheDocument();
+
+    expect(
+      screen.getByText(
+        "Odinbook helps you connect and share with the people in your life."
+      )
+    ).toBeInTheDocument();
   });
   test("Redirects to home page after successful sign in", async () => {
-    axiosMock.onGet("/auth/getAuthStatus").reply(200, null);
-    axiosMock.onPost("/auth/login").reply(200, {
+    axiosMock
+      .onGet("/auth/getAuthStatus")
+      .reply(200, null)
+      .onPost("/auth/login")
+      .reply(200, {
+        firstName: "Jason",
+        _id: "some_id",
+      });
+
+    setup();
+
+    userEvent.type(screen.getByLabelText("email"), "test@test.com");
+    userEvent.type(screen.getByLabelText("password"), "test");
+    userEvent.click(await screen.findByRole("button", { name: /log in/i }));
+    await waitForElementToBeRemoved(() => screen.queryByText("Loading"));
+    expect(screen.getByText("This is the home page")).toBeInTheDocument();
+  });
+  // TODO: Add tests for flash message display when login warning
+  test("Click on 'Create New Account' button opens modal", async () => {
+    setup();
+
+    userEvent.click(
+      await screen.findByRole("button", {
+        name: /create new account/i,
+      })
+    );
+
+    expect(screen.getByRole("dialog")).toBeInTheDocument();
+  });
+  // TODO: Add tests for behaviour when password is weak
+  test("Successful signup redirects to home page", async () => {
+    axiosMock.onPost("/auth/signup").reply(200, {
       firstName: "Jason",
       _id: "some_id",
     });
     setup();
-    const emailInput = screen.getByLabelText("email");
-    const passwordInput = screen.getByLabelText("password");
-    userEvent.type(emailInput, "test@test.com");
-    userEvent.type(passwordInput, "test");
-    const submitButton = await screen.findByRole("button", { name: /log in/i });
-    userEvent.click(submitButton);
-    await waitForElementToBeRemoved(() => screen.queryByText("Loading"));
-    expect(screen.getByText("This is the home page")).toBeInTheDocument();
+    userEvent.click(
+      await screen.findByRole("button", {
+        name: /create new account/i,
+      })
+    );
+
+    userEvent.type(await screen.findByLabelText("New email"), "test@test.com");
+    userEvent.type(await screen.findByLabelText("New password"), "test");
+    userEvent.click(await screen.findByRole("button", { name: "Sign Up" }));
+    expect(
+      await screen.findByText("This is the home page")
+    ).toBeInTheDocument();
+  });
+  test("Shows flash message if problem with sign up", async () => {
+    axiosMock.onPost("/auth/signup").reply(200, {
+      message: "Mock flash warning",
+    });
+    setup();
+    userEvent.click(
+      await screen.findByRole("button", {
+        name: /create new account/i,
+      })
+    );
+
+    userEvent.type(await screen.findByLabelText("New email"), "test@test.com");
+    userEvent.type(await screen.findByLabelText("New password"), "test");
+    userEvent.click(await screen.findByRole("button", { name: "Sign Up" }));
+    expect(await screen.findByText("Mock flash warning")).toBeInTheDocument();
   });
 });
