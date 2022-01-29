@@ -1,4 +1,4 @@
-import { FC, useState, ChangeEvent, SyntheticEvent, useContext } from "react";
+import { FC, useState, SyntheticEvent, useContext } from "react";
 import GitHubLink from "../components/GitHubLink";
 import axios from "axios";
 import { AuthContext } from "../contexts/Auth";
@@ -53,6 +53,8 @@ const SignIn: FC = () => {
       setSigninFlash("");
 
       const response = await axios.post("/auth/signup", {
+        firstName: givenName,
+        lastName: surname,
         email: signupEmail,
         password: signupPassword,
       });
@@ -60,7 +62,6 @@ const SignIn: FC = () => {
       const { message, _id }: { message: string; _id: string } = response.data;
       if (message) {
         setSigninFlash(message);
-        // setLoading(false);
       } else if (_id) {
         setUser(response.data);
       } else {

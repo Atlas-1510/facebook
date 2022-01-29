@@ -56,12 +56,19 @@ const signup = [
       // TODO: Remove hashed password from the response back to the client.
       const user = new User({
         email: req.body.email,
-        firstName: "placeholder",
-        lastName: "placeholder",
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
         password: hashedPassword,
       });
       await user.save();
-      return res.status(201).send(user);
+      req.logIn(user, function (err: any) {
+        if (err) {
+          return next(err);
+        }
+        const userObj: any = { ...user.toObject() };
+        delete userObj.password;
+        return res.status(201).send(userObj);
+      });
     } catch (err) {
       return next(err);
     }

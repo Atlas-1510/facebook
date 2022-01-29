@@ -10,13 +10,7 @@ import {
 const router = Router();
 
 // TODO: Remove login delay timer middleware below
-router.post(
-  "/login",
-  function (req, res, next) {
-    setTimeout(next, 1000);
-  },
-  tryLogin
-);
+router.post("/login", tryLogin);
 
 router.post("/signup", signup);
 

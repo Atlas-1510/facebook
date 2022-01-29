@@ -25,7 +25,6 @@ export default function (passport: any) {
           } else {
             return done(null, false, { message: "Incorrect password" });
           }
-          return done(null, user);
         } catch (err) {
           return done(err);
         }
