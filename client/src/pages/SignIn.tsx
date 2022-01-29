@@ -4,6 +4,7 @@ import axios from "axios";
 import { AuthContext } from "../contexts/Auth";
 import Modal from "../components/Modal";
 import PrimaryButton from "../components/PrimaryButton";
+import { Link } from "react-router-dom";
 
 const SignIn: FC = () => {
   const { setUser } = useContext(AuthContext);
@@ -123,9 +124,14 @@ const SignIn: FC = () => {
             </button>
           </form>
           <span className="my-2 text-red-500 text-sm">{flash}</span>
-          <span className=" my-2 text-facebook-blue text-sm">
-            Forgotten password?
-          </span>
+
+          {/* TODO: Implement password reset */}
+          <Link to="/passwordreset">
+            <span className=" my-2 text-facebook-blue text-sm">
+              Forgotten password?
+            </span>
+          </Link>
+
           <div className="flex w-full items-center">
             <div className="w-full ml-3 h-px bg-gray-300 box-border"></div>
             <span className="whitespace-nowrap mx-4 text-gray-800 text-sm">
