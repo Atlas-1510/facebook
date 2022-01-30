@@ -4,9 +4,9 @@ import { AiOutlineSearch, AiFillBell } from "react-icons/ai";
 import { HiUser, HiUserGroup } from "react-icons/hi";
 import { BsFillCaretDownFill } from "react-icons/bs";
 import NavButton from "../common/NavButton";
-import { Link } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
-import Logo from "../Logo";
+import Logo from "../common/Logo";
+import SearchBar from "../SearchBar";
 
 const NavBar: FC = () => {
   const isMobileScreen = useMediaQuery({ query: "(max-width: 768px)" });
@@ -47,8 +47,28 @@ const NavBar: FC = () => {
     );
   } else {
     return (
-      <header className=" bg-zinc-100 h-14 w-full flex items-center justify-between">
-        <Logo />
+      <header className=" bg-zinc-100 h-14 w-full grid grid-cols-3">
+        <div className="h-full flex items-center mx-1 w-full">
+          <Logo />
+          <SearchBar />
+        </div>
+        <ul className="h-full flex items-center justify-center mx-1 w-full">
+          <li>Home</li>
+          <li>Friends</li>
+        </ul>
+        <div className="h-full flex items-center justify-end px-1 w-full">
+          <span>Profile</span>
+          <NavButton to="notifications">
+            <IconContext.Provider value={{ color: "#27272a", size: "1.3rem" }}>
+              <AiFillBell />
+            </IconContext.Provider>
+          </NavButton>
+          <NavButton>
+            <IconContext.Provider value={{ color: "#27272a", size: "1.3rem" }}>
+              <BsFillCaretDownFill />
+            </IconContext.Provider>
+          </NavButton>
+        </div>
       </header>
     );
   }
