@@ -4,11 +4,15 @@ import { Link } from "react-router-dom";
 type Props = {
   children: ReactNode;
   to?: string;
+  className?: string;
 };
 
-const NavButton: FC<Props> = ({ children, to }) => {
+const NavButton: FC<Props> = ({ children, to, className }) => {
   return (
-    <Link to={to ? to : ""} className="h-full grid place-items-center">
+    <Link
+      to={to ? to : ""}
+      className={`h-full grid place-items-center ${className ? className : ""}`}
+    >
       <div className=" h-[70%] aspect-square rounded-full bg-zinc-300 hover:bg-zinc-400 grid place-items-center mx-1 transition-all">
         {children}
       </div>

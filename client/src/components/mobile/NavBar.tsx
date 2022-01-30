@@ -1,5 +1,4 @@
 import { FC } from "react";
-import { IconContext } from "react-icons/lib";
 import { AiOutlineSearch, AiFillBell } from "react-icons/ai";
 import { HiUser, HiUserGroup } from "react-icons/hi";
 import { BsFillCaretDownFill } from "react-icons/bs";
@@ -7,31 +6,31 @@ import NavButton from "../common/NavButton";
 import { useMediaQuery } from "react-responsive";
 import Logo from "../common/Logo";
 import SearchBar from "../SearchBar";
+import { AiFillHome } from "react-icons/ai";
 
 const NavBar: FC = () => {
   const isMobileScreen = useMediaQuery({ query: "(max-width: 768px)" });
-  const buttonStyle = { color: "#52525b", fontSize: "1.3rem" };
   if (isMobileScreen) {
     return (
       <header className=" bg-zinc-100 h-14 w-full flex items-center justify-between">
         <div className="h-full flex items-center mx-1">
           <Logo />
-          <NavButton to="search">
-            <AiOutlineSearch style={buttonStyle} />
+          <NavButton to="search" className="text-zinc-600 text-xl">
+            <AiOutlineSearch />
           </NavButton>
         </div>
         <div className="h-full flex items-center mx-1">
-          <NavButton to="friends">
-            <HiUserGroup style={buttonStyle} />
+          <NavButton to="friends" className="text-zinc-600 text-xl">
+            <HiUserGroup />
           </NavButton>
-          <NavButton to="profile">
-            <HiUser style={buttonStyle} />
+          <NavButton to="profile" className="text-zinc-600 text-xl">
+            <HiUser />
           </NavButton>
-          <NavButton to="notifications">
-            <AiFillBell style={buttonStyle} />
+          <NavButton to="notifications" className="text-zinc-600 text-xl">
+            <AiFillBell />
           </NavButton>
-          <NavButton>
-            <BsFillCaretDownFill style={buttonStyle} />
+          <NavButton className="text-zinc-600 text-xl">
+            <BsFillCaretDownFill />
           </NavButton>
         </div>
       </header>
@@ -44,17 +43,19 @@ const NavBar: FC = () => {
           <SearchBar />
         </div>
         <ul className="h-full flex items-center justify-center mx-1 w-full">
-          <li>Home</li>
+          <li className=" text-red-500">
+            <AiFillHome />
+          </li>
           <li>Friends</li>
         </ul>
         <div className="h-full flex items-center justify-end px-1 w-full">
           <span>Profile</span>
-          <NavButton to="notifications">
-            <AiFillBell style={buttonStyle} />
+          <NavButton to="notifications" className="text-zinc-600 text-xl">
+            <AiFillBell />
           </NavButton>
 
-          <NavButton>
-            <BsFillCaretDownFill style={buttonStyle} />
+          <NavButton className="text-zinc-600 text-xl">
+            <BsFillCaretDownFill />
           </NavButton>
         </div>
       </header>
