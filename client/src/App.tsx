@@ -10,7 +10,7 @@ const App: FC = () => {
 
   if (user) {
     return (
-      <div className="bg-zinc-300 flex flex-col h-screen">
+      <div className="bg-zinc-300 flex flex-col h-screen min-w-[100vw]">
         <NavBar />
         <Outlet />
       </div>

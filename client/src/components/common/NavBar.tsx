@@ -7,8 +7,9 @@ import { useMediaQuery } from "react-responsive";
 import Logo from "./Logo";
 import SearchBar from "../SearchBar";
 import { AiFillHome } from "react-icons/ai";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import NavTab from "./NavTab";
+import testImage from "../../images/test_profile_image.jpeg";
 
 const NavBar: FC = () => {
   const isMobileScreen = useMediaQuery({ query: "(max-width: 768px)" });
@@ -53,7 +54,19 @@ const NavBar: FC = () => {
           </NavTab>
         </ul>
         <div className="h-full flex items-center justify-end px-1 w-full">
-          <span>Profile</span>
+          <Link
+            to="profile"
+            className="h-full overflow-hidden flex justify-center items-center m-2"
+          >
+            <img
+              src={testImage}
+              alt="profile"
+              className="rounded-full h-7 aspect-square"
+            />
+            <span className=" font-roboto font-medium text-zinc-900 ml-2">
+              Jason
+            </span>
+          </Link>
           <NavButton to="notifications" className="text-zinc-600 text-xl">
             <AiFillBell />
           </NavButton>
