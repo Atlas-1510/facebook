@@ -10,37 +10,28 @@ import SearchBar from "../SearchBar";
 
 const NavBar: FC = () => {
   const isMobileScreen = useMediaQuery({ query: "(max-width: 768px)" });
+  const buttonStyle = { color: "#52525b", fontSize: "1.3rem" };
   if (isMobileScreen) {
     return (
       <header className=" bg-zinc-100 h-14 w-full flex items-center justify-between">
         <div className="h-full flex items-center mx-1">
           <Logo />
           <NavButton to="search">
-            <IconContext.Provider value={{ color: "#52525b", size: "1.3rem" }}>
-              <AiOutlineSearch />
-            </IconContext.Provider>
+            <AiOutlineSearch style={buttonStyle} />
           </NavButton>
         </div>
         <div className="h-full flex items-center mx-1">
           <NavButton to="friends">
-            <IconContext.Provider value={{ color: "#27272a", size: "1.3rem" }}>
-              <HiUserGroup />
-            </IconContext.Provider>
+            <HiUserGroup style={buttonStyle} />
           </NavButton>
           <NavButton to="profile">
-            <IconContext.Provider value={{ color: "#27272a", size: "1.3rem" }}>
-              <HiUser />
-            </IconContext.Provider>
+            <HiUser style={buttonStyle} />
           </NavButton>
           <NavButton to="notifications">
-            <IconContext.Provider value={{ color: "#27272a", size: "1.3rem" }}>
-              <AiFillBell />
-            </IconContext.Provider>
+            <AiFillBell style={buttonStyle} />
           </NavButton>
           <NavButton>
-            <IconContext.Provider value={{ color: "#27272a", size: "1.3rem" }}>
-              <BsFillCaretDownFill />
-            </IconContext.Provider>
+            <BsFillCaretDownFill style={buttonStyle} />
           </NavButton>
         </div>
       </header>
@@ -59,14 +50,11 @@ const NavBar: FC = () => {
         <div className="h-full flex items-center justify-end px-1 w-full">
           <span>Profile</span>
           <NavButton to="notifications">
-            <IconContext.Provider value={{ color: "#27272a", size: "1.3rem" }}>
-              <AiFillBell />
-            </IconContext.Provider>
+            <AiFillBell style={buttonStyle} />
           </NavButton>
+
           <NavButton>
-            <IconContext.Provider value={{ color: "#27272a", size: "1.3rem" }}>
-              <BsFillCaretDownFill />
-            </IconContext.Provider>
+            <BsFillCaretDownFill style={buttonStyle} />
           </NavButton>
         </div>
       </header>
