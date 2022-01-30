@@ -7,6 +7,7 @@ import { AuthContext } from "./contexts/Auth";
 
 const App: FC = () => {
   const { user } = useContext(AuthContext);
+
   if (user) {
     return (
       <>

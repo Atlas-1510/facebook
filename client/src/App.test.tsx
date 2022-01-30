@@ -7,7 +7,7 @@ import userEvent from "@testing-library/user-event";
 import App from "./App";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "./contexts/Auth";
-import Home from "./pages/Home";
+import Home from "./pages/Home/Home";
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
 
