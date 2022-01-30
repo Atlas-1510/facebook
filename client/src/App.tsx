@@ -1,7 +1,7 @@
 import { FC, useContext } from "react";
 import SignIn from "./pages/SignIn";
 
-import NavBar from "./components/mobile/NavBar";
+import NavBar from "./components/common/NavBar";
 import { Outlet } from "react-router-dom";
 import { AuthContext } from "./contexts/Auth";
 
@@ -10,10 +10,10 @@ const App: FC = () => {
 
   if (user) {
     return (
-      <>
+      <div className="bg-zinc-300 flex flex-col h-screen">
         <NavBar />
         <Outlet />
-      </>
+      </div>
     );
   } else {
     return <SignIn />;

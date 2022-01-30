@@ -8,16 +8,13 @@ type Props = {
 };
 
 const NavButton: FC<Props> = ({ children, to, className }) => {
+  const styles = `h-[70%] aspect-square rounded-full bg-zinc-300 hover:bg-zinc-400 grid place-items-center mx-1 transition-all ${className}`;
+  const activeStyles = styles + " bg-zinc-400";
+
   return (
     <NavLink
       to={to ? to : ""}
-      className={({ isActive }) => {
-        let styles = `h-[70%] aspect-square rounded-full bg-zinc-300 hover:bg-zinc-400 grid place-items-center mx-1 transition-all ${className}`;
-        if (isActive) {
-          styles = styles + " bg-zinc-400";
-        }
-        return styles;
-      }}
+      className={({ isActive }) => (isActive ? activeStyles : styles)}
     >
       {children}
     </NavLink>

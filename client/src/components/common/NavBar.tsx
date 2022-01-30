@@ -2,11 +2,13 @@ import { FC } from "react";
 import { AiOutlineSearch, AiFillBell } from "react-icons/ai";
 import { HiUser, HiUserGroup } from "react-icons/hi";
 import { BsFillCaretDownFill } from "react-icons/bs";
-import NavButton from "../common/NavButton";
+import NavButton from "./NavButton";
 import { useMediaQuery } from "react-responsive";
-import Logo from "../common/Logo";
+import Logo from "./Logo";
 import SearchBar from "../SearchBar";
 import { AiFillHome } from "react-icons/ai";
+import { NavLink } from "react-router-dom";
+import NavTab from "./NavTab";
 
 const NavBar: FC = () => {
   const isMobileScreen = useMediaQuery({ query: "(max-width: 768px)" });
@@ -29,7 +31,7 @@ const NavBar: FC = () => {
           <NavButton to="notifications" className="text-zinc-600 text-xl">
             <AiFillBell />
           </NavButton>
-          <NavButton className="text-zinc-600 text-xl">
+          <NavButton to="options" className="text-zinc-600 text-xl">
             <BsFillCaretDownFill />
           </NavButton>
         </div>
@@ -43,10 +45,12 @@ const NavBar: FC = () => {
           <SearchBar />
         </div>
         <ul className="h-full flex items-center justify-center mx-1 w-full">
-          <li className=" text-red-500">
+          <NavTab to="" className="text-zinc-600 text-xl">
             <AiFillHome />
-          </li>
-          <li>Friends</li>
+          </NavTab>
+          <NavTab to="friends" className="text-zinc-600 text-xl">
+            <HiUserGroup />
+          </NavTab>
         </ul>
         <div className="h-full flex items-center justify-end px-1 w-full">
           <span>Profile</span>
@@ -54,7 +58,7 @@ const NavBar: FC = () => {
             <AiFillBell />
           </NavButton>
 
-          <NavButton className="text-zinc-600 text-xl">
+          <NavButton to="options" className="text-zinc-600 text-xl">
             <BsFillCaretDownFill />
           </NavButton>
         </div>
