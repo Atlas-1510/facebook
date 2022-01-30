@@ -6,6 +6,8 @@ import Modal from "../components/Modal";
 import PrimaryButton from "../components/PrimaryButton";
 import { Link } from "react-router-dom";
 
+// TODO: Replace default browser outline on focus of inputs with standard one for all clients via tailwind (use 'ring' class)
+
 const SignIn: FC = () => {
   const { setUser } = useContext(AuthContext);
   // Signin form state
