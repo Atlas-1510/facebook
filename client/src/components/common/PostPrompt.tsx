@@ -8,6 +8,7 @@ import { AuthContext } from "../../contexts/Auth";
 const PostPrompt = () => {
   const { user } = useContext(AuthContext);
   const [modalOpen, setModalOpen] = useState(false);
+  const [postInput, setPostInput] = useState("");
   const handlePostSubmit = () => {};
   return (
     <section className="bg-zinc-100 shadow-md overflow-auto md:rounded-lg">
@@ -49,10 +50,17 @@ const PostPrompt = () => {
               name="post"
               required
               autoFocus
+              value={postInput}
+              onChange={(e) => setPostInput(e.target.value)}
             />
 
             {/* <span className="my-2 text-red-500 text-sm">{signinFlash}</span> */}
-            <PrimaryButton title="Post" onClick={async () => {}} />
+            <PrimaryButton
+              title="Post"
+              onClick={async () => {}}
+              type="submit"
+              disabled={postInput === ""}
+            />
           </form>
         </div>
       </Modal>
