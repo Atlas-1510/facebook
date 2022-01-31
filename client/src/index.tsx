@@ -2,7 +2,7 @@ import { render } from "react-dom";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from "./App";
 import "./index.css";
-import Home from "./pages/Home/Home";
+import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import Users from "./pages/Users";
