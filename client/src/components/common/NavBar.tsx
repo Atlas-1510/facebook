@@ -43,7 +43,7 @@ const NavBar: FC = () => {
     );
   } else {
     return (
-      <header className=" bg-zinc-100 h-14 w-full grid grid-cols-3 shadow-md fixed">
+      <header className=" bg-zinc-100 h-14 w-full grid grid-cols-3 shadow-md fixed z-10">
         <div className="h-full flex items-center mx-1">
           <Logo />
           <SearchBar />

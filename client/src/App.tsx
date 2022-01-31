@@ -10,7 +10,7 @@ const App: FC = () => {
 
   if (user) {
     return (
-      <div className="bg-zinc-200 font-roboto min-w-[20rem]">
+      <div className="bg-zinc-200 font-roboto min-w-[20rem] min-h-screen">
         <NavBar />
         {/* Div below sits behind fixed NavBar to prevent overlap at top of scroll */}
         <div className="h-14 w-full bg-transparent mb-3"></div>

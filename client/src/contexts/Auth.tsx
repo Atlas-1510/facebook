@@ -6,6 +6,7 @@ export interface User {
   email: string;
   firstName: string;
   lastName: string;
+  fullName: string;
   friends?: string[];
   inboundFriendRequests?: string[];
   outboundFriendRequests?: string[];
