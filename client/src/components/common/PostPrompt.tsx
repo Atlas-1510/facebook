@@ -1,15 +1,38 @@
-import { useState, useContext } from "react";
+import { useState, useContext, SyntheticEvent } from "react";
 import { MdPhotoLibrary } from "react-icons/md";
 import UserThumbnail from "./UserThumbnail";
 import Modal from "../Modal";
 import PrimaryButton from "../PrimaryButton";
 import { AuthContext } from "../../contexts/Auth";
+import axios from "axios";
 
 const PostPrompt = () => {
   const { user } = useContext(AuthContext);
   const [modalOpen, setModalOpen] = useState(false);
   const [postInput, setPostInput] = useState("");
-  const handlePostSubmit = () => {};
+  const [flash, setFlash] = useState("");
+  const handlePostSubmit = async (e: SyntheticEvent): Promise<void> => {
+    try {
+      e.preventDefault();
+      // reset flash
+      setFlash("");
+      // fire POST call with form input
+      const response = await axios.post("/api/posts", {
+        author: user?._id,
+        content: postInput,
+      });
+      console.log(response.data);
+      // reset post input
+      setPostInput("");
+      // close modal
+      setModalOpen(false);
+      // trigger timeline refresh
+      // --> ***** TRIGGER TIMELINE REFRESH HERE *****
+    } catch (err) {
+      console.error(err);
+      setFlash("Something went wrong");
+    }
+  };
   return (
     <section className="bg-zinc-100 shadow-md overflow-auto md:rounded-lg">
       <div className="flex items-center m-3 mb-0 pb-2 border-b border-b-zinc-300 h-12">
@@ -42,7 +65,10 @@ const PostPrompt = () => {
             </span>
           </div>
 
-          <form className="flex flex-col item-center w-full">
+          <form
+            className="flex flex-col item-center w-full"
+            onSubmit={handlePostSubmit}
+          >
             <textarea
               className="my-3 w-full h-40 placeholder:font-roboto placeholder:text-zinc-600 placeholder:text-xl focus:placeholder:text-zinc-400 resize-none outline-none"
               placeholder={`What's on your mind, ${user?.firstName}?`}
@@ -54,7 +80,7 @@ const PostPrompt = () => {
               onChange={(e) => setPostInput(e.target.value)}
             />
 
-            {/* <span className="my-2 text-red-500 text-sm">{signinFlash}</span> */}
+            <span className="my-2 text-red-500 text-sm">{flash}</span>
             <PrimaryButton
               title="Post"
               onClick={async () => {}}
