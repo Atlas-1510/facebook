@@ -15,7 +15,7 @@ const NavBar: FC = () => {
   const isMobileScreen = useMediaQuery({ query: "(max-width: 768px)" });
   if (isMobileScreen) {
     return (
-      <header className=" bg-zinc-100 h-14 w-full flex items-center justify-between shadow-sm mb-3">
+      <header className=" bg-zinc-100 h-14 w-full flex items-center justify-between shadow-md mb-3">
         <div className="h-full flex items-center mx-1">
           <Logo />
           <NavButton to="search" className="text-zinc-600 text-xl">
@@ -40,7 +40,7 @@ const NavBar: FC = () => {
     );
   } else {
     return (
-      <header className=" bg-zinc-100 h-14 w-full grid grid-cols-3 shadow-sm mb-3">
+      <header className=" bg-zinc-100 h-14 w-full grid grid-cols-3 shadow-md mb-3">
         <div className="h-full flex items-center mx-1">
           <Logo />
           <SearchBar />

@@ -4,7 +4,7 @@ import { MdPhotoLibrary } from "react-icons/md";
 
 const PostPrompt = () => {
   return (
-    <section className="bg-zinc-100 shadow-sm overflow-auto md:rounded-lg">
+    <section className="bg-zinc-100 shadow-md overflow-auto md:rounded-lg">
       <div className="flex items-center m-3 mb-0 pb-2 border-b border-b-zinc-300">
         <img
           src={testImage}
