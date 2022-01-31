@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useContext } from "react";
 import { AiOutlineSearch, AiFillBell } from "react-icons/ai";
 import { HiUser, HiUserGroup } from "react-icons/hi";
 import { BsFillCaretDownFill } from "react-icons/bs";
@@ -9,9 +9,11 @@ import SearchBar from "../SearchBar";
 import { AiFillHome } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import NavTab from "./NavTab";
-import testImage from "../../images/test_profile_image.jpeg";
+import { AuthContext } from "../../contexts/Auth";
+import UserThumbnail from "./UserThumbnail";
 
 const NavBar: FC = () => {
+  const { user } = useContext(AuthContext);
   const isMobileScreen = useMediaQuery({ query: "(max-width: 768px)" });
   if (isMobileScreen) {
     return (
@@ -58,13 +60,12 @@ const NavBar: FC = () => {
             to="profile"
             className="h-full overflow-hidden flex justify-center items-center m-2"
           >
-            <img
-              src={testImage}
-              alt="profile"
-              className="rounded-full h-7 aspect-square"
-            />
+            <div className="h-8">
+              <UserThumbnail />
+            </div>
+
             <span className=" font-roboto font-medium text-zinc-900 ml-2">
-              Jason
+              {user?.firstName}
             </span>
           </Link>
           <NavButton to="notifications" className="text-zinc-600 text-xl">

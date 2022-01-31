@@ -5,6 +5,7 @@ import testUserImage from "../../images/test_profile_image.jpeg";
 import { HiThumbUp } from "react-icons/hi";
 import { FaRegThumbsUp, FaRegComment } from "react-icons/fa";
 import Comment from "../common/Comment";
+import UserThumbnail from "./UserThumbnail";
 
 type Props = {
   author?: string;
@@ -70,15 +71,14 @@ const Post: FC<Props> = ({
         <Comment />
       </section>
       <form className="p-3 pt-3 flex">
-        <img
-          src={testUserImage}
-          alt="test"
-          className="rounded-full h-10 aspect-square inline-block mr-2"
-        />
+        <div className="h-10">
+          <UserThumbnail />
+        </div>
+
         <input
           type="text"
           placeholder="Write a comment..."
-          className="w-full p-2 pl-4 rounded-full bg-zinc-200 font-roboto"
+          className="w-full ml-2 p-2 pl-4 rounded-full bg-zinc-200 font-roboto"
         />
       </form>
     </article>
