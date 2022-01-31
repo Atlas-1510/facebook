@@ -7,7 +7,7 @@ type Props = {
   children?: ReactNode;
   open: boolean;
   title: string;
-  subtext: string;
+  subtext?: string;
   onClose: () => void;
 };
 
@@ -39,7 +39,7 @@ const Modal: FC<Props> = ({ children, open, onClose, title, subtext }) => {
 
   return ReactDom.createPortal(
     <div
-      className="absolute top-0 left-0 right-0 bottom-0 bg-stone-200/60 z-50"
+      className="fixed top-0 left-0 right-0 bottom-0 bg-stone-200/60 z-50"
       onClick={closeModal}
     >
       <div className=" w-full h-full grid place-items-center">
@@ -54,9 +54,11 @@ const Modal: FC<Props> = ({ children, open, onClose, title, subtext }) => {
               <h1 id="title" className=" text-3xl font-roboto">
                 {title}
               </h1>
-              <p className=" text-sm text-zinc-500 font-roboto mt-1">
-                {subtext}
-              </p>
+              {subtext && (
+                <p className=" text-sm text-zinc-500 font-roboto mt-1">
+                  {subtext}
+                </p>
+              )}
             </div>
             <button onClick={closeModal}>
               <IconContext.Provider value={{ color: "#71717a", size: "2rem" }}>

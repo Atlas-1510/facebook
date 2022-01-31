@@ -1,7 +1,6 @@
 import { FC } from "react";
 import testPageImage from "../../images/test_page.jpeg";
 import testPostImage from "../../images/test_post_image.jpeg";
-import testUserImage from "../../images/test_profile_image.jpeg";
 import { HiThumbUp } from "react-icons/hi";
 import { FaRegThumbsUp, FaRegComment } from "react-icons/fa";
 import Comment from "../common/Comment";
