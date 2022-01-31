@@ -8,6 +8,9 @@ const Home: FC = () => {
       <div className="col-start-2 col-span-2">
         <PostPrompt />
         <Post />
+        <Post />
+        <Post />
+        <Post />
       </div>
     </main>
   );

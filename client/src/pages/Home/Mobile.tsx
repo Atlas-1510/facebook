@@ -7,6 +7,9 @@ const Mobile = () => {
     <main className="flex flex-col">
       <PostPrompt />
       <Post />
+      <Post />
+      <Post />
+      <Post />
     </main>
   );
 };
