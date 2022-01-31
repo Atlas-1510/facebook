@@ -7,7 +7,7 @@ import { useMediaQuery } from "react-responsive";
 import Logo from "./Logo";
 import SearchBar from "../SearchBar";
 import { AiFillHome } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import NavTab from "./NavTab";
 import { AuthContext } from "../../contexts/Auth";
 import UserThumbnail from "./UserThumbnail";
@@ -15,6 +15,7 @@ import UserThumbnail from "./UserThumbnail";
 const NavBar: FC = () => {
   const { user } = useContext(AuthContext);
   const isMobileScreen = useMediaQuery({ query: "(max-width: 768px)" });
+
   if (isMobileScreen) {
     return (
       <header className=" bg-zinc-100 h-14 w-full flex items-center justify-between shadow-md fixed">
@@ -56,18 +57,24 @@ const NavBar: FC = () => {
           </NavTab>
         </ul>
         <div className="h-full flex items-center justify-end px-1">
-          <Link
+          <NavLink
             to="profile"
-            className="h-full overflow-hidden flex justify-center items-center m-2"
+            className={({ isActive }) => {
+              let styles =
+                "h-[70%] overflow-hidden text-zinc-900 flex justify-center items-center m-2 hover:bg-slate-200 rounded-full transition-all";
+              let activeStyles =
+                "h-[70%] overflow-hidden flex justify-center items-center m-2 hover:bg-blue-200 rounded-full text-facebook-blue bg-blue-100 transition-all";
+              return isActive ? activeStyles : styles;
+            }}
           >
-            <div className="h-8">
+            <div className="h-8 pl-1">
               <UserThumbnail />
             </div>
 
-            <span className=" font-roboto font-medium text-zinc-900 ml-2">
+            <span className=" font-roboto font-medium text-inherit  ml-2 pr-2">
               {user?.firstName}
             </span>
-          </Link>
+          </NavLink>
           <NavButton to="notifications" className="text-zinc-600 text-xl">
             <AiFillBell />
           </NavButton>
