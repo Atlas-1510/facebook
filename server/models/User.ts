@@ -30,16 +30,29 @@ export interface UserDocument extends UserInput, Document {
   password: string;
 }
 
-const UserSchema = new Schema<UserDocument>({
-  email: { type: Schema.Types.String, required: true },
-  firstName: { type: Schema.Types.String, required: true },
-  lastName: { type: Schema.Types.String, required: true },
-  friends: { type: [Schema.Types.ObjectId], default: [] },
-  inboundFriendRequests: { type: [Schema.Types.ObjectId], default: [] },
-  outboundFriendRequests: { type: [Schema.Types.ObjectId], default: [] },
-  googleId: { type: Schema.Types.String },
-  thumbnail: { type: Schema.Types.String },
-  password: { type: Schema.Types.String, required: true },
+const UserSchema = new Schema<UserDocument>(
+  {
+    email: { type: Schema.Types.String, required: true },
+    firstName: { type: Schema.Types.String, required: true },
+    lastName: { type: Schema.Types.String, required: true },
+    friends: { type: [Schema.Types.ObjectId], default: [] },
+    inboundFriendRequests: { type: [Schema.Types.ObjectId], default: [] },
+    outboundFriendRequests: { type: [Schema.Types.ObjectId], default: [] },
+    googleId: { type: Schema.Types.String },
+    thumbnail: { type: Schema.Types.String },
+    password: { type: Schema.Types.String, required: true },
+  },
+  {
+    toJSON: { virtuals: true },
+    toObject: { getters: true },
+  }
+);
+
+UserSchema.virtual("fullName").get(function (this: {
+  firstName: string;
+  lastName: string;
+}) {
+  return `${this.firstName} ${this.lastName}`;
 });
 
 export default mongoose.model("User", UserSchema);
