@@ -1,6 +1,7 @@
 import { FC } from "react";
 import testPageImage from "../../images/test_page.jpeg";
 import testPostImage from "../../images/test_post_image.jpeg";
+import testUserImage from "../../images/test_profile_image.jpeg";
 import { HiThumbUp } from "react-icons/hi";
 import { FaRegThumbsUp, FaRegComment } from "react-icons/fa";
 import Comment from "../common/Comment";
@@ -68,6 +69,18 @@ const Post: FC<Props> = ({
         <Comment />
         <Comment />
       </section>
+      <form className="p-3 pt-3 flex">
+        <img
+          src={testUserImage}
+          alt="test"
+          className="rounded-full h-10 aspect-square inline-block mr-2"
+        />
+        <input
+          type="text"
+          placeholder="Write a comment..."
+          className="w-full p-2 pl-4 rounded-full bg-zinc-200 font-roboto"
+        />
+      </form>
     </article>
   );
 };
