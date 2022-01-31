@@ -8,8 +8,8 @@ type Props = {
 };
 
 const NavButton: FC<Props> = ({ children, to, className }) => {
-  const styles = `h-[70%] aspect-square rounded-full bg-zinc-300 hover:bg-zinc-400 grid place-items-center mx-1 transition-all ${className}`;
-  const activeStyles = styles + " bg-zinc-400";
+  const styles = `h-[70%] aspect-square rounded-full bg-zinc-200 hover:bg-zinc-400 grid place-items-center mx-1 transition-all ${className}`;
+  const activeStyles = styles + " bg-zinc-300";
 
   return (
     <NavLink

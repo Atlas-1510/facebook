@@ -1,8 +1,11 @@
 import React from "react";
+import PostPrompt from "../../components/common/PostPrompt";
 
 const Mobile = () => {
   return (
-    <div className="bg-zinc-300 flex flex-col h-screen">MOBILE HOME SCREEN</div>
+    <main className="flex flex-col">
+      <PostPrompt />
+    </main>
   );
 };
 

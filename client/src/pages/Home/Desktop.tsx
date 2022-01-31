@@ -1,12 +1,13 @@
 import { FC } from "react";
-import { Link } from "react-router-dom";
+import PostPrompt from "../../components/common/PostPrompt";
 
 const Home: FC = () => {
   return (
-    <>
-      <div className=" grow">This is the home page</div>
-      <Link to="/profile">Profile</Link>
-    </>
+    <main className="grid grid-cols-4">
+      <div className="col-start-2 col-span-2">
+        <PostPrompt />
+      </div>
+    </main>
   );
 };
 
