@@ -5,6 +5,7 @@ import Modal from "../Modal";
 import PrimaryButton from "../PrimaryButton";
 import { AuthContext } from "../../contexts/Auth";
 import axios from "axios";
+import WhiteBox from "./WhiteBox";
 
 const PostPrompt = () => {
   const { user } = useContext(AuthContext);
@@ -34,8 +35,8 @@ const PostPrompt = () => {
     }
   };
   return (
-    <section className="bg-zinc-100 shadow-md overflow-auto md:rounded-lg">
-      <div className="flex items-center m-3 mb-0 pb-2 border-b border-b-zinc-300 h-12">
+    <WhiteBox>
+      <div className="flex items-center mb-0 pb-2 border-b border-b-zinc-300 h-12">
         <UserThumbnail />
         <button
           onClick={() => setModalOpen(true)}
@@ -45,7 +46,7 @@ const PostPrompt = () => {
         </button>
       </div>
       <div className="grid place-items-center">
-        <button className="flex items-center justify-center p-3 w-full rounded-full">
+        <button className="flex items-center justify-center pt-3 w-full rounded-full">
           <MdPhotoLibrary color="#10b981" size="2rem" />
           <span className=" font-roboto font-medium text-zinc-600 pl-3">
             Publish a photo
@@ -90,7 +91,7 @@ const PostPrompt = () => {
           </form>
         </div>
       </Modal>
-    </section>
+    </WhiteBox>
   );
 };
 
