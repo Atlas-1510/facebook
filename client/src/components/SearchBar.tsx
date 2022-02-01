@@ -1,6 +1,11 @@
+import { FC } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 
-const SearchBar = () => {
+type Props = {
+  placeholder: string;
+};
+
+const SearchBar: FC<Props> = ({ placeholder }) => {
   return (
     <section className="h-full w-full  flex items-center mx-1">
       <form className="h-full w-full  hidden md:flex items-center ">
@@ -15,7 +20,7 @@ const SearchBar = () => {
           <input
             type="search"
             aria-label="search"
-            placeholder="Search Odinbook"
+            placeholder={placeholder}
             className="font-roboto bg-transparent  placeholder-gray-400 w-full outline-none focus:-translate-x-5 transition-all"
           />
         </label>

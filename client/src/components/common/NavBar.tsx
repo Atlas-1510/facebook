@@ -46,13 +46,13 @@ const NavBar: FC = () => {
       <header className=" bg-zinc-100 h-14 w-full grid grid-cols-3 shadow-md  sticky top-0 z-10 mb-3">
         <div className="h-full flex items-center mx-1">
           <Logo />
-          <SearchBar />
+          <SearchBar placeholder="Search Facebook" />
         </div>
         <ul className="h-full flex items-center justify-center mx-1 w-full">
           <NavTab to="" className="text-zinc-600 text-xl">
             <AiFillHome />
           </NavTab>
-          <NavTab to="friends" className="text-zinc-600 text-xl">
+          <NavTab to="/profile/friends" className="text-zinc-600 text-xl">
             <HiUserGroup />
           </NavTab>
         </ul>

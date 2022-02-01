@@ -7,7 +7,7 @@ import Post from "../../components/common/Post";
 
 const Posts = () => {
   return (
-    <div className="  w-full md:w-[60vw] grid grid-cols-5 gap-3">
+    <>
       <div className=" col-span-2 hidden md:flex flex-col justify-end">
         <div className="space-y-3 sticky bottom-3 flex flex-col ">
           <WhiteBox>
@@ -70,7 +70,7 @@ const Posts = () => {
           <Post />
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

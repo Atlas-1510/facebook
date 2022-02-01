@@ -2,13 +2,15 @@ import { FC, useContext } from "react";
 import { AuthContext } from "../../contexts/Auth";
 import UserThumbnail from "../../components/common/UserThumbnail";
 import { RiPencilFill } from "react-icons/ri";
-import ProfileTab from "../../components/common/ProfileTab";
+import Tab from "../../components/common/Tab";
 import WhiteBox from "../../components/common/WhiteBox";
 import SecondaryButton from "../../components/common/SecondaryButton";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, Routes, Route } from "react-router-dom";
 import PostPrompt from "../../components/common/PostPrompt";
 import Post from "../../components/common/Post";
 import Posts from "./Posts";
+import Friends from "./Friends/Friends";
+import Photos from "./Photos";
 
 const Profile: FC = () => {
   const { user } = useContext(AuthContext);
@@ -38,16 +40,18 @@ const Profile: FC = () => {
           </div>
           <nav>
             <ul className="flex">
-              <ProfileTab title="Posts" to="/profile" />
-              <ProfileTab title="Friends" to="friends" />
-              <ProfileTab title="Photos" to="photos" />
+              <Tab title="Posts" to="/profile" />
+              <Tab title="Friends" to="friends" />
+              <Tab title="Photos" to="photos" />
             </ul>
           </nav>
         </header>
       </div>
-      <div className=" flex justify-center flex-grow mt-3">
-        <Outlet />
-      </div>
+      <main className=" flex justify-center flex-grow mt-3">
+        <div className="grid grid-cols-5 w-full md:w-[60vw] gap-3">
+          <Outlet />
+        </div>
+      </main>
     </div>
   );
 };
