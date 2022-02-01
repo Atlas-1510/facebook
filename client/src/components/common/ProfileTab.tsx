@@ -13,6 +13,7 @@ const ProfileTab: FC<Props> = ({ title, to }) => {
 
   return (
     <NavLink
+      end
       to={to}
       className={({ isActive }) => (isActive ? activeStyles : styles)}
     >
