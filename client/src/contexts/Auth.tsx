@@ -7,9 +7,9 @@ export interface User {
   firstName: string;
   lastName: string;
   fullName: string;
-  friends?: string[];
-  inboundFriendRequests?: string[];
-  outboundFriendRequests?: string[];
+  friends: string[];
+  inboundFriendRequests: string[];
+  outboundFriendRequests: string[];
   googleId?: string;
   thumbnail?: string;
 }

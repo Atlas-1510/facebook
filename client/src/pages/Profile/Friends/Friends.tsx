@@ -10,14 +10,14 @@ const Friends = () => {
       <WhiteBox>
         <div className="flex justify-between items-start">
           <h2 className=" text-zinc-800 font-medium text-2xl mb-2">Friends</h2>
-          <form>
+          <div>
             <SearchBar placeholder="Search friends" />
-          </form>
+          </div>
         </div>
         <ul className="flex">
           <Tab end={true} title="All Friends" to="" />
           <Tab title="Friend Requests" to="requests" />
-          <Tab title="Find New Friends" to="new" />
+          <Tab title="Find Friends" to="new" />
         </ul>
         <Outlet />
       </WhiteBox>

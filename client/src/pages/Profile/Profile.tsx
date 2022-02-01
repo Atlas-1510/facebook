@@ -20,12 +20,12 @@ const Profile: FC = () => {
       <div className=" bg-zinc-100 pt-10 flex justify-center shadow-md">
         <header className=" w-full md:w-[60vw] ">
           <div className="w-full flex items-center border-b border-zinc-300 pb-3  px-2 md:px-0">
-            <div className=" h-20 md:h-32">
+            <div className=" h-20 md:h-36">
               <UserThumbnail />
             </div>
-            <div className=" flex justify-between items-end ml-3 mt-5  w-full">
+            <div className=" flex justify-between items-end ml-4 translate-y-5 w-full">
               <div>
-                <h1 className=" text-2xl font-medium text-zinc-800">
+                <h1 className=" text-4xl font-medium text-zinc-800">
                   {user?.fullName}
                 </h1>
                 <span className=" text-zinc-500">378 friends</span>
