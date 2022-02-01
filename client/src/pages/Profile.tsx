@@ -47,16 +47,17 @@ const Profile: FC = () => {
       </div>
       <div className=" flex justify-center bg-emerald-300 flex-grow mt-3">
         <div className=" bg-amber-300 w-full md:w-[60vw] grid grid-cols-5 gap-3">
-          <div className="bg-indigo-300 col-span-2 hidden md:block">
-            <div className=" sticky top-16 space-y-3">
+          <div className="bg-indigo-300 col-span-2 hidden md:flex flex-col justify-end">
+            <div className="space-y-3 sticky bottom-3 flex flex-col bg-red-300">
               <WhiteBox>
                 <h2 className=" text-zinc-800 font-medium text-lg mb-2">
                   Intro
                 </h2>
-
-                <SecondaryButton className="w-full">
-                  <span>Add Bio</span>
-                </SecondaryButton>
+                <div className=" space-y-3">
+                  <SecondaryButton className="w-full">
+                    <span>Add Bio</span>
+                  </SecondaryButton>
+                </div>
               </WhiteBox>
               <WhiteBox>
                 <div className=" flex justify-between items-baseline">
