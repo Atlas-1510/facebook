@@ -12,7 +12,7 @@ import Friends from "./pages/Profile/Friends/Friends";
 import Photos from "./pages/Profile/Photos";
 import AllFriends from "./pages/Profile/Friends/AllFriends";
 import Requests from "./pages/Profile/Friends/Requests";
-import FindNewFriends from "./pages/Profile/Friends/FindNewFriends";
+import FindFriends from "./pages/Profile/Friends/FindFriends";
 
 const rootElement = document.getElementById("root");
 render(
@@ -26,7 +26,7 @@ render(
             <Route path="friends" element={<Friends />}>
               <Route index element={<AllFriends />} />
               <Route path="requests" element={<Requests />} />
-              <Route path="new" element={<FindNewFriends />} />
+              <Route path="new" element={<FindFriends />} />
             </Route>
             <Route path="photos" element={<Photos />} />
           </Route>
