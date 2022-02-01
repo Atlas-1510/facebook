@@ -40,8 +40,8 @@ const Profile: FC = () => {
           </div>
           <nav>
             <ul className="flex">
-              <Tab title="Posts" to="/profile" />
-              <Tab title="Friends" to="friends" />
+              <Tab end={true} title="Posts" to="/profile" />
+              <Tab end={false} title="Friends" to="friends" />
               <Tab title="Photos" to="photos" />
             </ul>
           </nav>

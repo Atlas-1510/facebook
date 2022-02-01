@@ -15,7 +15,7 @@ const Friends = () => {
           </form>
         </div>
         <ul className="flex">
-          <Tab title="All Friends" to="" />
+          <Tab end={true} title="All Friends" to="" />
           <Tab title="Friend Requests" to="requests" />
           <Tab title="Find New Friends" to="new" />
         </ul>
