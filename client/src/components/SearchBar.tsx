@@ -7,7 +7,7 @@ type Props = {
 
 const SearchBar: FC<Props> = ({ placeholder }) => {
   return (
-    <section className="h-full w-full  flex items-center mx-1">
+    <section className="h-full w-full  flex items-center">
       <form className="h-full w-full  hidden md:flex items-center ">
         <div />
         <label className="flex items-center focus-within:ring outline-blue-500 group rounded-full p-2 bg-zinc-200 w-full max-w-xs">
