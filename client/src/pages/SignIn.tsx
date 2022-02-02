@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 // TODO: Replace default browser outline on focus of inputs with standard one for all clients via tailwind (use 'ring' class)
 
 const SignIn: FC = () => {
-  const { setUser } = useContext(AuthContext);
+  const { getUserState } = useContext(AuthContext);
   // Signin form state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -39,7 +39,7 @@ const SignIn: FC = () => {
         setFlash(message);
         setLoading(false);
       } else if (_id) {
-        setUser(response.data);
+        getUserState();
       } else {
         throw new Error(
           "Login error, did not receive error message or successful login result"
@@ -66,7 +66,7 @@ const SignIn: FC = () => {
       if (message) {
         setSigninFlash(message);
       } else if (_id) {
-        setUser(response.data);
+        getUserState();
       } else {
         throw new Error(
           "Login error, did not receive error message or successful login result"

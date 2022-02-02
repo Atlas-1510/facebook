@@ -13,28 +13,33 @@ import Photos from "./pages/Profile/Photos";
 import AllFriends from "./pages/Profile/Friends/AllFriends";
 import Requests from "./pages/Profile/Friends/Requests";
 import FindFriends from "./pages/Profile/Friends/FindFriends";
+import { QueryClient, QueryClientProvider } from "react-query";
+
+const queryClient = new QueryClient();
 
 const rootElement = document.getElementById("root");
 render(
-  <AuthProvider>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<App />}>
-          <Route index element={<Home />} />
-          <Route path=":uid" element={<Profile />}>
-            <Route index element={<Posts />} />
-            <Route path="friends" element={<Friends />}>
-              <Route index element={<AllFriends />} />
-              <Route path="requests" element={<Requests />} />
-              <Route path="new" element={<FindFriends />} />
+  <QueryClientProvider client={queryClient}>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<App />}>
+            <Route index element={<Home />} />
+            <Route path=":uid" element={<Profile />}>
+              <Route index element={<Posts />} />
+              <Route path="friends" element={<Friends />}>
+                <Route index element={<AllFriends />} />
+                <Route path="requests" element={<Requests />} />
+                <Route path="new" element={<FindFriends />} />
+              </Route>
+              <Route path="photos" element={<Photos />} />
             </Route>
-            <Route path="photos" element={<Photos />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="users" element={<Users />} />
           </Route>
-          <Route path="settings" element={<Settings />} />
-          <Route path="users" element={<Users />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
-  </AuthProvider>,
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
+  </QueryClientProvider>,
   rootElement
 );

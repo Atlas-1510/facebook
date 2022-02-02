@@ -1,5 +1,6 @@
 import { createContext, FC, ReactNode, useState, useEffect } from "react";
 import axios from "axios";
+import { useQueryClient, useQuery, useMutation } from "react-query";
 
 export interface User {
   _id: string;
@@ -15,13 +16,13 @@ export interface User {
 }
 
 export type AuthContextType = {
-  user: User | null;
-  setUser: any;
+  user: any;
+  getUserState: any;
 };
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
-  setUser: null,
+  getUserState: null,
 });
 
 const { Provider } = AuthContext;
@@ -31,18 +32,23 @@ type Props = {
 };
 
 const AuthProvider: FC<Props> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    async function getAuthStatus() {
+  const fetchUserState = async () => {
+    try {
       const response = await axios.get("/auth/getAuthStatus");
-
-      setUser(response.data);
+      return response.data;
+    } catch (err: any) {
+      console.log(err.response.data);
+      throw err;
     }
-    getAuthStatus();
-  }, []);
+  };
 
-  return <Provider value={{ user, setUser }}>{children}</Provider>;
+  const queryClient = useQueryClient();
+  const { data: user, refetch: getUserState } = useQuery(
+    "userState",
+    fetchUserState
+  );
+
+  return <Provider value={{ user, getUserState }}>{children}</Provider>;
 };
 
 export { AuthContext, AuthProvider };

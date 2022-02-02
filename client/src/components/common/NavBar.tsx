@@ -15,14 +15,14 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const NavBar: FC = () => {
-  const { user, setUser } = useContext(AuthContext);
+  const { user, getUserState } = useContext(AuthContext);
   const isMobileScreen = useMediaQuery({ query: "(max-width: 768px)" });
   const navigate = useNavigate();
 
   const handleSignOut = async (e: SyntheticEvent): Promise<void> => {
     const response = await axios.get("/auth/logout");
     console.log(response);
-    setUser(null);
+    getUserState();
     navigate("/");
   };
 
