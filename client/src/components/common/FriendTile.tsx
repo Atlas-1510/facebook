@@ -5,6 +5,13 @@ import { Link } from "react-router-dom";
 import SecondaryButton from "./SecondaryButton";
 import { User, AuthContext } from "../../contexts/Auth";
 import axios from "axios";
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  QueryClient,
+  QueryClientProvider,
+} from "react-query";
 
 type Props = {
   contact: User;
@@ -13,10 +20,64 @@ type Props = {
 const FriendTile: FC<Props> = ({ contact }) => {
   const { user } = useContext(AuthContext);
 
-  const handleSendRequest = async (e: SyntheticEvent): Promise<void> => {
-    e.preventDefault();
-    console.log("Send request");
-  };
+  const queryClient = useQueryClient();
+
+  const sendRequest = useMutation(
+    async () => {
+      try {
+        console.log("Send request");
+        const response = await axios.post("/api/friendRequests", {
+          fid: contact._id,
+        });
+        console.log(response);
+      } catch (err: any) {
+        console.log(err.response.data.message);
+      }
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("userState");
+      },
+    }
+  );
+
+  const cancelRequest = useMutation(
+    async () => {
+      try {
+        const response = await axios.delete("/api/friendRequests", {
+          data: {
+            fid: contact._id,
+          },
+        });
+        console.log(response);
+      } catch (err: any) {
+        console.log(err.response.data.message);
+      }
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("userState");
+      },
+    }
+  );
+
+  const acceptRequest = useMutation(
+    async () => {
+      try {
+        const response = await axios.post("/api/friendRequests/handle", {
+          fid: contact._id,
+          action: "accept",
+        });
+        console.log(response);
+      } catch (err: any) {
+        console.log(err.response.data.message);
+      }
+    },
+    {
+      onSuccess: () => queryClient.invalidateQueries("userState"),
+    }
+  );
+
   if (!user) {
     return null;
   }
@@ -39,14 +100,24 @@ const FriendTile: FC<Props> = ({ contact }) => {
       break;
     case requestSent:
       Button = (
-        <SecondaryButton className="bg-red-200 text-red-600 hover:bg-red-300">
+        <SecondaryButton
+          className="bg-red-200 text-red-600 hover:bg-red-300"
+          onClick={async () => {
+            cancelRequest.mutate();
+          }}
+        >
           <h3>Cancel Request</h3>
         </SecondaryButton>
       );
       break;
     case requestRecieved:
       Button = (
-        <SecondaryButton className="bg-blue-200 text-blue-600 hover:bg-blue-300">
+        <SecondaryButton
+          className="bg-blue-200 text-blue-600 hover:bg-blue-300"
+          onClick={async () => {
+            acceptRequest.mutate();
+          }}
+        >
           <h3>Accept Request</h3>
         </SecondaryButton>
       );
@@ -55,7 +126,9 @@ const FriendTile: FC<Props> = ({ contact }) => {
       Button = (
         <SecondaryButton
           className="bg-blue-200 text-blue-600 hover:bg-blue-300"
-          onClick={handleSendRequest}
+          onClick={async () => {
+            sendRequest.mutate();
+          }}
         >
           <h3>Add Friend</h3>
         </SecondaryButton>
