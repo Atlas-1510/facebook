@@ -25,11 +25,9 @@ const FriendTile: FC<Props> = ({ contact }) => {
   const sendRequest = useMutation(
     async () => {
       try {
-        console.log("Send request");
-        const response = await axios.post("/api/friendRequests", {
+        await axios.post("/api/friendRequests", {
           fid: contact._id,
         });
-        console.log(response);
       } catch (err: any) {
         console.log(err.response.data.message);
       }
@@ -44,12 +42,11 @@ const FriendTile: FC<Props> = ({ contact }) => {
   const cancelRequest = useMutation(
     async () => {
       try {
-        const response = await axios.delete("/api/friendRequests", {
+        await axios.delete("/api/friendRequests", {
           data: {
             fid: contact._id,
           },
         });
-        console.log(response);
       } catch (err: any) {
         console.log(err.response.data.message);
       }
@@ -64,11 +61,27 @@ const FriendTile: FC<Props> = ({ contact }) => {
   const acceptRequest = useMutation(
     async () => {
       try {
-        const response = await axios.post("/api/friendRequests/handle", {
+        await axios.post("/api/friendRequests/handle", {
           fid: contact._id,
           action: "accept",
         });
-        console.log(response);
+      } catch (err: any) {
+        console.log(err.response.data.message);
+      }
+    },
+    {
+      onSuccess: () => queryClient.invalidateQueries("userState"),
+    }
+  );
+
+  const removeFriend = useMutation(
+    async () => {
+      try {
+        await axios.delete("/api/friendRequests/friends", {
+          data: {
+            fid: contact._id,
+          },
+        });
       } catch (err: any) {
         console.log(err.response.data.message);
       }
@@ -93,7 +106,11 @@ const FriendTile: FC<Props> = ({ contact }) => {
   switch (true) {
     case friends:
       Button = (
-        <SecondaryButton>
+        <SecondaryButton
+          onClick={async () => {
+            removeFriend.mutate();
+          }}
+        >
           <h3>Remove</h3>
         </SecondaryButton>
       );
