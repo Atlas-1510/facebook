@@ -124,4 +124,41 @@ const deleteRequest = [
   },
 ];
 
-export { sendRequest, deleteRequest, handleRequest };
+// To remove a friend
+const removeFriend = [
+  body("fid").isMongoId(),
+  processValidation,
+  async (req: any, res: express.Response, next: express.NextFunction) => {
+    try {
+      // user is defriend request sender. target is defriend request subject
+      const user: UserDocument = req.user;
+      const target: UserDocument | null = await User.findById(req.body.fid);
+      if (!target) {
+        return res.status(404).json({
+          message: "The target for this defriend request could not be found.",
+        });
+      }
+      if (!user.friends.includes(target._id)) {
+        return res.status(400).json({
+          message:
+            "This target for this defriend request is not in your friends list.",
+        });
+      }
+
+      const session = await mongoose.startSession();
+      await session.withTransaction(async () => {
+        removeItem(user.friends, target._id);
+        removeItem(target.friends, user._id);
+        await user.save();
+        await target.save();
+      });
+      session.endSession();
+      res.status(201);
+      return res.send(user);
+    } catch (err) {
+      return next(err);
+    }
+  },
+];
+
+export { sendRequest, deleteRequest, handleRequest, removeFriend };

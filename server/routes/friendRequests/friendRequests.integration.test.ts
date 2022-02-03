@@ -213,4 +213,56 @@ describe("/api/friendRequests/", () => {
       });
     });
   });
+
+  describe("/friends", () => {
+    describe("if logged in", () => {
+      beforeEach(async () => {
+        await agent
+          .post("/auth/login")
+          .send({
+            email: "tony@stark.com",
+            password: "test",
+          })
+          .type("form");
+      });
+      describe("DELETE", () => {
+        test("if a valid request, updates friend arrays", async () => {
+          const response = await agent
+            .delete(`/api/friendRequests/friends`)
+            .send({
+              fid: users[0]._id,
+            });
+
+          const tony = response.body;
+          expect(tony.friends).not.toContain(users[0].id);
+          const steveResponse = await agent.get(`/api/users/${users[0]._id}`);
+          const steve = steveResponse.body;
+          expect(steve.friends).not.toContain(users[1].id);
+        });
+        test("If a user tries to unfriend someone they aren't friends with, return 400 error", async () => {
+          const response = await agent
+            .delete(`/api/friendRequests/friends`)
+            .send({
+              fid: users[2]._id,
+            });
+          expect(response.statusCode).toBe(400);
+          expect(response.body.message).toBe(
+            "This target for this defriend request is not in your friends list."
+          );
+        });
+        test("If tries to defriend a non-existant account, return 404 error", async () => {
+          const nonExistantUserID = new mongoose.Types.ObjectId();
+          const response = await agent
+            .delete(`/api/friendRequests/friends`)
+            .send({
+              fid: nonExistantUserID,
+            });
+          expect(response.statusCode).toBe(404);
+          expect(response.body.message).toBe(
+            "The target for this defriend request could not be found."
+          );
+        });
+      });
+    });
+  });
 });
