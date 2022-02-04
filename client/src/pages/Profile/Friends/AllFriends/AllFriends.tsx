@@ -3,9 +3,11 @@ import { useContext } from "react";
 import FriendTile from "../../../../components/common/FriendTile";
 import { AuthContext, User } from "../../../../contexts/Auth";
 import { useQuery } from "react-query";
+import { useOutletContext } from "react-router-dom";
 
 const AllFriends = () => {
   const { user } = useContext(AuthContext);
+  const searchInput: string = useOutletContext();
 
   const getFriends = async () => {
     try {
@@ -25,12 +27,26 @@ const AllFriends = () => {
     enabled: !!user?._id,
   });
 
+  const generateTile = (contact: User) => (
+    <FriendTile key={contact._id} contact={contact} />
+  );
+
+  const tiles = (() => {
+    if (!friends) {
+      return null;
+    } else if (!searchInput) {
+      return friends.map(generateTile);
+    } else {
+      const filteredFriends = friends.filter((friend: User) =>
+        friend.fullName.toLowerCase().includes(searchInput.toLowerCase())
+      );
+      return filteredFriends.map(generateTile);
+    }
+  })();
+
   return (
     <section className=" mt-3 grid grid-cols-2 gap-1">
-      {friends &&
-        friends.map((contact: User) => (
-          <FriendTile key={contact._id} contact={contact} />
-        ))}
+      {friends && tiles}
     </section>
   );
 };

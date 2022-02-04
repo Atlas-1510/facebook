@@ -1,11 +1,13 @@
-import { FC } from "react";
+import { FC, Dispatch } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 
 type Props = {
   placeholder: string;
+  value: string;
+  setValue: Dispatch<React.SetStateAction<string>>;
 };
 
-const SearchBar: FC<Props> = ({ placeholder }) => {
+const SearchBar: FC<Props> = ({ placeholder, value, setValue }) => {
   return (
     <section className="h-full w-full flex items-center">
       <form className="h-full w-full  hidden md:flex items-center ">
@@ -21,6 +23,8 @@ const SearchBar: FC<Props> = ({ placeholder }) => {
             type="search"
             aria-label="search"
             placeholder={placeholder}
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
             className="font-roboto bg-transparent  placeholder-gray-400 w-full outline-none focus:-translate-x-5 transition-all"
           />
         </label>
