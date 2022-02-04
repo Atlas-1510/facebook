@@ -1,8 +1,8 @@
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import FriendTile from "../../../components/common/FriendTile";
-import { User } from "../../../contexts/Auth";
-import { AuthContext } from "../../../contexts/Auth";
+import FriendTile from "../../../../components/common/FriendTile";
+import { User } from "../../../../contexts/Auth";
+import { AuthContext } from "../../../../contexts/Auth";
 import { useQuery } from "react-query";
 
 const FindFriends = () => {
@@ -11,13 +11,20 @@ const FindFriends = () => {
   async function getAllUsers() {
     try {
       const response = await axios.get("/api/users");
-      return [...response.data].filter((contact) => contact._id !== user?._id);
+
+      const result = [...response.data].filter(
+        (contact) => contact._id !== user?._id
+      );
+
+      return result;
     } catch (err: any) {
       console.log(err.response);
     }
   }
 
-  const { data: allUsers } = useQuery("allUsers", getAllUsers);
+  const { data: allUsers } = useQuery("allUsers", getAllUsers, {
+    enabled: !!user?._id,
+  });
 
   return (
     <section className=" mt-3 grid grid-cols-2 gap-1">

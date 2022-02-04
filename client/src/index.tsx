@@ -12,7 +12,7 @@ import Friends from "./pages/Profile/Friends/Friends";
 import Photos from "./pages/Profile/Photos";
 import AllFriends from "./pages/Profile/Friends/AllFriends";
 import Requests from "./pages/Profile/Friends/Requests";
-import FindFriends from "./pages/Profile/Friends/FindFriends";
+import FindFriends from "./pages/Profile/Friends/FindFriends/FindFriends";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 const queryClient = new QueryClient();
