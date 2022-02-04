@@ -4,11 +4,13 @@ import FriendTile from "../../../../components/common/FriendTile";
 import { User } from "../../../../contexts/Auth";
 import { AuthContext } from "../../../../contexts/Auth";
 import { useQuery } from "react-query";
+import { useOutletContext } from "react-router-dom";
 
 // TODO: Implement pagination
 
 const FindFriends = () => {
   const { user } = useContext(AuthContext);
+  const searchInput: string = useOutletContext();
 
   async function getAllUsers() {
     try {
@@ -28,12 +30,26 @@ const FindFriends = () => {
     enabled: !!user?._id,
   });
 
+  const generateTile = (contact: User) => (
+    <FriendTile key={contact._id} contact={contact} />
+  );
+
+  const tiles = (() => {
+    if (!allUsers) {
+      return null;
+    } else if (!searchInput) {
+      return allUsers.map(generateTile);
+    } else {
+      const filteredFriends = allUsers.filter((friend: User) =>
+        friend.fullName.toLowerCase().includes(searchInput.toLowerCase())
+      );
+      return filteredFriends.map(generateTile);
+    }
+  })();
+
   return (
     <section className=" mt-3 grid grid-cols-2 gap-1">
-      {allUsers &&
-        allUsers.map((contact: User) => (
-          <FriendTile key={contact._id} contact={contact} />
-        ))}
+      {allUsers && tiles}
     </section>
   );
 };
