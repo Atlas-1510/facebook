@@ -5,6 +5,8 @@ import { User } from "../../../../contexts/Auth";
 import { AuthContext } from "../../../../contexts/Auth";
 import { useQuery } from "react-query";
 
+// TODO: Implement pagination
+
 const FindFriends = () => {
   const { user } = useContext(AuthContext);
 
