@@ -1,8 +1,7 @@
-// import mongoose from "mongoose";
 import { User } from "../contexts/Auth";
 
 export default function generateTestUsers() {
-  const mockUserIDs = [`123`, `456`, `789`, `abc`, `def`];
+  const mockUserIDs = [`123`, `456`, `789`, `abc`, `def`, "ghi"];
 
   // mockUsers designed from the view point of Tony (2nd element in array).
   const mockUsers: User[] = [
@@ -28,7 +27,7 @@ export default function generateTestUsers() {
       get fullName() {
         return this.firstName + " " + this.lastName;
       },
-      friends: [mockUserIDs[3]],
+      friends: [mockUserIDs[3], mockUserIDs[5]],
     },
     {
       _id: mockUserIDs[2],
@@ -65,6 +64,18 @@ export default function generateTestUsers() {
         return this.firstName + " " + this.lastName;
       },
       friends: [],
+    },
+    {
+      _id: mockUserIDs[5],
+      email: "nick@fury.com",
+      firstName: "Nick",
+      lastName: "Fury",
+      inboundFriendRequests: [],
+      outboundFriendRequests: [],
+      get fullName() {
+        return this.firstName + " " + this.lastName;
+      },
+      friends: [mockUserIDs[1]],
     },
   ];
 
