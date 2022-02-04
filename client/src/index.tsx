@@ -11,7 +11,7 @@ import { AuthProvider } from "./contexts/Auth";
 import Friends from "./pages/Profile/Friends/Friends";
 import Photos from "./pages/Profile/Photos";
 import AllFriends from "./pages/Profile/Friends/AllFriends/AllFriends";
-import Requests from "./pages/Profile/Friends/Requests";
+import Requests from "./pages/Profile/Friends/Requests/Requests";
 import FindFriends from "./pages/Profile/Friends/FindFriends/FindFriends";
 import { QueryClient, QueryClientProvider } from "react-query";
 
