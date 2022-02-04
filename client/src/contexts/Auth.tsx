@@ -1,6 +1,6 @@
-import { createContext, FC, ReactNode, useState, useEffect } from "react";
+import { createContext, FC, ReactNode } from "react";
 import axios from "axios";
-import { useQueryClient, useQuery, useMutation } from "react-query";
+import { useQueryClient, useQuery } from "react-query";
 
 export interface User {
   _id: string;

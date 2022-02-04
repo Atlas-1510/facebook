@@ -1,17 +1,11 @@
-import { FC, useContext, ReactNode, SyntheticEvent } from "react";
+import { FC, useContext, ReactNode } from "react";
 
 import testProfileImage from "../../images/test_profile_image.jpeg";
 import { Link } from "react-router-dom";
 import SecondaryButton from "./SecondaryButton";
 import { User, AuthContext } from "../../contexts/Auth";
 import axios from "axios";
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-  QueryClient,
-  QueryClientProvider,
-} from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 
 type Props = {
   contact: User;

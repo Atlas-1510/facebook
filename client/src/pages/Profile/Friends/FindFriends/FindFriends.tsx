@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useContext } from "react";
 import axios from "axios";
 import FriendTile from "../../../../components/common/FriendTile";
 import { User } from "../../../../contexts/Auth";
