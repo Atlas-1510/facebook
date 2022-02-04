@@ -6,3 +6,6 @@
 - tailwind
 - react router
 - react responsive
+- react query
+- react testing library
+- axios mock
