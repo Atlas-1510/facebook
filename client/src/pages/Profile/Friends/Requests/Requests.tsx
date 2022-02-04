@@ -1,6 +1,6 @@
 import { AuthContext, User } from "../../../../contexts/Auth";
 import FriendTile from "../../../../components/common/FriendTile";
-import { useContext, useEffect, useRef } from "react";
+import { useContext } from "react";
 import axios from "axios";
 import { useQuery } from "react-query";
 import { useOutletContext } from "react-router-dom";
@@ -8,7 +8,6 @@ import { useOutletContext } from "react-router-dom";
 const Requests = () => {
   const { user } = useContext(AuthContext);
   const searchInput: string = useOutletContext();
-  console.log(searchInput);
 
   const getRequests = async () => {
     const inbound = await (async () => {
@@ -58,7 +57,7 @@ const Requests = () => {
 
   let filteredInboundRequests = (() => {
     if (!requests || !requests.inbound) {
-      return [];
+      return null;
     }
     if (!searchInput) {
       return requests.inbound;
@@ -69,7 +68,7 @@ const Requests = () => {
 
   let filteredOutboundRequests = (() => {
     if (!requests || !requests.outbound) {
-      return [];
+      return null;
     }
     if (!searchInput) {
       return requests.outbound;
