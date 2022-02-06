@@ -1,11 +1,13 @@
 import { FC, useContext, ReactNode } from "react";
 
-import testProfileImage from "../../images/test_profile_image.jpeg";
+import testProfileImage from "../../../images/test_profile_image.jpeg";
 import { Link } from "react-router-dom";
-import SecondaryButton from "./SecondaryButton";
-import { User, AuthContext } from "../../contexts/Auth";
+import SecondaryButton from "../SecondaryButton";
+import { User, AuthContext } from "../../../contexts/Auth";
 import axios from "axios";
 import { useMutation, useQueryClient } from "react-query";
+
+// make skeleton friend tile
 
 type Props = {
   contact: User;
