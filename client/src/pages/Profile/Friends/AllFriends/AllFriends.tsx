@@ -4,6 +4,7 @@ import FriendTile from "../../../../components/common/FriendTile/FriendTile";
 import { AuthContext, User } from "../../../../contexts/Auth";
 import { useQuery } from "react-query";
 import { useOutletContext } from "react-router-dom";
+import SkeletonFriendTile from "../../../../components/common/FriendTile/SkeletonFriendTile";
 
 const AllFriends = () => {
   const { user } = useContext(AuthContext);
@@ -23,7 +24,7 @@ const AllFriends = () => {
     }
   };
 
-  const { data: friends } = useQuery("friends", getFriends, {
+  const { data: friends, status } = useQuery("friends", getFriends, {
     enabled: !!user?._id,
   });
 
@@ -46,7 +47,19 @@ const AllFriends = () => {
 
   return (
     <section className=" mt-3 grid grid-cols-2 gap-1">
-      {friends && tiles}
+      {status === "loading" && (
+        <>
+          <SkeletonFriendTile />
+          <SkeletonFriendTile />
+          <SkeletonFriendTile />
+          <SkeletonFriendTile />
+          <SkeletonFriendTile />
+          <SkeletonFriendTile />
+        </>
+      )}
+
+      {status === "error" && <div>Error fetching data</div>}
+      {status === "success" && friends && tiles}
     </section>
   );
 };
