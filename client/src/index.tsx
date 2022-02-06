@@ -14,6 +14,7 @@ import AllFriends from "./pages/Profile/Friends/AllFriends/AllFriends";
 import Requests from "./pages/Profile/Friends/Requests/Requests";
 import FindFriends from "./pages/Profile/Friends/FindFriends/FindFriends";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +41,7 @@ render(
         </Routes>
       </BrowserRouter>
     </AuthProvider>
+    <ReactQueryDevtools initialIsOpen={false} />
   </QueryClientProvider>,
   rootElement
 );
