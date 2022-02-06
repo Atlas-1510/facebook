@@ -1,4 +1,4 @@
-import { User } from "../contexts/Auth";
+import { User } from "../types/User";
 
 export default function generateTestUsers() {
   const mockUserIDs = [`123`, `456`, `789`, `abc`, `def`, "ghi"];

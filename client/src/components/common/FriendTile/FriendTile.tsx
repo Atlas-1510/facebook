@@ -3,7 +3,8 @@ import { FC, useContext, ReactNode } from "react";
 import testProfileImage from "../../../images/test_profile_image.jpeg";
 import { Link } from "react-router-dom";
 import SecondaryButton from "../SecondaryButton";
-import { User, AuthContext } from "../../../contexts/Auth";
+import { AuthContext } from "../../../contexts/Auth";
+import { User } from "../../../types/User";
 import axios from "axios";
 import { useMutation, useQueryClient } from "react-query";
 

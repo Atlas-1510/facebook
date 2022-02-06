@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import axios from "axios";
 import FriendTile from "../../../../components/common/FriendTile/FriendTile";
-import { User } from "../../../../contexts/Auth";
+import { User } from "../../../../types/User";
 import { AuthContext } from "../../../../contexts/Auth";
 import { useQuery } from "react-query";
 import { useOutletContext } from "react-router-dom";

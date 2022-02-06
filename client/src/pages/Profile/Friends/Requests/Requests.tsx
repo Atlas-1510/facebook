@@ -1,4 +1,5 @@
-import { AuthContext, User } from "../../../../contexts/Auth";
+import { AuthContext } from "../../../../contexts/Auth";
+import { User } from "../../../../types/User";
 import FriendTile from "../../../../components/common/FriendTile/FriendTile";
 import { useContext } from "react";
 import axios from "axios";

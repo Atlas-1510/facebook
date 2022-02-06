@@ -2,19 +2,6 @@ import { createContext, FC, ReactNode } from "react";
 import axios from "axios";
 import { useQueryClient, useQuery } from "react-query";
 
-export interface User {
-  _id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  fullName: string;
-  friends: string[];
-  inboundFriendRequests: string[];
-  outboundFriendRequests: string[];
-  googleId?: string;
-  thumbnail?: string;
-}
-
 export type AuthContextType = {
   user: any;
   getUserState: any;
