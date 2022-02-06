@@ -5,6 +5,7 @@ import { User } from "../../../../contexts/Auth";
 import { AuthContext } from "../../../../contexts/Auth";
 import { useQuery } from "react-query";
 import { useOutletContext } from "react-router-dom";
+import SkeletonFriendTile from "../../../../components/common/FriendTile/SkeletonFriendTile";
 
 // TODO: Implement pagination
 
@@ -26,7 +27,7 @@ const FindFriends = () => {
     }
   }
 
-  const { data: allUsers } = useQuery("allUsers", getAllUsers, {
+  const { data: allUsers, status } = useQuery("allUsers", getAllUsers, {
     enabled: !!user?._id,
   });
 
@@ -49,7 +50,19 @@ const FindFriends = () => {
 
   return (
     <section className=" mt-3 grid grid-cols-2 gap-1">
-      {allUsers && tiles}
+      {status === "loading" && (
+        <>
+          <SkeletonFriendTile />
+          <SkeletonFriendTile />
+          <SkeletonFriendTile />
+          <SkeletonFriendTile />
+          <SkeletonFriendTile />
+          <SkeletonFriendTile />
+        </>
+      )}
+
+      {status === "error" && <div>Error fetching data</div>}
+      {status === "success" && allUsers && tiles}
     </section>
   );
 };
