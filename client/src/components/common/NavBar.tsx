@@ -1,4 +1,4 @@
-import { FC, useContext, SyntheticEvent } from "react";
+import { FC, useContext, SyntheticEvent, useState } from "react";
 import { AiOutlineSearch, AiFillBell } from "react-icons/ai";
 import { HiUser, HiUserGroup } from "react-icons/hi";
 import { BsFillCaretDownFill } from "react-icons/bs";
@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 
 const NavBar: FC = () => {
   const { user, getUserState } = useContext(AuthContext);
+  const [searchInput, setSearchInput] = useState("");
   const isMobileScreen = useMediaQuery({ query: "(max-width: 768px)" });
   const navigate = useNavigate();
 
@@ -56,7 +57,11 @@ const NavBar: FC = () => {
       <header className=" bg-zinc-100 h-14 w-full grid grid-cols-3 shadow-md  sticky top-0 z-10 mb-3">
         <div className="h-full flex items-center mx-1">
           <Logo />
-          <SearchBar placeholder="Search Facebook" />
+          <SearchBar
+            placeholder="Search Facebook"
+            value={searchInput}
+            setValue={setSearchInput}
+          />
         </div>
         <ul className="h-full flex items-center justify-center mx-1 w-full">
           <NavTab to="" className="text-zinc-600 text-xl">
