@@ -7,7 +7,7 @@ import WhiteBox from "../../components/common/WhiteBox";
 import SecondaryButton from "../../components/common/SecondaryButton";
 import { Link, Outlet, Routes, Route } from "react-router-dom";
 import PostPrompt from "../../components/common/PostPrompt";
-import Post from "../../components/common/Post";
+import Post from "../../components/common/Post/Post";
 import Posts from "./Posts";
 import Friends from "./Friends/Friends";
 import Photos from "./Photos";

@@ -3,9 +3,24 @@ import WhiteBox from "../../components/common/WhiteBox";
 import SecondaryButton from "../../components/common/SecondaryButton";
 import { Link } from "react-router-dom";
 import PostPrompt from "../../components/common/PostPrompt";
-import Post from "../../components/common/Post";
+import axios from "axios";
+import { useQuery } from "react-query";
+import { PostInterface } from "../../types/PostInterface";
+import Post from "../../components/common/Post/Post";
+import SkeletonPost from "../../components/common/Post/SkeletonPost";
 
 const Posts = () => {
+  const getPosts = async () => {
+    try {
+      const { data } = await axios.get("/api/posts/newsfeed");
+      return data;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const { status, data: newsfeed } = useQuery("newsfeed", getPosts);
+
   return (
     <>
       <div className=" col-span-2 hidden md:flex flex-col justify-end">
@@ -66,8 +81,21 @@ const Posts = () => {
       <div className="  col-span-5 md:col-span-3">
         <div>
           <PostPrompt />
-          <Post />
-          <Post />
+          {status === "loading" && (
+            <>
+              <SkeletonPost />
+              <SkeletonPost />
+              <SkeletonPost />
+              <SkeletonPost />
+              <SkeletonPost />
+            </>
+          )}
+          {status === "error" && <div>Unable to retrieve posts</div>}
+          {status === "success" &&
+            newsfeed &&
+            newsfeed.map((post: PostInterface) => (
+              <Post key={post._id} post={post} />
+            ))}
         </div>
       </div>
     </>
