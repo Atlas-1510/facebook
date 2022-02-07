@@ -15,7 +15,6 @@ type Props = {
 };
 
 const Post: FC<Props> = ({ post }) => {
-  console.log(post);
   const getAuthorProfile = async () => {
     try {
       const { data } = await axios.get(`/api/users/${post.author}`);
@@ -32,10 +31,6 @@ const Post: FC<Props> = ({ post }) => {
       enabled: !!post?._id,
     }
   );
-
-  console.log(`post author: ${status}`);
-  console.log(`post author:`);
-  console.log(author);
 
   if (status === "loading") {
     return <SkeletonPost />;
