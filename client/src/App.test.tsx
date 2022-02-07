@@ -39,6 +39,7 @@ describe("App test", () => {
     jest.resetAllMocks();
     axiosMock.reset();
     queryClient.clear();
+    axiosMock.onGet("/api/posts/newsfeed").reply(200, []);
   });
   test("Renders home page when user context available", async () => {
     const user = {
