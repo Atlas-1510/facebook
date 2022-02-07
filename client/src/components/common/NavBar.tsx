@@ -40,7 +40,7 @@ const NavBar: FC = () => {
           <NavButton to="friends" className="text-zinc-600 text-xl">
             <HiUserGroup />
           </NavButton>
-          <NavButton to="profile" className="text-zinc-600 text-xl">
+          <NavButton to={`${user._id}`} className="text-zinc-600 text-xl">
             <HiUser />
           </NavButton>
           <NavButton to="notifications" className="text-zinc-600 text-xl">
@@ -67,13 +67,13 @@ const NavBar: FC = () => {
           <NavTab to="" className="text-zinc-600 text-xl">
             <AiFillHome />
           </NavTab>
-          <NavTab to="/profile/friends" className="text-zinc-600 text-xl">
+          <NavTab to={`/${user._id}/friends`} className="text-zinc-600 text-xl">
             <HiUserGroup />
           </NavTab>
         </ul>
         <div className="h-full flex items-center justify-end px-1">
           <NavLink
-            to="profile"
+            to={`${user._id}`}
             className={({ isActive }) => {
               let styles =
                 "h-[70%] overflow-hidden text-zinc-900 flex justify-center items-center m-2 hover:bg-slate-200 rounded-full transition-all";
