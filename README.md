@@ -9,3 +9,4 @@
 - react query
 - react testing library
 - axios mock
+- skeleton loading placeholders
