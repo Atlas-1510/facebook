@@ -7,13 +7,16 @@ import processValidation from "../../utils/processValidation";
 
 const debug = require("debug")("facebook:controllers/posts");
 
+// Gets posts from all friends to populate home page newsfeed stream
 const getNewsfeedPosts = async (req: any, res: any, next: any) => {
   try {
     if (req.user) {
       const user = req.user;
       const results = await Post.find({
         author: { $in: [...user!.friends!, user._id] },
-      }).exec();
+      })
+        .sort({ createdAt: -1 })
+        .exec();
       return res.send(results);
     } else {
       throw new Error("req.user is not defined in getNewsfeedPosts");
@@ -22,6 +25,30 @@ const getNewsfeedPosts = async (req: any, res: any, next: any) => {
     return next(err);
   }
 };
+
+// Gets posts only from a specific user, to populate a profile page 'wall'
+const getProfilePosts = [
+  param("fid", "A valid FID must be provided")
+    .exists()
+    .custom((fid) => isValidObjectId(fid)),
+  processValidation,
+  async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    try {
+      const results = await Post.find({
+        author: req.params.fid,
+      })
+        .sort({ createdAt: -1 })
+        .exec();
+      return res.send(results);
+    } catch (err: any) {
+      return next(err);
+    }
+  },
+];
 
 const getPost = [
   param("pid", "A valid PID must be provided")
@@ -253,6 +280,7 @@ const unlikePost = [
 
 export {
   getNewsfeedPosts,
+  getProfilePosts,
   getPost,
   createPost,
   editPost,

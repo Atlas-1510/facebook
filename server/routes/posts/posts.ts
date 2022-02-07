@@ -10,12 +10,15 @@ import {
   deleteComment,
   likePost,
   unlikePost,
+  getProfilePosts,
 } from "../../controllers/posts/posts";
 import { ensureAuthenticated } from "../../controllers/authentication/authentication";
 
 const router = Router();
 
 router.get("/newsfeed", ensureAuthenticated, getNewsfeedPosts);
+
+router.get("/profile/:fid", ensureAuthenticated, getProfilePosts);
 
 router.get("/:pid", ensureAuthenticated, getPost);
 
