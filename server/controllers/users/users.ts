@@ -25,16 +25,19 @@ const getUser = [
       next();
     }
   },
-  async (
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-  ) => {
+  async (req: any, res: express.Response, next: express.NextFunction) => {
     const { uid } = req.params;
-    const user = await User.findById(uid);
-    if (!user) {
+    const userDoc = await User.findById(uid);
+    if (!userDoc) {
       const err = createHttpError(404, "User not found in database");
       return res.status(err.status).send(err);
+    }
+    const user: any = Object.assign({}, userDoc.toObject());
+    delete user.password;
+    if (uid !== req.user._id.toString()) {
+      delete user?.googleID;
+      delete user.inboundFriendRequests;
+      delete user.outboundFriendRequests;
     }
     return res.send(user);
   },

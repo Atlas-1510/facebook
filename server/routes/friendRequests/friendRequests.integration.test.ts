@@ -10,6 +10,7 @@ import Comment, {
   CommentSchema,
 } from "../../models/Comment";
 import { PostInput, PostDocument } from "../../models/Post";
+import User from "../../models/User";
 
 expect.extend({
   toBeDistinct(received) {
@@ -81,23 +82,27 @@ describe("/api/friendRequests/", () => {
           fid: users[2]._id,
         });
         expect(response.statusCode).toBe(201);
-        const tonyResponse = await agent.get(`/api/users/${users[1]._id}`);
-        expect(tonyResponse.body.outboundFriendRequests).toContain(users[2].id);
-        const peterResponse = await agent.get(`/api/users/${users[2]._id}`);
-        expect(peterResponse.body.inboundFriendRequests).toContain(users[1].id);
+        const tonyResponse = await User.findById(users[1]._id);
+        expect(tonyResponse!.outboundFriendRequests).toContainEqual(
+          users[2]._id
+        );
+        const peterResponse = await User.findById(users[2]._id);
+        expect(peterResponse!.inboundFriendRequests).toContainEqual(
+          users[1]._id
+        );
       });
       test("Rejects request if author is already a friend of the target", async () => {
-        // Tony [1] is send a friend request to Steve [0], but they are already friends
+        // Tony [1] is sending a friend request to Steve [0], but they are already friends
         const response = await agent.post("/api/friendRequests").send({
           fid: users[0]._id,
         });
         expect(response.statusCode).toBe(400);
-        const tonyResponse = await agent.get(`/api/users/${users[1]._id}`);
-        expect(tonyResponse.body.outboundFriendRequests).not.toContain(
+        const tonyResponse = await User.findById(users[1]._id);
+        expect(tonyResponse!.outboundFriendRequests).not.toContainEqual(
           users[0]._id
         );
-        const steveResponse = await agent.get(`/api/users/${users[0]._id}`);
-        expect(steveResponse.body.inboundFriendRequests).not.toContain(
+        const steveResponse = await User.findById(users[0]._id);
+        expect(steveResponse!.inboundFriendRequests).not.toContainEqual(
           users[1]._id
         );
       });
@@ -107,10 +112,10 @@ describe("/api/friendRequests/", () => {
           fid: users[3]._id,
         });
         expect(response.statusCode).toBe(400);
-        const tonyResponse = await agent.get(`/api/users/${users[1]._id}`);
-        expect(tonyResponse.body.outboundFriendRequests).toBeDistinct();
-        const bruceResponse = await agent.get(`/api/users/${users[3]._id}`);
-        expect(bruceResponse.body.inboundFriendRequests).toBeDistinct();
+        const tonyResponse = await User.findById(users[1]._id);
+        expect(tonyResponse!.outboundFriendRequests).toBeDistinct();
+        const bruceResponse = await User.findById(users[3]._id);
+        expect(bruceResponse!.inboundFriendRequests).toBeDistinct();
       });
     });
     describe("DELETE", () => {
@@ -120,9 +125,10 @@ describe("/api/friendRequests/", () => {
         });
         const tony = response.body;
         expect(tony.outboundFriendRequests).not.toContain(users[3].id);
-        const bruceResponse = await agent.get(`/api/users/${users[3]._id}`);
-        const bruce = bruceResponse.body;
-        expect(bruce.inboundFriendRequests).not.toContain(users[1].id);
+        const bruceResponse = await User.findById(users[3]._id);
+        expect(bruceResponse!.inboundFriendRequests).not.toContainEqual(
+          users[1]._id
+        );
       });
       test("If tries to delete a friend request that doesn't exist, return 400 error", async () => {
         const response = await agent.delete(`/api/friendRequests/`).send({
@@ -175,10 +181,12 @@ describe("/api/friendRequests/", () => {
           const bruce = response.body;
           expect(bruce.friends).toContain(users[1].id);
           expect(bruce.inboundFriendRequests).not.toContain(users[1].id);
-          const tonyResponse = await agent.get(`/api/users/${users[1]._id}`);
-          const tony = tonyResponse.body;
-          expect(tony.friends).toContain(users[3].id);
-          expect(tony.inboundFriendRequests).not.toContain(users[3].id);
+          const tonyResponse = await User.findById(users[1]._id);
+
+          expect(tonyResponse!.friends).toContainEqual(users[3]._id);
+          expect(tonyResponse!.inboundFriendRequests).not.toContain(
+            users[3].id
+          );
         });
         test("if a friend request is REJECTED, updates friend arrays and deletes request record", async () => {
           const response = await agent.post(`/api/friendRequests/handle`).send({
@@ -188,10 +196,12 @@ describe("/api/friendRequests/", () => {
           const bruce = response.body;
           expect(bruce.friends).not.toContain(users[1].id);
           expect(bruce.inboundFriendRequests).not.toContain(users[1].id);
-          const tonyResponse = await agent.get(`/api/users/${users[1]._id}`);
-          const tony = tonyResponse.body;
-          expect(tony.friends).not.toContain(users[3].id);
-          expect(tony.inboundFriendRequests).not.toContain(users[3].id);
+          const tonyResponse = await User.findById(users[1]._id);
+
+          expect(tonyResponse!.friends).not.toContainEqual(users[3].id);
+          expect(tonyResponse!.inboundFriendRequests).not.toContainEqual(
+            users[3].id
+          );
         });
         test("If invalid action is provided in body, return 400 error", async () => {
           const response = await agent.post(`/api/friendRequests/handle`).send({
@@ -235,9 +245,8 @@ describe("/api/friendRequests/", () => {
 
           const tony = response.body;
           expect(tony.friends).not.toContain(users[0].id);
-          const steveResponse = await agent.get(`/api/users/${users[0]._id}`);
-          const steve = steveResponse.body;
-          expect(steve.friends).not.toContain(users[1].id);
+          const steveResponse = await User.findById(users[0]._id);
+          expect(steveResponse!.friends).not.toContainEqual(users[1]._id);
         });
         test("If a user tries to unfriend someone they aren't friends with, return 400 error", async () => {
           const response = await agent
