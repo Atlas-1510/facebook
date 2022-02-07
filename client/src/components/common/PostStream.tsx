@@ -19,13 +19,9 @@ const PostStream: FC<Props> = ({ id }) => {
     }
   };
 
-  const { status, data: newsfeed } = useQuery(
-    "profile posts",
-    getProfilePosts,
-    {
-      enabled: !!id,
-    }
-  );
+  const { status, data: posts } = useQuery("profile posts", getProfilePosts, {
+    enabled: !!id,
+  });
   return (
     <div>
       {status === "loading" && (
@@ -39,10 +35,8 @@ const PostStream: FC<Props> = ({ id }) => {
       )}
       {status === "error" && <div>Unable to retrieve posts</div>}
       {status === "success" &&
-        newsfeed &&
-        newsfeed.map((post: PostInterface) => (
-          <Post key={post._id} post={post} />
-        ))}
+        posts &&
+        posts.map((post: PostInterface) => <Post key={post._id} post={post} />)}
     </div>
   );
 };
