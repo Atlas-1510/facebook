@@ -36,7 +36,9 @@ const PostStream: FC<Props> = ({ id }) => {
       {status === "error" && <div>Unable to retrieve posts</div>}
       {status === "success" &&
         posts &&
-        posts.map((post: PostInterface) => <Post key={post._id} post={post} />)}
+        posts.map((post: PostInterface) => (
+          <Post key={post._id} initialData={post} />
+        ))}
     </div>
   );
 };

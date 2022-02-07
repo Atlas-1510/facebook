@@ -35,7 +35,7 @@ const Home: FC = () => {
           {status === "success" &&
             newsfeed &&
             newsfeed.map((post: PostInterface) => (
-              <Post key={post._id} post={post} />
+              <Post key={post._id} initialData={post} />
             ))}
         </div>
       </div>

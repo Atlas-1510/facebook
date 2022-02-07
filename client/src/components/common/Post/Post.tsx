@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, SyntheticEvent, ReactNode } from "react";
 import testPageImage from "../../../images/test_page.jpeg";
 import testPostImage from "../../images/test_post_image.jpeg";
 import { HiThumbUp } from "react-icons/hi";
@@ -7,36 +7,125 @@ import Comment from "../Comment";
 import UserThumbnail from "../UserThumbnail";
 import { PostInterface } from "../../../types/PostInterface";
 import axios from "axios";
-import { useQuery } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 import SkeletonPost from "./SkeletonPost";
 
+// Need to set up a query for the post, using initial data passed by poststream.
+// Upon like, needs to mutate. I should supply like status with an optimistic update.
+
 type Props = {
-  post: PostInterface;
+  initialData: PostInterface;
 };
 
-const Post: FC<Props> = ({ post }) => {
+const Post: FC<Props> = ({ initialData }) => {
+  const queryClient = useQueryClient();
+
   const getAuthorProfile = async () => {
     try {
-      const { data } = await axios.get(`/api/users/${post.author}`);
+      const { data } = await axios.get(`/api/users/${initialData.author}`);
       return data;
     } catch (err) {
       console.log(err);
     }
   };
 
-  const { data: author, status } = useQuery(
-    `postAuthor: ${post._id}`,
+  const { data: author, status: authorStatus } = useQuery(
+    `postAuthor: ${initialData._id}`,
     getAuthorProfile,
     {
-      enabled: !!post?._id,
+      enabled: !!initialData?._id,
     }
   );
 
-  if (status === "loading") {
+  const getPost = async () => {
+    try {
+      const { data } = await axios.get(`/api/posts/${initialData._id}`);
+      return data;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const { data: post, status } = useQuery(`post: ${initialData._id}`, getPost, {
+    initialData: initialData,
+  });
+
+  const submitLike = async () => {
+    try {
+      const { data } = await axios.post(`/api/posts/${initialData._id}/likes`);
+      console.log(data);
+      return data;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const removeLike = async () => {
+    try {
+      const { data } = await axios.delete(
+        `/api/posts/${initialData._id}/likes`
+      );
+      console.log(data);
+      return data;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const likeMutation = useMutation(submitLike, {
+    onSuccess: () => queryClient.invalidateQueries(`post: ${initialData._id}`),
+  });
+
+  const removeLikeMutation = useMutation(removeLike, {
+    onSuccess: () => queryClient.invalidateQueries(`post: ${initialData._id}`),
+  });
+
+  const handleLike = (e: SyntheticEvent) => {
+    e.preventDefault();
+    likeMutation.mutate();
+  };
+
+  const handleRemoveLike = (e: SyntheticEvent) => {
+    e.preventDefault();
+    removeLikeMutation.mutate();
+  };
+
+  const LikeButton: ReactNode = (() => {
+    if (post.likes.includes(post.author)) {
+      return (
+        <button
+          onClick={handleRemoveLike}
+          className="flex items-center justify-center w-full my-1 rounded-full bg-blue-200 hover:bg-blue-300"
+        >
+          <FaRegThumbsUp className="text-facebook-blue text-xl" />
+          <span className=" font-roboto font-medium text-facebook-blue pl-3">
+            Liked!
+          </span>
+        </button>
+      );
+    } else {
+      return (
+        <button
+          onClick={handleLike}
+          className="flex items-center justify-center w-full my-1 rounded-full"
+        >
+          <FaRegThumbsUp className=" text-zinc-500 text-xl" />
+          <span className=" font-roboto font-medium text-zinc-600 pl-3">
+            Like
+          </span>
+        </button>
+      );
+    }
+  })();
+
+  if (status === "loading" || authorStatus === "loading") {
     return <SkeletonPost />;
   }
   if (status === "error") {
-    return <div>Unable to get post author</div>;
+    return <div>Unable to get post information</div>;
+  }
+  if (authorStatus === "error") {
+    return <div>Unable to get post author information</div>;
   } else {
     return (
       <article className="bg-zinc-100 shadow-md overflow-auto md:rounded-lg my-3">
@@ -62,13 +151,8 @@ const Post: FC<Props> = ({ post }) => {
           </div>
           <span> 625 comments</span>
         </div>
-        <div className="m-1 py-3 flex border-b border-t border-zinc-300">
-          <button className="flex items-center justify-center w-full rounded-full">
-            <FaRegThumbsUp className=" text-zinc-500 text-xl" />
-            <span className=" font-roboto font-medium text-zinc-600 pl-3">
-              Like
-            </span>
-          </button>
+        <div className="m-1 h-12 flex border-b border-t border-zinc-300">
+          {LikeButton}
           <button className="flex items-center justify-center w-full rounded-full">
             <FaRegComment className=" text-zinc-500 text-xl" />
             <span className=" text-base font-roboto font-medium text-zinc-600 pl-3">
