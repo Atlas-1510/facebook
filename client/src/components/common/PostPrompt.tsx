@@ -29,7 +29,7 @@ const PostPrompt = () => {
 
   const mutation = useMutation(publishPost, {
     onSuccess: () => {
-      queryClient.invalidateQueries("newsfeed");
+      queryClient.invalidateQueries("profile posts");
       setPostInput("");
       setModalOpen(false);
     },

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import WhiteBox from "../../components/common/WhiteBox";
 import SecondaryButton from "../../components/common/SecondaryButton";
 import { Link } from "react-router-dom";
@@ -8,23 +8,31 @@ import { useQuery } from "react-query";
 import { PostInterface } from "../../types/PostInterface";
 import Post from "../../components/common/Post/Post";
 import SkeletonPost from "../../components/common/Post/SkeletonPost";
+import { AuthContext } from "../../contexts/Auth";
 
 const Posts = () => {
-  const getPosts = async () => {
+  const { user } = useContext(AuthContext);
+  const getProfilePosts = async () => {
     try {
-      const { data } = await axios.get("/api/posts/newsfeed");
+      const { data } = await axios.get(`/api/posts/profile/${user._id}`);
       return data;
     } catch (err) {
       console.log(err);
     }
   };
 
-  const { status, data: newsfeed } = useQuery("newsfeed", getPosts);
+  const { status, data: newsfeed } = useQuery(
+    "profile posts",
+    getProfilePosts,
+    {
+      enabled: !!user._id,
+    }
+  );
 
   return (
     <>
       <div className=" col-span-2 hidden md:flex flex-col justify-end">
-        <div className="space-y-3 sticky bottom-3 flex flex-col ">
+        <div className="space-y-3 sticky bottom-3 flex flex-col">
           <WhiteBox>
             <h2 className=" text-zinc-800 font-medium text-lg mb-2">Intro</h2>
             <div className=" space-y-3">
