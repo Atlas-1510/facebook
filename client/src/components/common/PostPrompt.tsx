@@ -6,34 +6,44 @@ import PrimaryButton from "../PrimaryButton";
 import { AuthContext } from "../../contexts/Auth";
 import axios from "axios";
 import WhiteBox from "./WhiteBox";
+import { useMutation, useQueryClient } from "react-query";
 
 const PostPrompt = () => {
   const { user } = useContext(AuthContext);
   const [modalOpen, setModalOpen] = useState(false);
   const [postInput, setPostInput] = useState("");
   const [flash, setFlash] = useState("");
-  const handlePostSubmit = async (e: SyntheticEvent): Promise<void> => {
+  const queryClient = useQueryClient();
+
+  const publishPost = async () => {
     try {
-      e.preventDefault();
-      // reset flash
-      setFlash("");
-      // fire POST call with form input
-      const response = await axios.post("/api/posts", {
+      const { data } = await axios.post("/api/posts", {
         author: user?._id,
         content: postInput,
       });
-      console.log(response.data);
-      // reset post input
-      setPostInput("");
-      // close modal
-      setModalOpen(false);
-      // trigger timeline refresh
-      // --> ***** TRIGGER TIMELINE REFRESH HERE *****
+      return data;
     } catch (err) {
       console.error(err);
-      setFlash("Something went wrong");
     }
   };
+
+  const mutation = useMutation(publishPost, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("newsfeed");
+      setPostInput("");
+      setModalOpen(false);
+    },
+    onError: () => {
+      setFlash("Something went wrong");
+    },
+  });
+
+  const handlePostSubmit = async (e: SyntheticEvent) => {
+    e.preventDefault();
+    setFlash("");
+    mutation.mutate();
+  };
+
   return (
     <WhiteBox>
       <div className="flex items-center mb-0 pb-2 border-b border-b-zinc-300 h-12">
