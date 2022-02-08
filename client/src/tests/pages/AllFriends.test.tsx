@@ -1,10 +1,10 @@
-import AllFriends from "./AllFriends";
-import { AuthProvider } from "../../../../contexts/Auth";
+import AllFriends from "../../pages/Profile/Friends/AllFriends";
+import { AuthProvider } from "../../contexts/Auth";
 import { QueryClientProvider, QueryClient } from "react-query";
 import { MemoryRouter } from "react-router-dom";
 import MockAdapter from "axios-mock-adapter";
 import axios from "axios";
-import generateTestUsers from "../../../../utils/generateTestUsers";
+import generateTestUsers from "../../utils/generateTestUsers";
 import { screen, render } from "@testing-library/react";
 
 const mockUsers = generateTestUsers();

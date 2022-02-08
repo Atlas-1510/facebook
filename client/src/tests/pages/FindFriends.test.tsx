@@ -1,10 +1,10 @@
 import { render, screen } from "@testing-library/react";
-import FindFriends from "./FindFriends";
+import FindFriends from "../../pages/Profile/Friends/FindFriends";
 import { QueryClientProvider, QueryClient } from "react-query";
-import { AuthProvider } from "../../../../contexts/Auth";
+import { AuthProvider } from "../../contexts/Auth";
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
-import generateTestUsers from "../../../../utils/generateTestUsers";
+import generateTestUsers from "../../utils/generateTestUsers";
 import { MemoryRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 

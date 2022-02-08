@@ -1,11 +1,11 @@
 import axios from "axios";
 import { useContext } from "react";
-import FriendTile from "../../../../components/common/FriendTile/FriendTile";
-import { AuthContext } from "../../../../contexts/Auth";
-import { User } from "../../../../types/User";
+import FriendTile from "../../../components/common/FriendTile/FriendTile";
+import { AuthContext } from "../../../contexts/Auth";
+import { User } from "../../../types/User";
 import { useQuery } from "react-query";
 import { useOutletContext } from "react-router-dom";
-import SkeletonFriendTile from "../../../../components/common/FriendTile/SkeletonFriendTile";
+import SkeletonFriendTile from "../../../components/common/FriendTile/SkeletonFriendTile";
 
 const AllFriends = () => {
   const { user } = useContext(AuthContext);

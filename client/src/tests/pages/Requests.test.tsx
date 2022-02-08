@@ -1,11 +1,11 @@
-import Requests from "./Requests";
-import { AuthProvider } from "../../../../contexts/Auth";
+import Requests from "../../pages/Profile/Friends/Requests";
+import { AuthProvider } from "../../contexts/Auth";
 import { QueryClientProvider, QueryClient } from "react-query";
 import { MemoryRouter } from "react-router-dom";
 import { render, screen } from "@testing-library/react";
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
-import generateTestUsers from "../../../../utils/generateTestUsers";
+import generateTestUsers from "../../utils/generateTestUsers";
 
 const mockUsers = generateTestUsers();
 
