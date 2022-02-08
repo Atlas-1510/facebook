@@ -9,6 +9,7 @@ import axios from "axios";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import SkeletonPost from "./SkeletonPost";
 import { CommentInterface } from "../../../types/CommentInterface";
+import getReadableTimestamp from "../../../utils/getReadableTimestamp";
 
 type Props = {
   initialData: PostInterface;
@@ -170,7 +171,9 @@ const Post: FC<Props> = ({ initialData }) => {
             />
             <div className="flex flex-col">
               <h2 className="font-medium">{author.fullName}</h2>
-              <span className=" text-sm text-zinc-600">14h</span>
+              <span className=" text-sm text-zinc-600">
+                {getReadableTimestamp(post.createdAt)}
+              </span>
             </div>
           </div>
           <p>{post.content}</p>

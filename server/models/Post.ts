@@ -24,7 +24,9 @@ const PostSchema = new Schema<PostDocument>(
     likes: [Schema.Types.ObjectId],
   },
   {
-    timestamps: true,
+    timestamps: {
+      currentTime: () => Math.floor(Date.now() / 1000),
+    },
   }
 );
 
