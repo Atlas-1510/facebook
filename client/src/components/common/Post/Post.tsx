@@ -151,7 +151,12 @@ const Post: FC<Props> = ({ initialData }) => {
         </div>
         <div className="m-1 h-12 flex border-b border-t border-zinc-300">
           {LikeButton}
-          <button className="flex items-center justify-center w-full rounded-full">
+          <button
+            onClick={() => {
+              document.getElementById(`commentInput-${post._id}`)?.focus();
+            }}
+            className="flex items-center justify-center w-full rounded-full"
+          >
             <FaRegComment className=" text-zinc-500 text-xl" />
             <span className=" text-base font-roboto font-medium text-zinc-600 pl-3">
               Comment
@@ -168,6 +173,7 @@ const Post: FC<Props> = ({ initialData }) => {
             type="text"
             placeholder="Write a comment..."
             className="w-full ml-2 p-2 pl-4 rounded-full bg-zinc-200 font-roboto"
+            id={`commentInput-${post._id}`}
           />
         </form>
       </article>
