@@ -9,9 +9,6 @@ import axios from "axios";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import SkeletonPost from "./SkeletonPost";
 
-// Need to set up a query for the post, using initial data passed by poststream.
-// Upon like, needs to mutate. I should supply like status with an optimistic update.
-
 type Props = {
   initialData: PostInterface;
 };
@@ -19,80 +16,79 @@ type Props = {
 const Post: FC<Props> = ({ initialData }) => {
   const queryClient = useQueryClient();
 
-  const getAuthorProfile = async () => {
-    try {
-      const { data } = await axios.get(`/api/users/${initialData.author}`);
-      return data;
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   const { data: author, status: authorStatus } = useQuery(
     `postAuthor: ${initialData._id}`,
-    getAuthorProfile,
+    async () => {
+      try {
+        const { data } = await axios.get(`/api/users/${initialData.author}`);
+        return data;
+      } catch (err) {
+        console.log(err);
+      }
+    },
     {
       enabled: !!initialData?._id,
     }
   );
 
-  const getPost = async () => {
-    try {
-      const { data } = await axios.get(`/api/posts/${initialData._id}`);
-      return data;
-    } catch (err) {
-      console.log(err);
+  const { data: post, status } = useQuery(
+    `post: ${initialData._id}`,
+    async () => {
+      try {
+        const { data } = await axios.get(`/api/posts/${initialData._id}`);
+        return data;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    {
+      initialData: initialData,
     }
-  };
+  );
 
-  const { data: post, status } = useQuery(`post: ${initialData._id}`, getPost, {
-    initialData: initialData,
-  });
-
-  const submitLike = async () => {
-    try {
-      const { data } = await axios.post(`/api/posts/${initialData._id}/likes`);
-      return data;
-    } catch (err) {
-      console.log(err);
+  const likeMutation = useMutation(
+    async () => {
+      try {
+        const { data } = await axios.post(
+          `/api/posts/${initialData._id}/likes`
+        );
+        return data;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    {
+      onSuccess: () =>
+        queryClient.invalidateQueries(`post: ${initialData._id}`),
     }
-  };
+  );
 
-  const removeLike = async () => {
-    try {
-      const { data } = await axios.delete(
-        `/api/posts/${initialData._id}/likes`
-      );
-      console.log(data);
-      return data;
-    } catch (err) {
-      console.log(err);
+  const removeLikeMutation = useMutation(
+    async () => {
+      try {
+        const { data } = await axios.delete(
+          `/api/posts/${initialData._id}/likes`
+        );
+        console.log(data);
+        return data;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    {
+      onSuccess: () =>
+        queryClient.invalidateQueries(`post: ${initialData._id}`),
     }
-  };
-
-  const likeMutation = useMutation(submitLike, {
-    onSuccess: () => queryClient.invalidateQueries(`post: ${initialData._id}`),
-  });
-
-  const removeLikeMutation = useMutation(removeLike, {
-    onSuccess: () => queryClient.invalidateQueries(`post: ${initialData._id}`),
-  });
-
-  const handleLike = (e: SyntheticEvent) => {
-    e.preventDefault();
-    likeMutation.mutate();
-  };
-
-  const handleRemoveLike = (e: SyntheticEvent) => {
-    e.preventDefault();
-    removeLikeMutation.mutate();
-  };
+  );
 
   const LikeButton: ReactNode = (() => {
     if (post.likes.includes(post.author)) {
       return (
         <button
-          onClick={handleRemoveLike}
+          onClick={(e) => {
+            e.preventDefault();
+            removeLikeMutation.mutate();
+          }}
           className="flex items-center justify-center w-full my-1 rounded-full bg-blue-200 hover:bg-blue-300"
         >
           <FaRegThumbsUp className="text-facebook-blue text-xl" />
@@ -104,7 +100,10 @@ const Post: FC<Props> = ({ initialData }) => {
     } else {
       return (
         <button
-          onClick={handleLike}
+          onClick={(e) => {
+            e.preventDefault();
+            likeMutation.mutate();
+          }}
           className="flex items-center justify-center w-full my-1 rounded-full"
         >
           <FaRegThumbsUp className=" text-zinc-500 text-xl" />
