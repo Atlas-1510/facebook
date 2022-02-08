@@ -5,10 +5,16 @@ import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
 import { QueryClientProvider, QueryClient } from "react-query";
 import { PostInterface } from "../types/PostInterface";
-import { MemoryRouter } from "react-router-dom";
 import { AuthProvider } from "../contexts/Auth";
 
 const queryClient = new QueryClient();
+
+const mockUser = {
+  _id: "some_id",
+  firstName: "Firsty",
+  lastName: "Lasty",
+  email: "first@last.com",
+};
 
 const mockPost: PostInterface = {
   author: "some_author_id",
@@ -41,26 +47,20 @@ describe("Post.tsx", () => {
     jest.resetAllMocks();
     axiosMock.reset();
     queryClient.clear();
-    const mockUser = {
-      _id: "some_id",
-      firstName: "Firsty",
-      lastName: "Lasty",
-      email: "first@last.com",
-    };
     axiosMock.onGet("/auth/getAuthStatus").reply(200, mockUser);
     axiosMock.onGet(`/api/users/${mockPost.author}`).reply(200, {
       fullName: "Some Full Name",
     });
-    axiosMock
-      .onGet(`/api/posts/${mockPost._id}`)
-      .replyOnce(200, mockPost)
-      .onGet(`/api/posts/${mockPost._id}`)
-      .replyOnce(200, mockPostWithAuthorLike);
+    axiosMock.onGet(`/api/posts/${mockPost._id}`).replyOnce(200, mockPost);
+  });
+
+  test("Shows 'liked' when like button is clicked", async () => {
+    // mock a post before and after being liked.
     axiosMock
       .onPost(`/api/posts/${mockPost._id}/likes`)
-      .reply(200, mockPostWithAuthorLike);
-  });
-  test("Shows 'liked' when like button is clicked", async () => {
+      .reply(200, mockPostWithAuthorLike)
+      .onGet(`/api/posts/${mockPost._id}`)
+      .replyOnce(200, mockPostWithAuthorLike);
     setup();
     const likeButton = await screen.findByText("Like");
     expect(likeButton).toBeInTheDocument();
