@@ -1,17 +1,17 @@
 import { useContext } from "react";
 import { AuthContext } from "../../contexts/Auth";
-
+import { User } from "../../types/User";
 import { HiUser } from "react-icons/hi";
 
 const UserThumbnail = () => {
-  const { user } = useContext(AuthContext);
-  if (!user) {
-    console.error(
-      "UserThumbnail couldn't access user from AuthContext provider"
+  const { user }: { user: User } = useContext(AuthContext);
+  if (!user || !user.thumbnail) {
+    return (
+      <div className="rounded-full h-full aspect-square bg-blue-400 grid place-items-center">
+        <HiUser className=" text-zinc-200" size="1.5rem" />
+      </div>
     );
-    return null;
-  }
-  if (user.thumbnail) {
+  } else
     return (
       <img
         src={user.thumbnail}
@@ -19,13 +19,6 @@ const UserThumbnail = () => {
         className="rounded-full h-full aspect-square"
       />
     );
-  } else {
-    return (
-      <div className="rounded-full h-full aspect-square bg-blue-400 grid place-items-center">
-        <HiUser className=" text-zinc-200" size="1.5rem" />
-      </div>
-    );
-  }
 };
 
 export default UserThumbnail;

@@ -4,10 +4,10 @@ import {
   waitForElementToBeRemoved,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import App from "./App";
+import App from "../App";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { AuthProvider } from "./contexts/Auth";
-import Home from "./pages/Home";
+import { AuthProvider } from "../contexts/Auth";
+import Home from "../pages/Home";
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
 import { QueryClientProvider, QueryClient } from "react-query";

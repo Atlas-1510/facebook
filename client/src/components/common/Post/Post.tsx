@@ -1,9 +1,8 @@
 import { FC, SyntheticEvent, ReactNode } from "react";
 import testPageImage from "../../../images/test_page.jpeg";
-import testPostImage from "../../images/test_post_image.jpeg";
 import { HiThumbUp } from "react-icons/hi";
 import { FaRegThumbsUp, FaRegComment } from "react-icons/fa";
-import Comment from "../Comment";
+// import Comment from "../Comment";
 import UserThumbnail from "../UserThumbnail";
 import { PostInterface } from "../../../types/PostInterface";
 import axios from "axios";
@@ -53,7 +52,6 @@ const Post: FC<Props> = ({ initialData }) => {
   const submitLike = async () => {
     try {
       const { data } = await axios.post(`/api/posts/${initialData._id}/likes`);
-      console.log(data);
       return data;
     } catch (err) {
       console.log(err);

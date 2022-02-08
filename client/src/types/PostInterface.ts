@@ -2,7 +2,7 @@ export interface PostInterface {
   author: string;
   content: string;
   comments: [];
-  likes: [];
+  likes: string[];
   createdAt: string;
   updatedAt: string;
   _id: string;
