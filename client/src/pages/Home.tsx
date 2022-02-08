@@ -1,12 +1,14 @@
-import { FC } from "react";
+import { FC, useContext } from "react";
 import PostPrompt from "../components/common/PostPrompt";
 import axios from "axios";
 import { useQuery } from "react-query";
 import Post from "../components/common/Post/Post";
 import { PostInterface } from "../types/PostInterface";
 import SkeletonPost from "../components/common/Post/SkeletonPost";
+import { AuthContext } from "../contexts/Auth";
 
 const Home: FC = () => {
+  const { user } = useContext(AuthContext);
   const getPosts = async () => {
     try {
       const { data } = await axios.get("/api/posts/newsfeed");
@@ -16,7 +18,9 @@ const Home: FC = () => {
     }
   };
 
-  const { status, data: newsfeed } = useQuery("newsfeed", getPosts);
+  const { status, data: newsfeed } = useQuery("newsfeed", getPosts, {
+    enabled: !!user._id,
+  });
   return (
     <main className="md:grid md:grid-cols-4">
       <div className="flex flex-col md:col-start-2 md:col-span-2">

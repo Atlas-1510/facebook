@@ -1,13 +1,14 @@
-import { FC, SyntheticEvent, ReactNode } from "react";
+import { FC, ReactNode, useState } from "react";
 import testPageImage from "../../../images/test_page.jpeg";
 import { HiThumbUp } from "react-icons/hi";
 import { FaRegThumbsUp, FaRegComment } from "react-icons/fa";
-// import Comment from "../Comment";
+import Comment from "../Comment";
 import UserThumbnail from "../UserThumbnail";
 import { PostInterface } from "../../../types/PostInterface";
 import axios from "axios";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import SkeletonPost from "./SkeletonPost";
+import { CommentInterface } from "../../../types/CommentInterface";
 
 type Props = {
   initialData: PostInterface;
@@ -46,6 +47,8 @@ const Post: FC<Props> = ({ initialData }) => {
     }
   );
 
+  // LIKES
+
   const likeMutation = useMutation(
     async () => {
       try {
@@ -69,7 +72,6 @@ const Post: FC<Props> = ({ initialData }) => {
         const { data } = await axios.delete(
           `/api/posts/${initialData._id}/likes`
         );
-        console.log(data);
         return data;
       } catch (err) {
         console.log(err);
@@ -115,6 +117,39 @@ const Post: FC<Props> = ({ initialData }) => {
     }
   })();
 
+  // COMMENTS
+
+  const [commentInput, setCommentInput] = useState("");
+  const commentMutation = useMutation(
+    async () => {
+      try {
+        const { data } = await axios.post(
+          `/api/posts/${initialData._id}/comments`,
+          {
+            content: commentInput,
+          }
+        );
+        return data;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(`post: ${initialData._id}`);
+        setCommentInput("");
+      },
+    }
+  );
+
+  const handleCommentButtonClick = () => {
+    const input = document.getElementById(`commentInput-${post._id}`);
+    input?.focus();
+    input?.scrollIntoView({
+      block: "center",
+    });
+  };
+
   if (status === "loading" || authorStatus === "loading") {
     return <SkeletonPost />;
   }
@@ -151,9 +186,7 @@ const Post: FC<Props> = ({ initialData }) => {
         <div className="m-1 h-12 flex border-b border-t border-zinc-300">
           {LikeButton}
           <button
-            onClick={() => {
-              document.getElementById(`commentInput-${post._id}`)?.focus();
-            }}
+            onClick={handleCommentButtonClick}
             className="flex items-center justify-center w-full rounded-full"
           >
             <FaRegComment className=" text-zinc-500 text-xl" />
@@ -162,7 +195,11 @@ const Post: FC<Props> = ({ initialData }) => {
             </span>
           </button>
         </div>
-        <section className="p-3 space-y-3">{/* <Comment /> */}</section>
+        <section className="p-3 space-y-3">
+          {post.comments.map((comment: CommentInterface) => (
+            <Comment key={comment._id} comment={comment} />
+          ))}
+        </section>
         <form className="p-3 pt-3 flex">
           <div className="h-10">
             <UserThumbnail />
@@ -172,7 +209,17 @@ const Post: FC<Props> = ({ initialData }) => {
             type="text"
             placeholder="Write a comment..."
             className="w-full ml-2 p-2 pl-4 rounded-full bg-zinc-200 font-roboto"
+            value={commentInput}
             id={`commentInput-${post._id}`}
+            onChange={(e) => {
+              setCommentInput(e.target.value);
+            }}
+            onKeyPress={(e) => {
+              if (e.code === "Enter" || e.code === "NumpadEnter") {
+                e.preventDefault();
+                commentMutation.mutate();
+              }
+            }}
           />
         </form>
       </article>
