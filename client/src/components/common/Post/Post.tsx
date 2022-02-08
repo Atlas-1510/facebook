@@ -181,7 +181,10 @@ const Post: FC<Props> = ({ initialData }) => {
             <HiThumbUp className=" -translate-y-[2px] text-facebook-blue text-xl" />
             <span className="ml-2">{post.likes.length}</span>
           </div>
-          <span> 625 comments</span>
+          {post.comments.length === 1 && <span>1 comment</span>}
+          {post.comments.length > 1 && (
+            <span>{post.comments.length} comments</span>
+          )}
         </div>
         <div className="m-1 h-12 flex border-b border-t border-zinc-300">
           {LikeButton}
