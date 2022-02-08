@@ -145,7 +145,7 @@ const Post: FC<Props> = ({ initialData }) => {
         <div className=" flex justify-between m-3 mb-0 pb-2 text-zinc-500 ">
           <div className="flex items-center">
             <HiThumbUp className=" -translate-y-[2px] text-facebook-blue text-xl" />
-            <span className="ml-2">8.8k</span>
+            <span className="ml-2">{post.likes.length}</span>
           </div>
           <span> 625 comments</span>
         </div>
