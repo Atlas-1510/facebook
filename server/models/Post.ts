@@ -4,9 +4,10 @@ import { Types, Document } from "mongoose";
 
 export interface PostInput {
   author: Types.ObjectId;
-  content: string;
+  content?: string;
   comments: CommentDocument[];
   likes: Types.ObjectId[];
+  image?: string;
 }
 
 export interface PostDocument extends PostInput, Document {
@@ -14,14 +15,16 @@ export interface PostDocument extends PostInput, Document {
   content: string;
   comments: Types.DocumentArray<CommentDocument>;
   likes: Types.ObjectId[];
+  image?: string;
 }
 
 const PostSchema = new Schema<PostDocument>(
   {
     author: { type: Schema.Types.ObjectId, required: true },
-    content: { type: String, required: true },
+    content: { type: String },
     comments: [CommentSchema],
     likes: [Schema.Types.ObjectId],
+    image: { type: String },
   },
   {
     timestamps: {
