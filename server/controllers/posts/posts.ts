@@ -83,10 +83,12 @@ const createPost = [
     next: express.NextFunction
   ) => {
     try {
+      console.log(req.file);
       const post: HydratedDocument<PostDocument> = new Post({
         author: req.body.author,
         content: req.body.content,
         comments: [],
+        image: `/${req.body.author}/${req.file?.filename}`,
       });
 
       post.save();

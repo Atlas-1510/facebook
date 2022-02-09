@@ -14,6 +14,10 @@ import {
 } from "../../controllers/posts/posts";
 import { ensureAuthenticated } from "../../controllers/authentication/authentication";
 
+import multer from "multer";
+
+const upload = multer({ dest: "uploads/" });
+
 const router = Router();
 
 router.get("/newsfeed", ensureAuthenticated, getNewsfeedPosts);
@@ -22,7 +26,7 @@ router.get("/profile/:fid", ensureAuthenticated, getProfilePosts);
 
 router.get("/:pid", ensureAuthenticated, getPost);
 
-router.post("/", ensureAuthenticated, createPost);
+router.post("/", ensureAuthenticated, upload.single("image"), createPost);
 
 router.put("/:pid", ensureAuthenticated, editPost);
 
