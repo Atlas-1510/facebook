@@ -3,17 +3,15 @@ import SecondaryButton from "../../components/common/SecondaryButton";
 import PostStream from "../../components/common/PostStream";
 import PostPrompt from "../../components/common/PostPrompt";
 import { useParams, Link } from "react-router-dom";
-import { useQueryClient, useQuery } from "react-query";
+import { useQuery } from "react-query";
 import axios from "axios";
 import { PostInterface } from "../../types/PostInterface";
-import { SyntheticEvent, useState } from "react";
+import { useReducer } from "react";
 import Modal from "../../components/Modal";
 import Post from "../../components/common/Post/Post";
 
 const Posts = () => {
   const { uid } = useParams();
-  const [modalOpen, setModalOpen] = useState(false);
-  const [modalData, setModalData] = useState<PostInterface | null>(null);
 
   const getImagePosts = async () => {
     try {
@@ -28,13 +26,28 @@ const Posts = () => {
     enabled: !!uid,
   });
 
-  const openPhotoModal = (pid: string) => {
-    const post = imagePosts.find(
-      (element: PostInterface) => element._id === pid
-    );
-    setModalData(post);
-    setModalOpen(true);
+  const initialModalState = { open: false, data: null };
+
+  type ACTIONTYPE =
+    | { type: "open"; payload: { pid: string } }
+    | { type: "close"; payload: null };
+
+  const modalReducer = (
+    state: typeof initialModalState,
+    action: ACTIONTYPE
+  ) => {
+    switch (action.type) {
+      case "open":
+        const post = imagePosts.find(
+          (element: PostInterface) => element._id === action.payload.pid
+        );
+        return { open: true, data: post };
+      case "close":
+        return { open: false, data: null };
+    }
   };
+
+  const [modal, modalDispatch] = useReducer(modalReducer, initialModalState);
 
   if (!uid) {
     return <div>Something Went Wrong...</div>;
@@ -69,7 +82,10 @@ const Posts = () => {
                         className="w-full h-full flex justify-center items-center border border-zinc-300 rounded-md p-1 shadow-sm transition-all hover:scale-105"
                         onClick={(e) => {
                           e.preventDefault();
-                          openPhotoModal(post._id);
+                          modalDispatch({
+                            type: "open",
+                            payload: { pid: post._id },
+                          });
                         }}
                       >
                         <img
@@ -109,16 +125,15 @@ const Posts = () => {
           <PostPrompt />
           <PostStream id={uid} />
         </div>
-        {modalData && modalOpen && (
+        {modal.open && (
           <Modal
-            open={modalOpen}
+            open={modal.open}
             onClose={() => {
-              setModalOpen(false);
-              setModalData(null);
+              modalDispatch({ type: "close", payload: null });
             }}
             title="Photo Modal"
           >
-            <Post initialData={modalData} />
+            <Post initialData={modal.data} />
           </Modal>
         )}
       </>
