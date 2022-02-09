@@ -15,6 +15,12 @@ import axios from "axios";
 import WhiteBox from "./WhiteBox";
 import { useMutation, useQueryClient } from "react-query";
 
+type uploadData = {
+  author: string;
+  content: string;
+  image?: File;
+};
+
 const PostPrompt = () => {
   const { user } = useContext(AuthContext);
   const [modalOpen, setModalOpen] = useState(false);
@@ -26,14 +32,14 @@ const PostPrompt = () => {
 
   const publishPost = async () => {
     try {
-      const uploadData = {
+      const uploadData: uploadData = {
         author: user?._id,
         content: postInput,
       };
       if (image) {
-        console.log("IMAGE TO BE UPLOADED");
-        console.log(image);
+        uploadData.image = image;
       }
+
       const { data } = await axios.post("/api/posts", uploadData);
       return data;
     } catch (err) {
