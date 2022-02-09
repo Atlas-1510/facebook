@@ -75,6 +75,26 @@ const getPost = [
   },
 ];
 
+// To get recent posts with images, to populate image grid on profile page.
+const getImagePosts = [
+  param("uid").isMongoId(),
+  processValidation,
+  async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    const posts = await Post.find()
+      .where("author")
+      .equals(req.params.uid)
+      .where("image")
+      .exists(true)
+      .limit(9)
+      .sort({ createdAt: "descending" });
+    return res.send(posts);
+  },
+];
+
 const createPost = [
   body("author").isMongoId(),
   body("content").isString(),
@@ -296,6 +316,7 @@ export {
   getNewsfeedPosts,
   getProfilePosts,
   getPost,
+  getImagePosts,
   createPost,
   editPost,
   deletePost,

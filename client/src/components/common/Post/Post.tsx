@@ -38,7 +38,6 @@ const Post: FC<Props> = ({ initialData }) => {
     async () => {
       try {
         const { data } = await axios.get(`/api/posts/${initialData._id}`);
-        console.log(data);
         return data;
       } catch (err) {
         console.log(err);

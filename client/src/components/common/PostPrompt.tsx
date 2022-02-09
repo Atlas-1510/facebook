@@ -50,6 +50,7 @@ const PostPrompt = () => {
     onSuccess: () => {
       queryClient.invalidateQueries("profile posts");
       queryClient.invalidateQueries("newsfeed");
+      queryClient.invalidateQueries(`imagePosts ${user._id}`);
 
       setPostInput("");
       setImage(null);

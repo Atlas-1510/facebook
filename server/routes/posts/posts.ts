@@ -5,6 +5,7 @@ import {
   deletePost,
   getNewsfeedPosts,
   getPost,
+  getImagePosts,
   addComment,
   editComment,
   deleteComment,
@@ -25,6 +26,8 @@ router.get("/newsfeed", ensureAuthenticated, getNewsfeedPosts);
 router.get("/profile/:fid", ensureAuthenticated, getProfilePosts);
 
 router.get("/:pid", ensureAuthenticated, getPost);
+
+router.get("/getImagePosts/:uid", ensureAuthenticated, getImagePosts);
 
 router.post("/", ensureAuthenticated, upload.single("image"), createPost);
 

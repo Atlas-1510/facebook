@@ -1,12 +1,27 @@
 import WhiteBox from "../../components/common/WhiteBox";
 import SecondaryButton from "../../components/common/SecondaryButton";
-import { Link } from "react-router-dom";
 import PostStream from "../../components/common/PostStream";
 import PostPrompt from "../../components/common/PostPrompt";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
+import { useQueryClient, useQuery } from "react-query";
+import axios from "axios";
+import { PostInterface } from "../../types/PostInterface";
 
 const Posts = () => {
   const { uid } = useParams();
+
+  const getImagePosts = async () => {
+    try {
+      const { data } = await axios.get(`/api/posts/getImagePosts/${uid}`);
+      return data;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const { data: imagePosts } = useQuery(`imagePosts ${uid}`, getImagePosts, {
+    enabled: !!uid,
+  });
 
   if (!uid) {
     return <div>Something Went Wrong...</div>;
@@ -33,22 +48,25 @@ const Posts = () => {
                 </Link>
               </div>
 
-              <ul className="  grid grid-cols-3 grid-rows-3 gap-2">
-                <li className="aspect-square bg-cyan-300">1</li>
-                <li className="aspect-square bg-cyan-300">2</li>
-                <li className="aspect-square bg-cyan-300">3</li>
-                <li className="aspect-square bg-cyan-300">4</li>
-                <li className="aspect-square bg-cyan-300">5</li>
-                <li className="aspect-square bg-cyan-300">6</li>
-                <li className="aspect-square bg-cyan-300">7</li>
-                <li className="aspect-square bg-cyan-300">8</li>
-                <li className="aspect-square bg-cyan-300">9</li>
+              <ul className="grid grid-cols-3 grid-rows-3 gap-2 aspect-square">
+                {imagePosts &&
+                  imagePosts.map((post: PostInterface) => (
+                    <Link key={post._id} to={`/posts/${post._id}`}>
+                      <li className="w-full h-full flex justify-center items-center border border-zinc-300 rounded-md p-1 shadow-sm">
+                        <img
+                          src={`/api/images/${post.image}`}
+                          alt="user uploaded"
+                          className="= max-w-full max-h-full"
+                        />
+                      </li>
+                    </Link>
+                  ))}
               </ul>
             </WhiteBox>
             <WhiteBox>
               <div className=" flex justify-between items-baseline">
                 <h2 className=" text-zinc-800 font-medium text-lg mb-2">
-                  Photos
+                  Friends
                 </h2>
                 <Link to="photos" className=" text-facebook-blue text-sm">
                   See All Friends
