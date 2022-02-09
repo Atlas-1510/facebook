@@ -52,6 +52,7 @@ const PostPrompt = () => {
       queryClient.invalidateQueries("newsfeed");
 
       setPostInput("");
+      setImage(null);
       setModalOpen(false);
     },
     onError: () => {
