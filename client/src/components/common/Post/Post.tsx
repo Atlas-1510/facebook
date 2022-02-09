@@ -38,6 +38,7 @@ const Post: FC<Props> = ({ initialData }) => {
     async () => {
       try {
         const { data } = await axios.get(`/api/posts/${initialData._id}`);
+        console.log(data);
         return data;
       } catch (err) {
         console.log(err);
@@ -178,7 +179,9 @@ const Post: FC<Props> = ({ initialData }) => {
           </div>
           <p>{post.content}</p>
         </section>
-        {/* <img src={testPostImage} alt="test post" /> */}
+        {post.image && (
+          <img src={`/api/images/${post.image}`} alt="test post" />
+        )}
         <div className=" flex justify-between m-3 mb-0 pb-2 text-zinc-500 ">
           <div className="flex items-center">
             <HiThumbUp className=" -translate-y-[2px] text-facebook-blue text-xl" />

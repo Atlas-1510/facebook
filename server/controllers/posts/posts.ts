@@ -4,7 +4,8 @@ import { isValidObjectId, Types, HydratedDocument } from "mongoose";
 import { body, param } from "express-validator";
 import express from "express";
 import processValidation from "../../utils/processValidation";
-
+import { uploadFile, getFileStream } from "../../s3";
+import unlinkFile from "../../utils/unlinkFile";
 const debug = require("debug")("facebook:controllers/posts");
 
 // Gets posts from all friends to populate home page newsfeed stream
@@ -62,10 +63,11 @@ const getPost = [
   ) => {
     try {
       const { pid } = req.params;
-      const post = await Post.findById(pid);
+      let post = await Post.findById(pid);
       if (post === null) {
         return res.sendStatus(404);
       }
+
       return res.send(post);
     } catch (err) {
       return next(err);
@@ -83,13 +85,23 @@ const createPost = [
     next: express.NextFunction
   ) => {
     try {
-      console.log(req.file);
-      const post: HydratedDocument<PostDocument> = new Post({
-        author: req.body.author,
-        content: req.body.content,
-        comments: [],
-        image: `/${req.body.author}/${req.file?.filename}`,
-      });
+      let post: HydratedDocument<PostDocument>;
+      if (req.file) {
+        await uploadFile(req.file);
+        await unlinkFile(req.file.path);
+        post = new Post({
+          author: req.body.author,
+          content: req.body.content,
+          comments: [],
+          image: req.file?.filename,
+        });
+      } else {
+        post = new Post({
+          author: req.body.author,
+          content: req.body.content,
+          comments: [],
+        });
+      }
 
       post.save();
       res.status(201);

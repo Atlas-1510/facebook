@@ -10,3 +10,5 @@
 - react testing library
 - axios mock
 - skeleton loading placeholders
+- multer image uploading
+- Amazon S3 file storage
