@@ -6,9 +6,14 @@ import { useParams, Link } from "react-router-dom";
 import { useQueryClient, useQuery } from "react-query";
 import axios from "axios";
 import { PostInterface } from "../../types/PostInterface";
+import { SyntheticEvent, useState } from "react";
+import Modal from "../../components/Modal";
+import Post from "../../components/common/Post/Post";
 
 const Posts = () => {
   const { uid } = useParams();
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalData, setModalData] = useState<PostInterface | null>(null);
 
   const getImagePosts = async () => {
     try {
@@ -22,6 +27,14 @@ const Posts = () => {
   const { data: imagePosts } = useQuery(`imagePosts ${uid}`, getImagePosts, {
     enabled: !!uid,
   });
+
+  const openPhotoModal = (pid: string) => {
+    const post = imagePosts.find(
+      (element: PostInterface) => element._id === pid
+    );
+    setModalData(post);
+    setModalOpen(true);
+  };
 
   if (!uid) {
     return <div>Something Went Wrong...</div>;
@@ -51,15 +64,21 @@ const Posts = () => {
               <ul className="grid grid-cols-3 grid-rows-3 gap-2 aspect-square">
                 {imagePosts &&
                   imagePosts.map((post: PostInterface) => (
-                    <Link key={post._id} to={`/posts/${post._id}`}>
-                      <li className="w-full h-full flex justify-center items-center border border-zinc-300 rounded-md p-1 shadow-sm">
+                    <li key={post._id}>
+                      <button
+                        className="w-full h-full flex justify-center items-center border border-zinc-300 rounded-md p-1 shadow-sm transition-all hover:scale-105"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          openPhotoModal(post._id);
+                        }}
+                      >
                         <img
                           src={`/api/images/${post.image}`}
                           alt="user uploaded"
                           className="= max-w-full max-h-full"
                         />
-                      </li>
-                    </Link>
+                      </button>
+                    </li>
                   ))}
               </ul>
             </WhiteBox>
@@ -90,6 +109,18 @@ const Posts = () => {
           <PostPrompt />
           <PostStream id={uid} />
         </div>
+        {modalData && modalOpen && (
+          <Modal
+            open={modalOpen}
+            onClose={() => {
+              setModalOpen(false);
+              setModalData(null);
+            }}
+            title="Photo Modal"
+          >
+            <Post initialData={modalData} />
+          </Modal>
+        )}
       </>
     );
 };

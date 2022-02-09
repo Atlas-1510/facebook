@@ -6,7 +6,6 @@ import Home from "./pages/Home";
 import Profile from "./pages/Profile/Profile";
 import Posts from "./pages/Profile/Posts";
 import Settings from "./pages/Settings";
-import Post from "./pages/Post";
 import { AuthProvider } from "./contexts/Auth";
 import Friends from "./pages/Profile/Friends/Friends";
 import Photos from "./pages/Profile/Photos";
@@ -36,7 +35,6 @@ render(
               <Route path="photos" element={<Photos />} />
             </Route>
             <Route path="settings" element={<Settings />} />
-            <Route path="/posts/:pid" element={<Post />} />
           </Route>
         </Routes>
       </BrowserRouter>
