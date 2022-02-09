@@ -32,15 +32,14 @@ const PostPrompt = () => {
 
   const publishPost = async () => {
     try {
-      const uploadData: uploadData = {
-        author: user?._id,
-        content: postInput,
-      };
+      const formData: FormData = new FormData();
+      formData.append("author", user?._id);
+      formData.append("content", postInput);
       if (image) {
-        uploadData.image = image;
+        formData.append("image", image);
       }
 
-      const { data } = await axios.post("/api/posts", uploadData);
+      const { data } = await axios.post("/api/posts", formData);
       return data;
     } catch (err) {
       console.error(err);
@@ -179,13 +178,13 @@ const PostPrompt = () => {
             <form
               className="flex flex-col item-center w-full"
               onSubmit={handlePostSubmit}
+              encType="multipart/form-data"
             >
               <textarea
                 className="my-3 w-full h-32 placeholder:font-roboto placeholder:text-zinc-600 placeholder:text-xl focus:placeholder:text-zinc-400 resize-none outline-none"
                 placeholder={`What's on your mind, ${user?.firstName}?`}
                 aria-label="post input"
                 name="post"
-                required
                 autoFocus
                 value={postInput}
                 onChange={(e) => setPostInput(e.target.value)}
