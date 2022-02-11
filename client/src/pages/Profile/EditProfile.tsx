@@ -1,16 +1,24 @@
+import axios from "axios";
 import {
   SyntheticEvent,
   useEffect,
   useState,
   useRef,
   useContext,
-  FormEvent,
   useMemo,
 } from "react";
+import { useMutation } from "react-query";
 
 import PrimaryButton from "../../components/PrimaryButton";
 import { AuthContext } from "../../contexts/Auth";
 import testImage from "../../images/test_profile_image.jpeg";
+import { User } from "../../types/User";
+
+type flashMessage = {
+  type: "success" | "failure";
+  message: string;
+  payload?: User;
+};
 
 const EditProfile = () => {
   const { user } = useContext(AuthContext);
@@ -29,6 +37,10 @@ const EditProfile = () => {
   );
   const [accountDetails, setAccountDetails] = useState(initialAccountDetails);
   const [currentPassword, setCurrentPassword] = useState("");
+  const [flashMessage, setFlashMessage] = useState<flashMessage>({
+    type: "success",
+    message: "",
+  });
   const handleChooseProfileButtonClick = (e: SyntheticEvent) => {
     e.preventDefault();
     setTriggerImageInput(true);
@@ -64,10 +76,47 @@ const EditProfile = () => {
     }
   };
 
-  const handleSubmit = (e: FormEvent) => {
-    console.log("submitted");
+  const mutation = useMutation(
+    async () => {
+      try {
+        const changedDetails: { [k: string]: any } = {};
+
+        Object.keys(accountDetails).forEach((key: string) => {
+          let a: any = accountDetails[key as keyof typeof accountDetails];
+          let b: any =
+            initialAccountDetails[key as keyof typeof initialAccountDetails];
+          if (a !== b) {
+            changedDetails[key] = a;
+          }
+        });
+        const { data } = await axios.put(`/api/users/${user._id}`, {
+          ...changedDetails,
+          currentPassword,
+        });
+        return data;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    {
+      onSuccess: (response: flashMessage) => {
+        setFlashMessage({
+          type: response.type,
+          message: response.message,
+        });
+      },
+      onError: (response: flashMessage) => {
+        setFlashMessage({
+          type: response.type,
+          message: response.message,
+        });
+      },
+    }
+  );
+
+  const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    console.log(accountDetails);
+    mutation.mutate();
   };
 
   return (
@@ -95,7 +144,6 @@ const EditProfile = () => {
       </div>
       <form
         className="flex flex-col item-center w-full"
-        onSubmit={handleSubmit}
         onChange={() => setSubmitDisabled(true)}
       >
         <div className="flex w-full">
@@ -192,11 +240,19 @@ const EditProfile = () => {
           onChange={(e) => setCurrentPassword(e.target.value)}
           required
         />
-        <span className="my-2 text-red-500 text-sm text-center">
-          Placeholder
+        <span
+          className={`my-2 text-sm text-center ${
+            flashMessage.type === "success"
+              ? "text-emerald-500"
+              : "text-red-500"
+          }`}
+        >
+          {flashMessage.message}
         </span>
         <div className=" flex items-center justify-center space-x-3 m-3">
-          <PrimaryButton disabled={submitDisabled}>Save Changes</PrimaryButton>
+          <PrimaryButton onClick={handleSubmit} disabled={submitDisabled}>
+            Save Changes
+          </PrimaryButton>
         </div>
       </form>
     </section>

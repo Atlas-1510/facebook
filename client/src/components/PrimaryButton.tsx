@@ -1,7 +1,9 @@
 import React, { FC, ReactNode, SyntheticEvent } from "react";
 
 type Props = {
-  onClick?: (e: SyntheticEvent) => Promise<void>;
+  onClick?:
+    | ((e: SyntheticEvent) => Promise<void>)
+    | ((e: SyntheticEvent) => void);
   type?: "button" | "submit" | "reset" | undefined;
   disabled?: boolean;
   children: ReactNode;

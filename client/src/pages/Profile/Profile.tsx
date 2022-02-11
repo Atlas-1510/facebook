@@ -9,7 +9,7 @@ import Modal from "../../components/Modal";
 import EditProfile from "./EditProfile";
 
 const Profile: FC = () => {
-  const { user } = useContext(AuthContext);
+  const { user, getUserState } = useContext(AuthContext);
   const [editProfileModal, setEditProfileModal] = useState(false);
 
   return (
@@ -47,7 +47,10 @@ const Profile: FC = () => {
       <main className=" flex justify-center flex-grow mt-3">
         <Modal
           open={editProfileModal}
-          onClose={() => setEditProfileModal(false)}
+          onClose={() => {
+            getUserState();
+            setEditProfileModal(false);
+          }}
           title="Edit Profile"
         >
           <EditProfile />
