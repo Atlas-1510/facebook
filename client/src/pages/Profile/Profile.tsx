@@ -1,13 +1,16 @@
-import { FC, useContext } from "react";
+import { FC, SyntheticEvent, useContext, useState } from "react";
 import { AuthContext } from "../../contexts/Auth";
 import UserThumbnail from "../../components/common/UserThumbnail";
 import { RiPencilFill } from "react-icons/ri";
 import Tab from "../../components/common/Tab";
 import SecondaryButton from "../../components/common/SecondaryButton";
 import { Outlet } from "react-router-dom";
+import Modal from "../../components/Modal";
+import EditProfile from "./EditProfile/EditProfile";
 
 const Profile: FC = () => {
   const { user } = useContext(AuthContext);
+  const [editProfileModal, setEditProfileModal] = useState(false);
 
   return (
     <div className="  min-h-screen relative -top-5">
@@ -26,7 +29,7 @@ const Profile: FC = () => {
                 <div>friend images here</div>
               </div>
 
-              <SecondaryButton>
+              <SecondaryButton onClick={() => setEditProfileModal(true)}>
                 <RiPencilFill className=" text-zinc-700 m-1 text-lg" />
                 <span className=" ">Edit Profile</span>
               </SecondaryButton>
@@ -42,6 +45,13 @@ const Profile: FC = () => {
         </header>
       </div>
       <main className=" flex justify-center flex-grow mt-3">
+        <Modal
+          open={editProfileModal}
+          onClose={() => setEditProfileModal(false)}
+          title="Edit Profile"
+        >
+          <EditProfile />
+        </Modal>
         <div className="grid grid-cols-5 w-full md:w-[60vw] gap-3">
           <Outlet />
         </div>
