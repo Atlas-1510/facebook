@@ -14,6 +14,8 @@ import { AuthContext } from "../../contexts/Auth";
 import testImage from "../../images/test_profile_image.jpeg";
 import { User } from "../../types/User";
 
+// TODO: Make sure user posts update name and profile image after a profile is edited.
+
 type flashMessage = {
   type: "success" | "failure";
   message: string;

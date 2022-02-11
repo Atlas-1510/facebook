@@ -1,4 +1,4 @@
-import { FC, SyntheticEvent, useContext, useState } from "react";
+import { FC, useContext, useState } from "react";
 import { AuthContext } from "../../contexts/Auth";
 import UserThumbnail from "../../components/common/UserThumbnail";
 import { RiPencilFill } from "react-icons/ri";
