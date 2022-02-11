@@ -1,21 +1,208 @@
-import React, { useContext, useState } from "react";
+import {
+  SyntheticEvent,
+  useEffect,
+  useState,
+  useRef,
+  useContext,
+  FormEvent,
+  useMemo,
+} from "react";
+
+import PrimaryButton from "../../../components/PrimaryButton";
 import { AuthContext } from "../../../contexts/Auth";
-import NameOrImage from "./NameOrImage";
-// import Email from "./Email";
-// import Password from "./Password";
-// import DeleteAccount from "./DeleteAccount";
+import testImage from "../../../images/test_profile_image.jpeg";
 
 const EditProfile = () => {
   const { user } = useContext(AuthContext);
-  const [section, setSection] = useState("nameAndImage");
+  const [triggerImageInput, setTriggerImageInput] = useState(false);
+  const [image, setImage] = useState<File | null>(null);
+  const imageInput = useRef<HTMLInputElement | null>(null);
+  const [submitDisabled, setSubmitDisabled] = useState(true);
+  const initialAccountDetails = useMemo(
+    () => ({
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      newPassword: "",
+    }),
+    [user]
+  );
+  const [accountDetails, setAccountDetails] = useState(initialAccountDetails);
+  const [currentPassword, setCurrentPassword] = useState("");
+  // PROFILE IMAGE
+  const handleChooseProfileButtonClick = (e: SyntheticEvent) => {
+    e.preventDefault();
+    setTriggerImageInput(true);
+  };
+
+  useEffect(() => {
+    if (triggerImageInput) {
+      imageInput.current?.click();
+      setTriggerImageInput(false);
+    }
+  }, [triggerImageInput]);
+
+  useEffect(() => {
+    if (
+      JSON.stringify(accountDetails) !== JSON.stringify(initialAccountDetails)
+    ) {
+      if (currentPassword !== "") {
+        setSubmitDisabled(false);
+      }
+    }
+  }, [accountDetails, initialAccountDetails, currentPassword]);
+
+  const handleImageSelection = () => {
+    if (imageInput.current?.files) {
+      const file = imageInput.current.files[0];
+      if (!/image/i.test(file.type)) {
+        alert("File " + file.name + " is not an image.");
+        setImage(null);
+        return;
+      }
+      setImage(file);
+      setSubmitDisabled(false);
+    }
+  };
+
+  const handleSubmit = (e: FormEvent) => {
+    console.log("submitted");
+    e.preventDefault();
+    console.log(accountDetails);
+  };
 
   return (
-    <div>
-      {section === "nameAndImage" && <NameOrImage setSection={setSection} />}
-      {/* {section === "email" && <Email setSection={setSection} />} */}
-      {/* {section === "password" && <Password setSection={setSection} />} */}
-      {/* {section === "deleteAccount" && <DeleteAccount setSection={setSection} />} */}
-    </div>
+    <section className=" flex flex-col items-center w-full">
+      {/* Profile Image */}
+      <div className="relative rounded-full overflow-hidden h-20 md:h-36 aspect-square m-3">
+        <img
+          src={image ? URL.createObjectURL(image) : testImage}
+          alt="chosen display for current user"
+          className="w-full"
+        />
+        <input
+          type="file"
+          className="hidden"
+          ref={imageInput}
+          onChange={handleImageSelection}
+          accept="image/*"
+        ></input>
+        <button
+          className="absolute grid w-full h-full top-0 left-0 right-0 bottom-0 bg-black text-white 
+                        opacity-0 hover:opacity-60 place-items-center transition-all"
+          onClick={handleChooseProfileButtonClick}
+        >
+          <span className=" font-roboto">Change Image</span>
+        </button>
+      </div>
+      {/* Account details */}
+      <form
+        className="flex flex-col item-center w-full"
+        onSubmit={handleSubmit}
+        onChange={() => setSubmitDisabled(true)}
+      >
+        <div className="flex w-full">
+          <div className="w-full">
+            <label htmlFor="givenName" className="label">
+              Given Name
+            </label>
+            <input
+              id="givenName"
+              className="input mb-3"
+              name="first name"
+              type="text"
+              placeholder="First name"
+              autoComplete="given-name"
+              value={accountDetails.firstName}
+              onChange={(e) =>
+                setAccountDetails({
+                  ...accountDetails,
+                  firstName: e.target.value,
+                })
+              }
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="familyName" className="label">
+              Family Name
+            </label>
+            <input
+              id="familyName"
+              className="input mb-3"
+              name="surname"
+              type="text"
+              placeholder="Surname"
+              autoComplete="family-name"
+              value={accountDetails.lastName}
+              onChange={(e) =>
+                setAccountDetails({
+                  ...accountDetails,
+                  lastName: e.target.value,
+                })
+              }
+              required
+            />
+          </div>
+        </div>
+
+        <label htmlFor="Email" className="label">
+          Email
+        </label>
+        <input
+          id="email"
+          className="input mb-3"
+          name="email"
+          type="email"
+          placeholder="Email address"
+          autoComplete="email"
+          value={accountDetails.email}
+          onChange={(e) =>
+            setAccountDetails({ ...accountDetails, email: e.target.value })
+          }
+          required
+        />
+        <label htmlFor="newPassword" className="label">
+          New Password
+        </label>
+        <input
+          id="newPassword"
+          className="input mb-3"
+          name="password"
+          type="password"
+          placeholder="New password"
+          autoComplete="new-password"
+          value={accountDetails.newPassword}
+          onChange={(e) =>
+            setAccountDetails({
+              ...accountDetails,
+              newPassword: e.target.value,
+            })
+          }
+        />
+        <div className="w-full my-3 h-px bg-gray-300 box-border"></div>
+        <span className=" text-sm text-center m-1">
+          Please enter your password to save your changes
+        </span>
+        <input
+          aria-label="current password"
+          className="input mb-3 bg-zinc-100"
+          name="password"
+          type="password"
+          placeholder="Password"
+          autoComplete="password"
+          value={currentPassword}
+          onChange={(e) => setCurrentPassword(e.target.value)}
+          required
+        />
+        <span className="my-2 text-red-500 text-sm text-center">
+          Placeholder
+        </span>
+        <div className=" flex items-center justify-center space-x-3 m-3">
+          <PrimaryButton disabled={submitDisabled}>Save Changes</PrimaryButton>
+        </div>
+      </form>
+    </section>
   );
 };
 
