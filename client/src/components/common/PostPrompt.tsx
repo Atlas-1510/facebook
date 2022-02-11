@@ -205,11 +205,12 @@ const PostPrompt = () => {
               {Button}
 
               <PrimaryButton
-                title="Post"
                 onClick={async () => {}}
                 type="submit"
                 disabled={!postInput && !image}
-              />
+              >
+                Post
+              </PrimaryButton>
               <input
                 type="file"
                 className="hidden"

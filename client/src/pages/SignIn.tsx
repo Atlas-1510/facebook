@@ -202,7 +202,7 @@ const SignIn: FC = () => {
               required
             />
             <span className="my-2 text-red-500 text-sm">{signinFlash}</span>
-            <PrimaryButton title="Sign Up" onClick={handleSignUpSubmit} />
+            <PrimaryButton onClick={handleSignUpSubmit}>Sign Up</PrimaryButton>
           </form>
         </Modal>
       </main>
