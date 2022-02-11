@@ -13,18 +13,26 @@ import Post from "../../components/common/Post/Post";
 const Posts = () => {
   const { uid } = useParams();
 
-  const getImagePosts = async () => {
+  const getImagePosts = async (imageLimit: number) => {
     try {
-      const { data } = await axios.get(`/api/posts/getImagePosts/${uid}`);
+      const { data } = await axios.get(`/api/posts/getImagePosts/${uid}`, {
+        params: { limit: imageLimit },
+      });
       return data;
     } catch (err) {
       console.log(err);
     }
   };
 
-  const { data: imagePosts } = useQuery(`imagePosts ${uid}`, getImagePosts, {
-    enabled: !!uid,
-  });
+  const imageLimit = 9; // 0 means there is no image limit
+
+  const { data: imagePosts } = useQuery(
+    [`imagePosts ${uid}`, imageLimit],
+    () => getImagePosts(imageLimit),
+    {
+      enabled: !!uid,
+    }
+  );
 
   const initialModalState = { open: false, data: null };
 
@@ -131,7 +139,6 @@ const Posts = () => {
             onClose={() => {
               modalDispatch({ type: "close", payload: null });
             }}
-            title="Photo Modal"
           >
             <Post initialData={modal.data} />
           </Modal>

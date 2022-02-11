@@ -6,7 +6,7 @@ import { IoMdClose } from "react-icons/io";
 type Props = {
   children?: ReactNode;
   open: boolean;
-  title: string;
+  title?: string;
   subtext?: string;
   onClose: () => void;
 };
@@ -51,9 +51,11 @@ const Modal: FC<Props> = ({ children, open, onClose, title, subtext }) => {
         >
           <div className="flex w-full justify-between">
             <div>
-              <h1 id="title" className=" text-3xl font-roboto">
-                {title}
-              </h1>
+              {title && (
+                <h1 id="title" className=" text-3xl font-roboto">
+                  {title}
+                </h1>
+              )}
               {subtext && (
                 <p className=" text-sm text-zinc-500 font-roboto mt-1">
                   {subtext}

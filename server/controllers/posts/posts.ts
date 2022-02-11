@@ -84,12 +84,14 @@ const getImagePosts = [
     res: express.Response,
     next: express.NextFunction
   ) => {
+    const imageLimit =
+      typeof req.query.limit === "string" ? parseInt(req.query.limit) : 0;
     const posts = await Post.find()
       .where("author")
       .equals(req.params.uid)
       .where("image")
       .exists(true)
-      .limit(9)
+      .limit(imageLimit)
       .sort({ createdAt: "descending" });
     return res.send(posts);
   },
