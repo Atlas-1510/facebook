@@ -8,9 +8,9 @@ import {
   useMemo,
 } from "react";
 
-import PrimaryButton from "../../../components/PrimaryButton";
-import { AuthContext } from "../../../contexts/Auth";
-import testImage from "../../../images/test_profile_image.jpeg";
+import PrimaryButton from "../../components/PrimaryButton";
+import { AuthContext } from "../../contexts/Auth";
+import testImage from "../../images/test_profile_image.jpeg";
 
 const EditProfile = () => {
   const { user } = useContext(AuthContext);
@@ -29,7 +29,6 @@ const EditProfile = () => {
   );
   const [accountDetails, setAccountDetails] = useState(initialAccountDetails);
   const [currentPassword, setCurrentPassword] = useState("");
-  // PROFILE IMAGE
   const handleChooseProfileButtonClick = (e: SyntheticEvent) => {
     e.preventDefault();
     setTriggerImageInput(true);
@@ -73,7 +72,6 @@ const EditProfile = () => {
 
   return (
     <section className=" flex flex-col items-center w-full">
-      {/* Profile Image */}
       <div className="relative rounded-full overflow-hidden h-20 md:h-36 aspect-square m-3">
         <img
           src={image ? URL.createObjectURL(image) : testImage}
@@ -95,7 +93,6 @@ const EditProfile = () => {
           <span className=" font-roboto">Change Image</span>
         </button>
       </div>
-      {/* Account details */}
       <form
         className="flex flex-col item-center w-full"
         onSubmit={handleSubmit}

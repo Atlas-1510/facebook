@@ -6,7 +6,7 @@ import Tab from "../../components/common/Tab";
 import SecondaryButton from "../../components/common/SecondaryButton";
 import { Outlet } from "react-router-dom";
 import Modal from "../../components/Modal";
-import EditProfile from "./EditProfile/EditProfile";
+import EditProfile from "./EditProfile";
 
 const Profile: FC = () => {
   const { user } = useContext(AuthContext);
