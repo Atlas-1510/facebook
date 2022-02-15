@@ -39,7 +39,7 @@ const SignIn: FC = () => {
         setFlash(message);
         setLoading(false);
       } else if (_id) {
-        getUserState();
+        await getUserState();
       } else {
         throw new Error(
           "Login error, did not receive error message or successful login result"
