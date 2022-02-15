@@ -82,14 +82,14 @@ const updateUser = [
         update[key] = req.body[key];
       });
 
-      await User.findByIdAndUpdate(uid, update, {
+      const updatedUser = await User.findByIdAndUpdate(uid, update, {
         returnOriginal: false,
       });
 
       return res.send({
         type: "success",
         message: "Your account has been successfully updated.",
-        payload: user,
+        payload: updatedUser,
       });
     } catch (err) {
       return next(err);

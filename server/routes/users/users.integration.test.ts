@@ -125,30 +125,41 @@ describe("/api/users", () => {
         });
         describe("given a valid uid", () => {
           test("updates and returns user document if uid is found", async () => {
-            const newUserData = {
+            const editedUserData = {
               email: "sam@wilson.com",
               firstName: "Sam",
               lastName: "Wilson",
+              currentPassword: "test",
             };
             const response = await agent
               .put(`/api/users/${users[0]._id}`)
-              .send(newUserData);
+              .send(editedUserData);
             expect(response.statusCode).toBe(200);
             expect(response.headers["content-type"]).toEqual(
               expect.stringContaining("json")
             );
-            expect(response.body).toEqual(expect.objectContaining(newUserData));
+            expect(response.body).toMatchObject({
+              message: "Your account has been successfully updated.",
+              payload: {
+                email: "sam@wilson.com",
+                firstName: "Sam",
+                lastName: "Wilson",
+              },
+              type: "success",
+            });
           });
           describe("if user tries to update an account that is not theirs", () => {
-            const nonExistingUserDocId = new mongoose.Types.ObjectId();
             test("returns 403 status code and warns user", async () => {
-              const response = await agent.put(
-                `/api/users/${nonExistingUserDocId}`
-              );
+              const response = await agent
+                .put(`/api/users/${users[1]._id}`)
+                .send({
+                  currentPassword: "test",
+                });
               expect(response.statusCode).toBe(403);
-              expect(response.text).toBe(
-                "You must login as this user to edit this account."
-              );
+              expect(response.body).toMatchObject({
+                type: "failure",
+                message: "You must login as this user to edit this account.",
+              });
             });
           });
         });
