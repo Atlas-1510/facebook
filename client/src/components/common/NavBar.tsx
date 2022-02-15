@@ -78,7 +78,7 @@ const NavBar: FC = () => {
               let styles =
                 "h-[70%] overflow-hidden text-zinc-900 flex justify-center items-center m-2 hover:bg-slate-200 rounded-full transition-all";
               let activeStyles =
-                "h-[70%] overflow-hidden flex justify-center items-center m-2 hover:bg-blue-200 rounded-full text-facebook-blue bg-blue-100 transition-all";
+                "h-[70%] overflow-hidden flex justify-center items-center m-2 hover:bg-blue-200 rounded-full text-facebook-blue bg-blue-200 transition-all";
               return isActive ? activeStyles : styles;
             }}
           >
