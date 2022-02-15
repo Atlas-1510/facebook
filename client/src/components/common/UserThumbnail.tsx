@@ -1,20 +1,24 @@
 import { useContext } from "react";
 import { AuthContext } from "../../contexts/Auth";
 import { User } from "../../types/User";
-import { HiUser } from "react-icons/hi";
+import defaultUserPicture from "../../images/defaultUserPicture.jpeg";
 
 const UserThumbnail = () => {
   const { user }: { user: User } = useContext(AuthContext);
-  if (!user || !user.thumbnail) {
+  if (!user || !user.displayPhoto) {
     return (
       <div className="rounded-full h-full aspect-square bg-blue-400 grid place-items-center">
-        <HiUser className=" text-zinc-200" size="1.5rem" />
+        <img
+          src={defaultUserPicture}
+          alt="Default user"
+          className=" rounded-full"
+        />
       </div>
     );
   } else
     return (
       <img
-        src={user.thumbnail}
+        src={user.displayPhoto}
         alt="profile"
         className="rounded-full h-full aspect-square"
       />

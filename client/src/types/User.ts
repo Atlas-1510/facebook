@@ -8,5 +8,5 @@ export interface User {
   inboundFriendRequests: string[];
   outboundFriendRequests: string[];
   googleId?: string;
-  thumbnail?: string;
+  displayPhoto?: string;
 }

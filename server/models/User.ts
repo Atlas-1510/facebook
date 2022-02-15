@@ -14,7 +14,7 @@ export interface UserInput {
   inboundFriendRequests?: ObjectId[];
   outboundFriendRequests?: ObjectId[];
   googleId?: string;
-  thumbnail?: string;
+  displayPhoto?: string;
   password?: string;
 }
 
@@ -26,7 +26,7 @@ export interface UserDocument extends UserInput, Document {
   inboundFriendRequests: ObjectId[];
   outboundFriendRequests: ObjectId[];
   googleId: string;
-  thumbnail: string;
+  displayPhoto: string;
   password: string;
 }
 
@@ -39,7 +39,7 @@ const UserSchema = new Schema<UserDocument>(
     inboundFriendRequests: { type: [Schema.Types.ObjectId], default: [] },
     outboundFriendRequests: { type: [Schema.Types.ObjectId], default: [] },
     googleId: { type: Schema.Types.String },
-    thumbnail: { type: Schema.Types.String },
+    displayPhoto: { type: Schema.Types.String },
     password: { type: Schema.Types.String, required: true },
   },
   {
