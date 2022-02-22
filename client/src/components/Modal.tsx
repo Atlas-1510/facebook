@@ -1,5 +1,4 @@
-import React, { FC, ReactNode, MouseEvent, useEffect } from "react";
-import ReactDom from "react-dom";
+import React, { FC, ReactNode, MouseEvent } from "react";
 import { IconContext } from "react-icons";
 import { IoMdClose } from "react-icons/io";
 
@@ -12,32 +11,16 @@ type Props = {
 };
 
 const Modal: FC<Props> = ({ children, open, onClose, title, subtext }) => {
-  let portal = document.getElementById("portal");
-  if (!portal) {
-    portal = document.createElement("div");
-    portal.setAttribute("id", "portal");
-    document.body.appendChild(portal);
-  }
-
-  useEffect(() => {
-    return () => {
-      if (portal) {
-        portal.remove();
-      }
-    };
-  }, [portal]);
-
   const closeModal = (e: MouseEvent<HTMLElement>): void => {
     e.stopPropagation();
     onClose();
   };
 
   if (!open) {
-    portal.remove();
     return null;
   }
 
-  return ReactDom.createPortal(
+  return (
     <div
       className="fixed top-0 left-0 right-0 bottom-0 bg-stone-200/60 z-50"
       onClick={closeModal}
@@ -72,8 +55,7 @@ const Modal: FC<Props> = ({ children, open, onClose, title, subtext }) => {
           {children}
         </section>
       </div>
-    </div>,
-    portal
+    </div>
   );
 };
 
