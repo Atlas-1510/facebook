@@ -57,13 +57,13 @@ const EditProfile = () => {
 
   useEffect(() => {
     if (
-      JSON.stringify(accountDetails) !== JSON.stringify(initialAccountDetails)
+      JSON.stringify(accountDetails) !==
+        JSON.stringify(initialAccountDetails) ||
+      image !== null
     ) {
-      if (currentPassword !== "") {
-        setSubmitDisabled(false);
-      }
+      setSubmitDisabled(currentPassword !== "" ? false : true);
     }
-  }, [accountDetails, initialAccountDetails, currentPassword]);
+  }, [accountDetails, initialAccountDetails, currentPassword, image]);
 
   const handleImageSelection = () => {
     if (imageInput.current?.files) {
@@ -74,7 +74,6 @@ const EditProfile = () => {
         return;
       }
       setImage(file);
-      setSubmitDisabled(false);
     }
   };
 
@@ -91,6 +90,10 @@ const EditProfile = () => {
             changedDetails[key] = a;
           }
         });
+        if (image) {
+          changedDetails.newProfileImage = image;
+        }
+
         const { data } = await axios.put(`/api/users/${user._id}`, {
           ...changedDetails,
           currentPassword,
@@ -144,10 +147,7 @@ const EditProfile = () => {
           <span className=" font-roboto">Change Image</span>
         </button>
       </div>
-      <form
-        className="flex flex-col item-center w-full"
-        onChange={() => setSubmitDisabled(true)}
-      >
+      <form className="flex flex-col item-center w-full">
         <div className="flex w-full">
           <div className="w-full">
             <label htmlFor="givenName" className="label">
