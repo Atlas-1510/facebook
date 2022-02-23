@@ -1,6 +1,6 @@
 import { FC, useContext, ReactNode } from "react";
 
-import testProfileImage from "../../../images/test_profile_image.jpeg";
+import defaultProfileImage from "../../../images/defaultUserPicture.jpeg";
 import { Link } from "react-router-dom";
 import SecondaryButton from "../SecondaryButton";
 import { AuthContext } from "../../../contexts/Auth";
@@ -155,7 +155,18 @@ const FriendTile: FC<Props> = ({ contact }) => {
         to="something"
         className="flex items-center flex-grow hover:text-facebook-blue"
       >
-        <img src={testProfileImage} alt="profile" className="rounded-xl h-20" />
+        <div className="overflow-hidden rounded-xl h-20 aspect-square">
+          <img
+            src={
+              contact.displayPhoto
+                ? `/api/images/${contact.displayPhoto}`
+                : defaultProfileImage
+            }
+            alt="profile"
+            className=" min-w-full min-h-full"
+          />
+        </div>
+
         <h3 className=" font-medium ml-3 flex-grow">{contact.fullName}</h3>
       </Link>
       {Button}
