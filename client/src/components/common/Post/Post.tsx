@@ -12,6 +12,7 @@ import { CommentInterface } from "../../../types/CommentInterface";
 import getReadableTimestamp from "../../../utils/getReadableTimestamp";
 import { User } from "../../../types/User";
 import { AuthContext } from "../../../contexts/Auth";
+import { Link } from "react-router-dom";
 
 type Props = {
   initialData: PostInterface;
@@ -170,22 +171,24 @@ const Post: FC<Props> = ({ initialData }) => {
     return (
       <article className="bg-zinc-100 shadow-md overflow-auto md:rounded-lg my-3">
         <section className="p-3">
-          <div className="flex items-center mb-2">
-            <div className="aspect-square overflow-hidden bg-emerald-300 grid place-items-center max-h-12 rounded-full mr-2 ">
-              <img
-                src={`/api/images/${author.displayPhoto}`}
-                alt="profile"
-                className="h-full"
-              />
-            </div>
+          <Link to={`${author._id}`}>
+            <div className="flex items-center mb-2">
+              <div className="aspect-square overflow-hidden bg-emerald-300 grid place-items-center max-h-12 rounded-full mr-2 ">
+                <img
+                  src={`/api/images/${author.displayPhoto}`}
+                  alt="profile"
+                  className="h-full"
+                />
+              </div>
 
-            <div className="flex flex-col">
-              <h2 className="font-medium">{author.fullName}</h2>
-              <span className=" text-sm text-zinc-600">
-                {getReadableTimestamp(post.createdAt)}
-              </span>
+              <div className="flex flex-col">
+                <h2 className="font-medium">{author.fullName}</h2>
+                <span className=" text-sm text-zinc-600">
+                  {getReadableTimestamp(post.createdAt)}
+                </span>
+              </div>
             </div>
-          </div>
+          </Link>
           <p>{post.content}</p>
         </section>
         {post.image && (

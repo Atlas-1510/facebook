@@ -77,7 +77,7 @@ const NavBar: FC = () => {
         </ul>
         <div className="h-full flex items-center justify-end px-1">
           <NavLink
-            to={`${user._id}`}
+            to="profile"
             className={({ isActive }) => {
               let styles =
                 "h-[70%] overflow-hidden text-zinc-900 flex justify-center items-center m-2 hover:bg-slate-200 rounded-full transition-all";

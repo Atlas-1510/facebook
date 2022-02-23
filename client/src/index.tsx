@@ -25,7 +25,7 @@ render(
         <Routes>
           <Route path="/" element={<App />}>
             <Route index element={<Home />} />
-            <Route path=":uid" element={<Profile />}>
+            <Route path="profile" element={<Profile />}>
               <Route index element={<Posts />} />
               <Route path="friends" element={<Friends />}>
                 <Route index element={<AllFriends />} />
