@@ -111,7 +111,7 @@ const Posts = () => {
                 <h2 className=" text-zinc-800 font-medium text-lg mb-2">
                   Friends
                 </h2>
-                <Link to="photos" className=" text-facebook-blue text-sm">
+                <Link to="friends" className=" text-facebook-blue text-sm">
                   See All Friends
                 </Link>
               </div>
