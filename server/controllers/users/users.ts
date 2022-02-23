@@ -5,6 +5,8 @@ import { body, param, validationResult } from "express-validator";
 import express from "express";
 import processValidation from "../../utils/processValidation";
 import bcrypt from "bcryptjs";
+import { uploadFile } from "../../s3";
+import unlinkFile from "../../utils/unlinkFile";
 
 const getAllUsers = async (
   req: express.Request,
@@ -76,15 +78,26 @@ const updateUser = [
           message: "The password you provided was incorrect.",
         });
       }
-      const update: any = {};
 
-      Object.keys(req.body).forEach((key) => {
-        update[key] = req.body[key];
-      });
+      // handle the image if it exists
+      console.log(req.file);
+      if (req.file) {
+        await uploadFile(req.file);
+        await unlinkFile(req.file.path);
+      }
+      // const update: any = {};
 
-      const updatedUser = await User.findByIdAndUpdate(uid, update, {
-        returnOriginal: false,
-      });
+      // Object.keys(req.body).forEach((key) => {
+      //   update[key] = req.body[key];
+      // });
+
+      const updatedUser = await User.findByIdAndUpdate(
+        uid,
+        { ...req.body, displayPhoto: req.file.filename },
+        {
+          returnOriginal: false,
+        }
+      );
 
       return res.send({
         type: "success",

@@ -11,7 +11,7 @@ import { useMutation } from "react-query";
 
 import PrimaryButton from "../../components/PrimaryButton";
 import { AuthContext } from "../../contexts/Auth";
-import testImage from "../../images/test_profile_image.jpeg";
+import defaultImage from "../../images/defaultUserPicture.jpeg";
 import { User } from "../../types/User";
 
 // TODO: Make sure user posts update name and profile image after a profile is edited.
@@ -25,7 +25,14 @@ type flashMessage = {
 const EditProfile = () => {
   const { user } = useContext(AuthContext);
   const [triggerImageInput, setTriggerImageInput] = useState(false);
-  const [image, setImage] = useState<File | null>(null);
+  const [image, setImage] = useState<any>(() => {
+    if (user.displayPhoto) {
+      return `/api/images/${user.displayPhoto}`;
+    } else {
+      return defaultImage;
+    }
+  });
+
   const imageInput = useRef<HTMLInputElement | null>(null);
   const [submitDisabled, setSubmitDisabled] = useState(true);
   const initialAccountDetails = useMemo(
@@ -73,31 +80,27 @@ const EditProfile = () => {
         setImage(null);
         return;
       }
-      setImage(file);
+      setImage(URL.createObjectURL(file));
     }
   };
 
   const mutation = useMutation(
     async () => {
       try {
-        const changedDetails: { [k: string]: any } = {};
-
-        Object.keys(accountDetails).forEach((key: string) => {
-          let a: any = accountDetails[key as keyof typeof accountDetails];
-          let b: any =
-            initialAccountDetails[key as keyof typeof initialAccountDetails];
-          if (a !== b) {
-            changedDetails[key] = a;
-          }
-        });
+        const formData: FormData = new FormData();
+        formData.append("currentPassword", currentPassword);
+        formData.append("firstName", accountDetails.firstName);
+        formData.append("lastName", accountDetails.lastName);
+        formData.append("email", accountDetails.email);
+        if (accountDetails.newPassword) {
+          formData.append("newPassword", accountDetails.newPassword);
+        }
         if (image) {
-          changedDetails.newProfileImage = image;
+          const blobbedImage = await fetch(image).then((r) => r.blob());
+          formData.append("newProfileImage", blobbedImage);
         }
 
-        const { data } = await axios.put(`/api/users/${user._id}`, {
-          ...changedDetails,
-          currentPassword,
-        });
+        const { data } = await axios.put(`/api/users/${user._id}`, formData);
         return data;
       } catch (err) {
         console.log(err);
@@ -105,10 +108,13 @@ const EditProfile = () => {
     },
     {
       onSuccess: (response: flashMessage) => {
+        console.log(response);
         setFlashMessage({
           type: response.type,
           message: response.message,
         });
+        setSubmitDisabled(true);
+        setCurrentPassword("");
       },
       onError: (response: flashMessage) => {
         setFlashMessage({
@@ -128,7 +134,7 @@ const EditProfile = () => {
     <section className=" flex flex-col items-center w-full">
       <div className="relative rounded-full overflow-hidden h-20 md:h-36 aspect-square m-3">
         <img
-          src={image ? URL.createObjectURL(image) : testImage}
+          src={image}
           alt="chosen display for current user"
           className="w-full"
         />
