@@ -11,7 +11,7 @@ const UserThumbnail = () => {
   }
 
   return (
-    <div className="rounded-full h-full aspect-square bg-emerald-400 grid place-items-center">
+    <div className="rounded-full h-full aspect-square bg-emerald-400 grid place-items-center overflow-hidden">
       {user.displayPhoto && (
         <img
           src={`/api/images/${user.displayPhoto}`}
