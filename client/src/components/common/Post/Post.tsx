@@ -1,4 +1,4 @@
-import { FC, ReactNode, useState } from "react";
+import { FC, ReactNode, useContext, useState } from "react";
 import testPageImage from "../../../images/test_page.jpeg";
 import { HiThumbUp } from "react-icons/hi";
 import { FaRegThumbsUp, FaRegComment } from "react-icons/fa";
@@ -11,12 +11,14 @@ import SkeletonPost from "./SkeletonPost";
 import { CommentInterface } from "../../../types/CommentInterface";
 import getReadableTimestamp from "../../../utils/getReadableTimestamp";
 import { User } from "../../../types/User";
+import { AuthContext } from "../../../contexts/Auth";
 
 type Props = {
   initialData: PostInterface;
 };
 
 const Post: FC<Props> = ({ initialData }) => {
+  const { user } = useContext(AuthContext);
   const queryClient = useQueryClient();
 
   const { data: author, status: authorStatus } = useQuery(
@@ -86,7 +88,7 @@ const Post: FC<Props> = ({ initialData }) => {
   );
 
   const LikeButton: ReactNode = (() => {
-    if (post.likes.includes(post.author)) {
+    if (post.likes.includes(user!._id)) {
       return (
         <button
           onClick={(e) => {
@@ -152,6 +154,10 @@ const Post: FC<Props> = ({ initialData }) => {
     });
   };
 
+  if (!user) {
+    return <div>loading</div>;
+  }
+
   if (status === "loading" || authorStatus === "loading") {
     return <SkeletonPost />;
   }
@@ -183,7 +189,11 @@ const Post: FC<Props> = ({ initialData }) => {
           <p>{post.content}</p>
         </section>
         {post.image && (
-          <img src={`/api/images/${post.image}`} alt="test post" />
+          <img
+            src={`/api/images/${post.image}`}
+            alt="test post"
+            className="w-full"
+          />
         )}
         <div className=" flex justify-between m-3 mb-0 pb-2 text-zinc-500 ">
           <div className="flex items-center">
