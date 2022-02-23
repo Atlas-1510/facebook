@@ -82,10 +82,10 @@ const SignIn: FC = () => {
       <main className="w-full flex flex-col md:flex-row items-center p-5 md:p-10 md:justify-around flex-grow max-w-6xl">
         <section className="flex flex-col items-center md:items-start max-w-sm md:max-w-md md:mr-4">
           <h1 className=" text-facebook-blue font-klavika text-6xl">
-            facebook
+            fakebook
           </h1>
           <p className=" text-xl text-center md:text-left my-3 font-roboto">
-            Odinbook helps you connect and share with the people in your life.
+            Fakebook helps you connect and share with the people in your life.
           </p>
         </section>
 

@@ -62,7 +62,7 @@ const NavBar: FC = () => {
         <div className="h-full flex items-center mx-1">
           <Logo />
           <SearchBar
-            placeholder="Search Facebook"
+            placeholder="Search Fakebook"
             value={searchInput}
             setValue={setSearchInput}
           />
