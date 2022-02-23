@@ -31,11 +31,14 @@ const Comment: FC<Props> = ({ comment }) => {
   } else
     return (
       <article className="flex">
-        <img
-          src={testPageImage}
-          alt="test"
-          className="rounded-full h-10 aspect-square inline-block mr-2"
-        />
+        <div className="rounded-full h-10 aspect-square mr-2 grid place-items-center overflow-hidden">
+          <img
+            src={`/api/images/${author.displayPhoto}`}
+            alt="test"
+            className=""
+          />
+        </div>
+
         <div className=" bg-zinc-200 rounded-2xl p-3">
           <h3 className=" font-medium">{author.fullName}</h3>
           <p>{comment.content}</p>

@@ -16,15 +16,11 @@ const UserThumbnail = () => {
         <img
           src={`/api/images/${user.displayPhoto}`}
           alt="user"
-          className="rounded-full h-full"
+          className=" h-full"
         />
       )}
       {!user.displayPhoto && (
-        <img
-          src={defaultUserPicture}
-          alt="Default user"
-          className=" rounded-full"
-        />
+        <img src={defaultUserPicture} alt="Default user" className=" h-full" />
       )}
     </div>
   );
