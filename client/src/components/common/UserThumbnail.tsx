@@ -4,7 +4,11 @@ import { User } from "../../types/User";
 import defaultUserPicture from "../../images/defaultUserPicture.jpeg";
 
 const UserThumbnail = () => {
-  const { user }: { user: User } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
+
+  if (!user) {
+    return <div>loading</div>;
+  }
 
   return (
     <div className="rounded-full h-full aspect-square bg-emerald-400 grid place-items-center">

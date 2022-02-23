@@ -27,6 +27,10 @@ const NavBar: FC = () => {
     navigate("/");
   };
 
+  if (!user) {
+    return <div>loading</div>;
+  }
+
   if (isMobileScreen) {
     return (
       <header className=" bg-zinc-100 h-14 w-full flex items-center justify-between shadow-md sticky top-0 mb-3">

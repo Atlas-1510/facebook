@@ -20,13 +20,17 @@ const Profile: FC = () => {
             <div className=" h-20 md:h-36">
               <UserThumbnail />
             </div>
-            <div className=" flex justify-between items-end ml-4 translate-y-5 w-full">
+            <div className=" flex justify-between items-end ml-4 translate-y-3 w-full">
               <div>
                 <h1 className=" text-4xl font-medium text-zinc-800">
                   {user?.fullName}
                 </h1>
-                <span className=" text-zinc-500">378 friends</span>
-                <div>friend images here</div>
+                <span className=" text-zinc-500">
+                  {(() => {
+                    const length = user?.friends.length;
+                    return `${length} ${length === 1 ? "friend" : "friends"}`;
+                  })()}
+                </span>
               </div>
 
               <SecondaryButton onClick={() => setEditProfileModal(true)}>
@@ -37,7 +41,7 @@ const Profile: FC = () => {
           </div>
           <nav>
             <ul className="flex">
-              <Tab end={true} title="Posts" to={`/${user._id}`} />
+              <Tab end={true} title="Posts" to={`/${user!._id}`} />
               <Tab end={false} title="Friends" to="friends" />
               <Tab title="Photos" to="photos" />
             </ul>

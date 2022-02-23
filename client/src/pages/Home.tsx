@@ -19,7 +19,7 @@ const Home: FC = () => {
   };
 
   const { status, data: newsfeed } = useQuery("newsfeed", getPosts, {
-    enabled: !!user._id,
+    enabled: !!user!._id,
   });
   return (
     <main className="md:grid md:grid-cols-4">

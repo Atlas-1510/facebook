@@ -1,9 +1,10 @@
 import { createContext, FC, ReactNode } from "react";
 import axios from "axios";
 import { useQueryClient, useQuery } from "react-query";
+import { User } from "../types/User";
 
 export type AuthContextType = {
-  user: any;
+  user: User | null;
   getUserState: any;
 };
 

@@ -33,7 +33,7 @@ const PostPrompt = () => {
   const publishPost = async () => {
     try {
       const formData: FormData = new FormData();
-      formData.append("author", user?._id);
+      formData.append("author", user!._id);
       formData.append("content", postInput);
       if (image) {
         formData.append("image", image);
@@ -50,7 +50,7 @@ const PostPrompt = () => {
     onSuccess: () => {
       queryClient.invalidateQueries("profile posts");
       queryClient.invalidateQueries("newsfeed");
-      queryClient.invalidateQueries(`imagePosts ${user._id}`);
+      queryClient.invalidateQueries(`imagePosts ${user!._id}`);
 
       setPostInput("");
       setImage(null);

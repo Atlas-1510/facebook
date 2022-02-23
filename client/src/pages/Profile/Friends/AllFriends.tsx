@@ -14,7 +14,7 @@ const AllFriends = () => {
   const getFriends = async () => {
     try {
       const results = await Promise.all(
-        user.friends.map(async (fid: string) => {
+        user!.friends.map(async (fid: string) => {
           const { data } = await axios.get(`/api/users/${fid}`);
           return data;
         })

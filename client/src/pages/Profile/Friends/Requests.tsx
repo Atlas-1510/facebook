@@ -15,7 +15,7 @@ const Requests = () => {
     const inbound = await (async () => {
       try {
         const results = await Promise.all(
-          user.inboundFriendRequests.map(async (fid: string) => {
+          user!.inboundFriendRequests.map(async (fid: string) => {
             const { data } = await axios.get(`/api/users/${fid}`);
             return data;
           })
@@ -29,7 +29,7 @@ const Requests = () => {
     const outbound = await (async () => {
       try {
         const results = await Promise.all(
-          user.outboundFriendRequests.map(async (fid: string) => {
+          user!.outboundFriendRequests.map(async (fid: string) => {
             const { data } = await axios.get(`/api/users/${fid}`);
             return data;
           })

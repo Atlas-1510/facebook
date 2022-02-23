@@ -26,10 +26,10 @@ const EditProfile = () => {
   const { user } = useContext(AuthContext);
   const [triggerImageInput, setTriggerImageInput] = useState(false);
   const [image, setImage] = useState<any>(() => {
-    if (user.displayPhoto) {
-      return `/api/images/${user.displayPhoto}`;
-    } else {
+    if (!user || !user.displayPhoto) {
       return defaultImage;
+    } else {
+      return `/api/images/${user.displayPhoto}`;
     }
   });
 
@@ -37,9 +37,9 @@ const EditProfile = () => {
   const [submitDisabled, setSubmitDisabled] = useState(true);
   const initialAccountDetails = useMemo(
     () => ({
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
+      firstName: user!.firstName,
+      lastName: user!.lastName,
+      email: user!.email,
       newPassword: "",
     }),
     [user]
@@ -100,7 +100,7 @@ const EditProfile = () => {
           formData.append("newProfileImage", blobbedImage);
         }
 
-        const { data } = await axios.put(`/api/users/${user._id}`, formData);
+        const { data } = await axios.put(`/api/users/${user!._id}`, formData);
         return data;
       } catch (err) {
         console.log(err);
