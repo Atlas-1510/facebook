@@ -12,16 +12,15 @@ const UserThumbnail = () => {
 
   return (
     <div className="rounded-full h-full aspect-square bg-emerald-400 grid place-items-center overflow-hidden">
-      {user.displayPhoto && (
-        <img
-          src={`/api/images/${user.displayPhoto}`}
-          alt="user"
-          className=" h-full"
-        />
-      )}
-      {!user.displayPhoto && (
-        <img src={defaultUserPicture} alt="Default user" className=" h-full" />
-      )}
+      <img
+        src={
+          user.displayPhoto
+            ? `/api/images/${user.displayPhoto}`
+            : defaultUserPicture
+        }
+        alt="user"
+        className=" h-full"
+      />
     </div>
   );
 };
