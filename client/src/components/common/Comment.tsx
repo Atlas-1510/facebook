@@ -3,6 +3,7 @@ import { FC } from "react";
 import { CommentInterface } from "../../types/CommentInterface";
 import { useQuery } from "react-query";
 import axios from "axios";
+import defaultUserPicture from "../../images/defaultUserPicture.jpeg";
 
 type Props = {
   comment: CommentInterface;
@@ -33,7 +34,11 @@ const Comment: FC<Props> = ({ comment }) => {
       <article className="flex">
         <div className="rounded-full h-10 aspect-square mr-2 grid place-items-center overflow-hidden">
           <img
-            src={`/api/images/${author.displayPhoto}`}
+            src={
+              author.displayPhoto
+                ? `/api/images/${author.displayPhoto}`
+                : defaultUserPicture
+            }
             alt="test"
             className=""
           />
