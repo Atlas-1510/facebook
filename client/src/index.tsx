@@ -14,6 +14,8 @@ import Requests from "./pages/Profile/Friends/Requests";
 import FindFriends from "./pages/Profile/Friends/FindFriends";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
+import ForeignProfile from "./pages/ForeignProfile/ForeignProfile";
+import ForeignPosts from "./pages/ForeignProfile/ForeignPosts";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +35,9 @@ render(
                 <Route path="new" element={<FindFriends />} />
               </Route>
               <Route path="photos" element={<Photos />} />
+            </Route>
+            <Route path="profile/:uid" element={<ForeignProfile />}>
+              <Route index element={<ForeignPosts />} />
             </Route>
             <Route path="settings" element={<Settings />} />
           </Route>

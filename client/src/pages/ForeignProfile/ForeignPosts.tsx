@@ -11,19 +11,15 @@ import Modal from "../../components/Modal";
 import Post from "../../components/common/Post/Post";
 import { AuthContext } from "../../contexts/Auth";
 
-const Posts = () => {
-  const { user } = useContext(AuthContext);
-  console.log(user);
+const ForeignPosts = () => {
+  const { uid } = useParams();
+  console.log(uid);
   const getImagePosts = async (imageLimit: number) => {
     try {
       console.log("inside getImagePosts");
-      console.log(user?._id);
-      const { data } = await axios.get(
-        `/api/posts/getImagePosts/${user?._id}`,
-        {
-          params: { limit: imageLimit },
-        }
-      );
+      const { data } = await axios.get(`/api/posts/getImagePosts/${uid}`, {
+        params: { limit: imageLimit },
+      });
       return data;
     } catch (err) {
       console.log(err);
@@ -33,10 +29,10 @@ const Posts = () => {
   const imageLimit = 9; // 0 means there is no image limit
 
   const { data: imagePosts } = useQuery(
-    [`imagePosts ${user?._id}`, imageLimit],
+    [`imagePosts ${uid}`, imageLimit],
     () => getImagePosts(imageLimit),
     {
-      enabled: !!user?._id,
+      enabled: !!uid,
     }
   );
 
@@ -63,21 +59,13 @@ const Posts = () => {
 
   const [modal, modalDispatch] = useReducer(modalReducer, initialModalState);
 
-  if (!user?._id) {
+  if (!uid) {
     return <div>Something Went Wrong...</div>;
   } else
     return (
       <>
         <div className=" col-span-2 hidden md:flex flex-col justify-end">
           <div className="space-y-3 sticky bottom-3 flex flex-col">
-            <WhiteBox>
-              <h2 className=" text-zinc-800 font-medium text-lg mb-2">Intro</h2>
-              <div className=" space-y-3">
-                <SecondaryButton className="w-full">
-                  <span>Add Bio</span>
-                </SecondaryButton>
-              </div>
-            </WhiteBox>
             <WhiteBox>
               <div className=" flex justify-between items-baseline">
                 <h2 className=" text-zinc-800 font-medium text-lg mb-2">
@@ -136,8 +124,7 @@ const Posts = () => {
           </div>
         </div>
         <div className="  col-span-5 md:col-span-3">
-          <PostPrompt />
-          <PostStream id={user._id} />
+          <PostStream id={uid} />
         </div>
         {modal.open && (
           <Modal
@@ -153,4 +140,4 @@ const Posts = () => {
     );
 };
 
-export default Posts;
+export default ForeignPosts;

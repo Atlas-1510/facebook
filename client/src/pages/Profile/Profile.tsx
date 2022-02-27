@@ -4,11 +4,18 @@ import UserThumbnail from "../../components/common/UserThumbnail";
 import { RiPencilFill } from "react-icons/ri";
 import Tab from "../../components/common/Tab";
 import SecondaryButton from "../../components/common/SecondaryButton";
-import { Outlet } from "react-router-dom";
+import { Outlet, useParams, useOutletContext } from "react-router-dom";
 import Modal from "../../components/Modal";
 import EditProfile from "./EditProfile";
+import { User } from "../../types/User";
 
-const Profile: FC = () => {
+type ContextType = { user: User | null };
+
+export function useUser() {
+  return useOutletContext<ContextType>();
+}
+
+const Profile = () => {
   const { user, getUserState } = useContext(AuthContext);
   const [editProfileModal, setEditProfileModal] = useState(false);
 
@@ -60,7 +67,7 @@ const Profile: FC = () => {
           <EditProfile />
         </Modal>
         <div className="grid grid-cols-5 w-full md:w-[60vw] gap-3">
-          <Outlet />
+          <Outlet context={{ user: user }} />
         </div>
       </main>
     </div>

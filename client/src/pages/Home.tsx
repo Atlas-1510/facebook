@@ -21,6 +21,9 @@ const Home: FC = () => {
   const { status, data: newsfeed } = useQuery("newsfeed", getPosts, {
     enabled: !!user!._id,
   });
+  if (newsfeed && newsfeed.hasOwnProperty("message")) {
+    return <div>loading</div>;
+  }
   return (
     <main className="md:grid md:grid-cols-4">
       <div className="flex flex-col md:col-start-2 md:col-span-2">

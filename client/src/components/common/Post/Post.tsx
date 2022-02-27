@@ -171,7 +171,7 @@ const Post: FC<Props> = ({ initialData }) => {
     return (
       <article className="bg-zinc-100 shadow-md overflow-auto md:rounded-lg my-3">
         <section className="p-3">
-          <Link to={`${author._id}`}>
+          <Link to={`/profile/${author._id}`}>
             <div className="flex items-center mb-2">
               <div className="aspect-square overflow-hidden bg-emerald-300 grid place-items-center max-h-12 rounded-full mr-2 ">
                 <img
