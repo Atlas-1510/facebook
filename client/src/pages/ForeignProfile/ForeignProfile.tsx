@@ -1,4 +1,4 @@
-import { FC, useContext } from "react";
+import { FC, useContext, useEffect } from "react";
 import UserThumbnail from "../../components/common/UserThumbnail";
 import Tab from "../../components/common/Tab";
 import {
@@ -18,9 +18,11 @@ const ForeignProfile: FC = () => {
   const { uid: id } = useParams();
   const { user: currentUser } = useContext(AuthContext);
 
-  if (id === currentUser?._id) {
-    navigate("/profile", { replace: true });
-  }
+  useEffect(() => {
+    if (id === currentUser?._id) {
+      navigate("/profile", { replace: true });
+    }
+  }, [currentUser, id, navigate]);
 
   const getUser = async () => {
     try {

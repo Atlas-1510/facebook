@@ -11,30 +11,30 @@ type Props = {
 };
 
 const FriendGrid: FC<Props> = ({ id }) => {
-  const { user } = useContext(AuthContext);
+  const getFriend = async (id: string): Promise<User> => {
+    const { data: friend } = await axios.get(`/api/users/${id}`);
+    return friend;
+  };
 
   const getFriends = async () => {
+    const user = await getFriend(id);
+
     // for each friend, get their profile, get their image, load it. limit to nine
     if (!user) {
       return null;
     }
-    const friends = await Promise.all(
-      user.friends.map(async (id) => {
-        try {
-          const { data: friend } = await axios.get(`/api/users/${id}`);
-          return friend;
-        } catch (err) {
-          console.log(err);
-        }
-      })
-    );
+    let promises = [];
+    for (let i = 0; i < 9; i++) {
+      if (user.friends[i]) {
+        promises.push(getFriend(user.friends[i]));
+      }
+    }
+    const friends = await Promise.all(promises);
+
     return friends;
   };
 
-  const { data: friends } = useQuery(`friends - ${id}`, getFriends, {
-    enabled: !!user,
-  });
-  console.log(friends);
+  const { data: friends } = useQuery(`friends - ${id}`, getFriends);
 
   return (
     <WhiteBox>
