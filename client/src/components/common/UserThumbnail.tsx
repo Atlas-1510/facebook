@@ -6,7 +6,7 @@ import axios from "axios";
 import { useQuery } from "react-query";
 
 type Props = {
-  id?: string;
+  id: string;
 };
 
 const UserThumbnail: FC<Props> = ({ id }) => {

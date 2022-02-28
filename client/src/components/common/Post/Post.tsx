@@ -227,7 +227,7 @@ const Post: FC<Props> = ({ initialData }) => {
         </section>
         <form className="p-3 pt-3 flex">
           <div className="h-10">
-            <UserThumbnail />
+            <UserThumbnail id={user._id} />
           </div>
 
           <input

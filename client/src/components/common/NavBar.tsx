@@ -87,7 +87,7 @@ const NavBar: FC = () => {
             }}
           >
             <div className="h-8 pl-1">
-              <UserThumbnail />
+              <UserThumbnail id={user._id} />
             </div>
 
             <span className=" font-roboto font-medium text-inherit  ml-2 pr-2">

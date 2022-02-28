@@ -145,7 +145,7 @@ const PostPrompt = () => {
     return (
       <WhiteBox>
         <div className="flex items-center mb-0 pb-2 border-b border-b-zinc-300 h-12">
-          <UserThumbnail />
+          <UserThumbnail id={user._id} />
           <button
             onClick={() => setModalOpen(true)}
             className="w-full ml-2 p-2 pl-4 rounded-full bg-zinc-200 font-roboto flex items-center justify-start text-zinc-500"
@@ -171,7 +171,7 @@ const PostPrompt = () => {
         >
           <div className="flex flex-col w-full">
             <div className="h-10 flex items-center">
-              <UserThumbnail />
+              <UserThumbnail id={user._id} />
               <span className=" font-roboto font-medium text-zinc-900 ml-2">
                 {user?.firstName}
               </span>
