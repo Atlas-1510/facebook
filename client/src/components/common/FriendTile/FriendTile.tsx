@@ -1,7 +1,7 @@
 import { FC, useContext, ReactNode } from "react";
 
 import defaultProfileImage from "../../../images/defaultUserPicture.jpeg";
-import { Link } from "react-router-dom";
+import { Link, useParams, useMatch, useLocation } from "react-router-dom";
 import SecondaryButton from "../SecondaryButton";
 import { AuthContext } from "../../../contexts/Auth";
 import { User } from "../../../types/User";
@@ -16,6 +16,8 @@ type Props = {
 
 const FriendTile: FC<Props> = ({ contact }) => {
   const { user } = useContext(AuthContext);
+
+  const location = useLocation();
 
   const queryClient = useQueryClient();
 
@@ -94,65 +96,67 @@ const FriendTile: FC<Props> = ({ contact }) => {
 
   let Button: ReactNode;
 
-  const friends: boolean = user?.friends.includes(contact._id);
-  const requestRecieved: boolean =
-    !friends && user.inboundFriendRequests.includes(contact._id);
-  const requestSent: boolean =
-    !friends && user.outboundFriendRequests.includes(contact._id);
+  if (location.pathname.match(/profile/)) {
+    const friends: boolean = user?.friends.includes(contact._id);
+    const requestRecieved: boolean =
+      !friends && user.inboundFriendRequests.includes(contact._id);
+    const requestSent: boolean =
+      !friends && user.outboundFriendRequests.includes(contact._id);
 
-  switch (true) {
-    case friends:
-      Button = (
-        <SecondaryButton
-          onClick={async () => {
-            removeFriend.mutate();
-          }}
-        >
-          <h3>Remove</h3>
-        </SecondaryButton>
-      );
-      break;
-    case requestSent:
-      Button = (
-        <SecondaryButton
-          className="bg-red-200 text-red-600 hover:bg-red-300"
-          onClick={async () => {
-            cancelRequest.mutate();
-          }}
-        >
-          <h3>Cancel Request</h3>
-        </SecondaryButton>
-      );
-      break;
-    case requestRecieved:
-      Button = (
-        <SecondaryButton
-          className="bg-blue-200 text-blue-600 hover:bg-blue-300"
-          onClick={async () => {
-            acceptRequest.mutate();
-          }}
-        >
-          <h3>Accept Request</h3>
-        </SecondaryButton>
-      );
-      break;
-    default:
-      Button = (
-        <SecondaryButton
-          className="bg-blue-200 text-blue-600 hover:bg-blue-300"
-          onClick={async () => {
-            sendRequest.mutate();
-          }}
-        >
-          <h3>Add Friend</h3>
-        </SecondaryButton>
-      );
+    switch (true) {
+      case friends:
+        Button = (
+          <SecondaryButton
+            onClick={async () => {
+              removeFriend.mutate();
+            }}
+          >
+            <h3>Remove</h3>
+          </SecondaryButton>
+        );
+        break;
+      case requestSent:
+        Button = (
+          <SecondaryButton
+            className="bg-red-200 text-red-600 hover:bg-red-300"
+            onClick={async () => {
+              cancelRequest.mutate();
+            }}
+          >
+            <h3>Cancel Request</h3>
+          </SecondaryButton>
+        );
+        break;
+      case requestRecieved:
+        Button = (
+          <SecondaryButton
+            className="bg-blue-200 text-blue-600 hover:bg-blue-300"
+            onClick={async () => {
+              acceptRequest.mutate();
+            }}
+          >
+            <h3>Accept Request</h3>
+          </SecondaryButton>
+        );
+        break;
+      default:
+        Button = (
+          <SecondaryButton
+            className="bg-blue-200 text-blue-600 hover:bg-blue-300"
+            onClick={async () => {
+              sendRequest.mutate();
+            }}
+          >
+            <h3>Add Friend</h3>
+          </SecondaryButton>
+        );
+    }
   }
 
   return (
     <div className=" flex items-center justify-between border-zinc-300 border rounded-xl p-3">
       <Link
-        to="something"
+        to={`/users/${contact._id}`}
         className="flex items-center flex-grow hover:text-facebook-blue"
       >
         <div className="overflow-hidden rounded-xl h-20 aspect-square">

@@ -26,7 +26,7 @@ const Profile = () => {
 
   return (
     <div className="  min-h-screen relative -top-5">
-      <ProfileHeader user={user}>
+      <ProfileHeader user={user} mainURL={`/profile`}>
         <SecondaryButton onClick={() => setEditProfileModal(true)}>
           <RiPencilFill className=" text-zinc-700 m-1 text-lg" />
           <span className=" ">Edit Profile</span>

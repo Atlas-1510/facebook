@@ -13,11 +13,8 @@ import { AuthContext } from "../../contexts/Auth";
 
 const Posts = () => {
   const { user } = useContext(AuthContext);
-  console.log(user);
   const getImagePosts = async (imageLimit: number) => {
     try {
-      console.log("inside getImagePosts");
-      console.log(user?._id);
       const { data } = await axios.get(
         `/api/posts/getImagePosts/${user?._id}`,
         {

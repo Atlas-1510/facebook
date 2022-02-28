@@ -39,8 +39,6 @@ const ForeignProfile: FC = () => {
     error,
   } = useQuery(`user ${id}`, getUser);
 
-  console.log(user);
-
   if (isLoading) {
     return <div>Loading</div>;
   }
@@ -49,7 +47,7 @@ const ForeignProfile: FC = () => {
   } else {
     return (
       <div className="  min-h-screen relative -top-5">
-        <ProfileHeader user={user} />
+        <ProfileHeader user={user} mainURL={`/users/${user!._id}`} />
         <main className=" flex justify-center flex-grow mt-3">
           <div className="grid grid-cols-5 w-full md:w-[60vw] gap-3">
             <Outlet context={{ user: user }} />

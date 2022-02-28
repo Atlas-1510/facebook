@@ -6,9 +6,10 @@ import Tab from "./Tab";
 type Props = {
   user: User;
   children?: ReactNode;
+  mainURL: string; // this is used for the 'Posts' tab in the profile header. Would either by '/profile' or '/profile/:uid'
 };
 
-const ProfileHeader: FC<Props> = ({ children, user }) => {
+const ProfileHeader: FC<Props> = ({ children, user, mainURL }) => {
   return (
     <div className=" bg-zinc-100 pt-10 flex justify-center shadow-md">
       <header className=" w-full md:w-[60vw] ">
@@ -34,7 +35,7 @@ const ProfileHeader: FC<Props> = ({ children, user }) => {
         </div>
         <nav>
           <ul className="flex">
-            <Tab end={true} title="Posts" to={`/${user!._id}`} />
+            <Tab end={true} title="Posts" to={mainURL} />
             <Tab end={false} title="Friends" to="friends" />
             <Tab title="Photos" to="photos" />
           </ul>

@@ -16,6 +16,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import ForeignProfile from "./pages/ForeignProfile/ForeignProfile";
 import ForeignPosts from "./pages/ForeignProfile/ForeignPosts";
+import ForeignFriends from "./pages/ForeignProfile/ForeignFriends";
 
 const queryClient = new QueryClient();
 
@@ -36,8 +37,9 @@ render(
               </Route>
               <Route path="photos" element={<Photos />} />
             </Route>
-            <Route path="profile/:uid" element={<ForeignProfile />}>
+            <Route path="users/:uid" element={<ForeignProfile />}>
               <Route index element={<ForeignPosts />} />
+              <Route path="friends" element={<ForeignFriends />} />
             </Route>
             <Route path="settings" element={<Settings />} />
           </Route>

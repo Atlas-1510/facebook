@@ -71,7 +71,7 @@ const NavBar: FC = () => {
           <NavTab to="" className="text-zinc-600 text-xl">
             <AiFillHome />
           </NavTab>
-          <NavTab to={`/${user._id}/friends`} className="text-zinc-600 text-xl">
+          <NavTab to={`/profile/friends`} className="text-zinc-600 text-xl">
             <HiUserGroup />
           </NavTab>
         </ul>
