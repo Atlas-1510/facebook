@@ -4,6 +4,7 @@ import { CommentInterface } from "../../types/CommentInterface";
 import { useQuery } from "react-query";
 import axios from "axios";
 import defaultUserPicture from "../../images/defaultUserPicture.jpeg";
+import { Link } from "react-router-dom";
 
 type Props = {
   comment: CommentInterface;
@@ -32,20 +33,24 @@ const Comment: FC<Props> = ({ comment }) => {
   } else
     return (
       <article className="flex">
-        <div className="rounded-full h-10 aspect-square mr-2 grid place-items-center overflow-hidden">
-          <img
-            src={
-              author.displayPhoto
-                ? `/api/images/${author.displayPhoto}`
-                : defaultUserPicture
-            }
-            alt="test"
-            className=""
-          />
-        </div>
+        <Link to={`/users/${author._id}`}>
+          <div className="rounded-full h-10 aspect-square mr-2 grid place-items-center overflow-hidden">
+            <img
+              src={
+                author.displayPhoto
+                  ? `/api/images/${author.displayPhoto}`
+                  : defaultUserPicture
+              }
+              alt="test"
+              className=""
+            />
+          </div>
+        </Link>
 
         <div className=" bg-zinc-200 rounded-2xl p-3">
-          <h3 className=" font-medium">{author.fullName}</h3>
+          <Link to={`/users/${author._id}`}>
+            <h3 className=" font-medium">{author.fullName}</h3>
+          </Link>
           <p>{comment.content}</p>
         </div>
       </article>

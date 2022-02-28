@@ -13,10 +13,8 @@ import { AuthContext } from "../../contexts/Auth";
 
 const ForeignPosts = () => {
   const { uid } = useParams();
-  console.log(uid);
   const getImagePosts = async (imageLimit: number) => {
     try {
-      console.log("inside getImagePosts");
       const { data } = await axios.get(`/api/posts/getImagePosts/${uid}`, {
         params: { limit: imageLimit },
       });
