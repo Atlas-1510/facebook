@@ -10,6 +10,7 @@ import { useReducer, useContext } from "react";
 import Modal from "../../components/Modal";
 import Post from "../../components/common/Post/Post";
 import { AuthContext } from "../../contexts/Auth";
+import FriendGrid from "../../components/common/FriendGrid";
 
 const Posts = () => {
   const { user } = useContext(AuthContext);
@@ -90,7 +91,7 @@ const Posts = () => {
                   imagePosts.map((post: PostInterface) => (
                     <li key={post._id}>
                       <button
-                        className="w-full h-full flex justify-center items-center border border-zinc-300 rounded-md p-1 shadow-sm transition-all hover:scale-105"
+                        className=" aspect-square overflow-hidden w-full h-full flex justify-center items-center border border-zinc-300 rounded-md p-1 shadow-sm transition-all hover:scale-105"
                         onClick={(e) => {
                           e.preventDefault();
                           modalDispatch({
@@ -109,27 +110,7 @@ const Posts = () => {
                   ))}
               </ul>
             </WhiteBox>
-            <WhiteBox>
-              <div className=" flex justify-between items-baseline">
-                <h2 className=" text-zinc-800 font-medium text-lg mb-2">
-                  Friends
-                </h2>
-                <Link to="friends" className=" text-facebook-blue text-sm">
-                  See All Friends
-                </Link>
-              </div>
-              <ul className="  grid grid-cols-3 grid-rows-3 gap-2">
-                <li className="aspect-square bg-cyan-300">1</li>
-                <li className="aspect-square bg-cyan-300">2</li>
-                <li className="aspect-square bg-cyan-300">3</li>
-                <li className="aspect-square bg-cyan-300">4</li>
-                <li className="aspect-square bg-cyan-300">5</li>
-                <li className="aspect-square bg-cyan-300">6</li>
-                <li className="aspect-square bg-cyan-300">7</li>
-                <li className="aspect-square bg-cyan-300">8</li>
-                <li className="aspect-square bg-cyan-300">9</li>
-              </ul>
-            </WhiteBox>
+            <FriendGrid id={user._id} />
           </div>
         </div>
         <div className="  col-span-5 md:col-span-3">
