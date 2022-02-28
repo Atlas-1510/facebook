@@ -2,7 +2,7 @@ import WhiteBox from "../../components/common/WhiteBox";
 import SecondaryButton from "../../components/common/SecondaryButton";
 import PostStream from "../../components/PostStream";
 import PostPrompt from "../../components/PostPrompt";
-import { useParams, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useQuery } from "react-query";
 import axios from "axios";
 import { PostInterface } from "../../types/PostInterface";

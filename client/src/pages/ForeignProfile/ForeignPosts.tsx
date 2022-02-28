@@ -1,15 +1,12 @@
 import WhiteBox from "../../components/common/WhiteBox";
-import SecondaryButton from "../../components/common/SecondaryButton";
 import PostStream from "../../components/PostStream";
-import PostPrompt from "../../components/PostPrompt";
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "react-query";
 import axios from "axios";
 import { PostInterface } from "../../types/PostInterface";
-import { useReducer, useContext } from "react";
+import { useReducer } from "react";
 import Modal from "../../components/Modal";
 import Post from "../../components/Post/Post";
-import { AuthContext } from "../../contexts/Auth";
 import FriendGrid from "../../components/FriendGrid";
 
 const ForeignPosts = () => {

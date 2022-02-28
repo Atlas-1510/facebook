@@ -1,6 +1,5 @@
 import { useContext, FC } from "react";
 import { AuthContext } from "../../contexts/Auth";
-import { User } from "../../types/User";
 import defaultUserPicture from "../../images/defaultUserPicture.jpeg";
 import axios from "axios";
 import { useQuery } from "react-query";
@@ -25,12 +24,7 @@ const UserThumbnail: FC<Props> = ({ id }) => {
     }
   };
 
-  const {
-    isLoading,
-    isError,
-    data: user,
-    error,
-  } = useQuery(`user ${id}`, getUser);
+  const { data: user } = useQuery(`user ${id}`, getUser);
 
   if (!user) {
     return <div>loading</div>;

@@ -1,10 +1,10 @@
-import { FC, useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/Auth";
-import UserThumbnail from "../../components/common/UserThumbnail";
+
 import { RiPencilFill } from "react-icons/ri";
-import Tab from "../../components/common/Tab";
+
 import SecondaryButton from "../../components/common/SecondaryButton";
-import { Outlet, useParams, useOutletContext } from "react-router-dom";
+import { Outlet, useOutletContext } from "react-router-dom";
 import Modal from "../../components/Modal";
 import EditProfile from "./EditProfile";
 import { User } from "../../types/User";

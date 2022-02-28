@@ -3,7 +3,6 @@ import { AuthContext } from "../../contexts/Auth";
 import WhiteBox from "../../components/common/WhiteBox";
 import SearchBar from "../../components/SearchBar";
 import Tab from "../../components/common/Tab";
-import { Outlet } from "react-router-dom";
 import SkeletonFriendTile from "../../components/FriendTile/SkeletonFriendTile";
 import axios from "axios";
 import { useQuery } from "react-query";

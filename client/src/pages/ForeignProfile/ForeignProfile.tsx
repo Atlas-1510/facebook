@@ -1,15 +1,7 @@
 import { FC, useContext, useEffect } from "react";
-import UserThumbnail from "../../components/common/UserThumbnail";
-import Tab from "../../components/common/Tab";
-import {
-  Outlet,
-  useNavigate,
-  useOutletContext,
-  useParams,
-} from "react-router-dom";
+import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import axios from "axios";
-import { User } from "../../types/User";
 import { AuthContext } from "../../contexts/Auth";
 import ProfileHeader from "../../components/ProfileHeader";
 
@@ -34,12 +26,7 @@ const ForeignProfile: FC = () => {
     }
   };
 
-  const {
-    isLoading,
-    isError,
-    data: user,
-    error,
-  } = useQuery(`user ${id}`, getUser);
+  const { isLoading, isError, data: user } = useQuery(`user ${id}`, getUser);
 
   if (isLoading) {
     return <div>Loading</div>;
