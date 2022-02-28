@@ -40,6 +40,7 @@ render(
             <Route path="users/:uid" element={<ForeignProfile />}>
               <Route index element={<ForeignPosts />} />
               <Route path="friends" element={<ForeignFriends />} />
+              <Route path="photos" element={<Photos />} />
             </Route>
             <Route path="settings" element={<Settings />} />
           </Route>

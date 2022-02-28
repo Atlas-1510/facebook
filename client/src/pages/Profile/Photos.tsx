@@ -1,17 +1,26 @@
-import { useReducer } from "react";
+import { useContext, useReducer } from "react";
 import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { PostInterface } from "../../types/PostInterface";
 import Modal from "../../components/Modal";
 import Post from "../../components/common/Post/Post";
+import { AuthContext } from "../../contexts/Auth";
 
 const Photos = () => {
+  let id: string;
   const { uid } = useParams();
+  const { user } = useContext(AuthContext);
+
+  if (uid) {
+    id = uid;
+  } else {
+    id = user!._id;
+  }
 
   const getImagePosts = async (imageLimit: number) => {
     try {
-      const { data } = await axios.get(`/api/posts/getImagePosts/${uid}`, {
+      const { data } = await axios.get(`/api/posts/getImagePosts/${id}`, {
         params: { limit: imageLimit },
       });
       return data;
@@ -23,10 +32,10 @@ const Photos = () => {
   const imageLimit = 0; // 0 means there is no image limit
 
   const { data: imagePosts } = useQuery(
-    [`imagePosts ${uid}`, imageLimit],
+    [`imagePosts ${id}`, imageLimit],
     () => getImagePosts(imageLimit),
     {
-      enabled: !!uid,
+      enabled: !!id,
     }
   );
 
