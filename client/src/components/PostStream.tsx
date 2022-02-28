@@ -2,7 +2,7 @@ import SkeletonPost from "./Post/SkeletonPost";
 import { FC } from "react";
 import axios from "axios";
 import { useQuery } from "react-query";
-import { PostInterface } from "../../types/PostInterface";
+import { PostInterface } from "../types/PostInterface";
 import Post from "./Post/Post";
 
 type Props = {

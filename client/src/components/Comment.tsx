@@ -1,9 +1,9 @@
 import testPageImage from "../../images/test_page.jpeg";
 import { FC } from "react";
-import { CommentInterface } from "../../types/CommentInterface";
+import { CommentInterface } from "../types/CommentInterface";
 import { useQuery } from "react-query";
 import axios from "axios";
-import defaultUserPicture from "../../images/defaultUserPicture.jpeg";
+import defaultUserPicture from "../images/defaultUserPicture.jpeg";
 import { Link } from "react-router-dom";
 
 type Props = {

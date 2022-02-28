@@ -1,7 +1,7 @@
 import React, { FC, ReactNode } from "react";
-import UserThumbnail from "./UserThumbnail";
-import { User } from "../../types/User";
-import Tab from "./Tab";
+import UserThumbnail from "./common/UserThumbnail";
+import { User } from "../types/User";
+import Tab from "./common/Tab";
 
 type Props = {
   user: User;

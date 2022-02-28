@@ -1,10 +1,10 @@
 import { FC, useContext, ReactNode } from "react";
 
-import defaultProfileImage from "../../../images/defaultUserPicture.jpeg";
+import defaultProfileImage from "../../images/defaultUserPicture.jpeg";
 import { Link, useParams, useMatch, useLocation } from "react-router-dom";
-import SecondaryButton from "../SecondaryButton";
-import { AuthContext } from "../../../contexts/Auth";
-import { User } from "../../../types/User";
+import SecondaryButton from "../common/SecondaryButton";
+import { AuthContext } from "../../contexts/Auth";
+import { User } from "../../types/User";
 import axios from "axios";
 import { useMutation, useQueryClient } from "react-query";
 

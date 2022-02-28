@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import Post from "../components/common/Post/Post";
+import Post from "../components/Post/Post";
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
 import { QueryClientProvider, QueryClient } from "react-query";

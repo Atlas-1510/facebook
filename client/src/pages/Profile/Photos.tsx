@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { PostInterface } from "../../types/PostInterface";
 import Modal from "../../components/Modal";
-import Post from "../../components/common/Post/Post";
+import Post from "../../components/Post/Post";
 import { AuthContext } from "../../contexts/Auth";
 
 const Photos = () => {

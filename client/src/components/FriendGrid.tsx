@@ -1,10 +1,10 @@
 import React, { FC, useContext } from "react";
-import WhiteBox from "./WhiteBox";
+import WhiteBox from "./common/WhiteBox";
 import { Link } from "react-router-dom";
-import { AuthContext } from "../../contexts/Auth";
+import { AuthContext } from "../contexts/Auth";
 import axios from "axios";
 import { useQuery } from "react-query";
-import { User } from "../../types/User";
+import { User } from "../types/User";
 
 type Props = {
   id: string;

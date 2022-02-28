@@ -1,4 +1,4 @@
-import PostPrompt from "../components/common/PostPrompt";
+import PostPrompt from "../components/PostPrompt";
 import { AuthProvider } from "../contexts/Auth";
 import { QueryClientProvider, QueryClient } from "react-query";
 import { fireEvent, render, screen } from "@testing-library/react";

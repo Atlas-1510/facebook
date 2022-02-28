@@ -11,7 +11,7 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import { User } from "../../types/User";
 import { AuthContext } from "../../contexts/Auth";
-import ProfileHeader from "../../components/common/ProfileHeader";
+import ProfileHeader from "../../components/ProfileHeader";
 
 const ForeignProfile: FC = () => {
   const navigate = useNavigate();

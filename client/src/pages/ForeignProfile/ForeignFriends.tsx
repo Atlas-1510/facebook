@@ -4,10 +4,10 @@ import WhiteBox from "../../components/common/WhiteBox";
 import SearchBar from "../../components/SearchBar";
 import Tab from "../../components/common/Tab";
 import { Outlet } from "react-router-dom";
-import SkeletonFriendTile from "../../components/common/FriendTile/SkeletonFriendTile";
+import SkeletonFriendTile from "../../components/FriendTile/SkeletonFriendTile";
 import axios from "axios";
 import { useQuery } from "react-query";
-import FriendTile from "../../components/common/FriendTile/FriendTile";
+import FriendTile from "../../components/FriendTile/FriendTile";
 import { User } from "../../types/User";
 
 const ForeignFriends = () => {

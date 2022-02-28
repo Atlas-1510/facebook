@@ -8,7 +8,7 @@ import { Outlet, useParams, useOutletContext } from "react-router-dom";
 import Modal from "../../components/Modal";
 import EditProfile from "./EditProfile";
 import { User } from "../../types/User";
-import ProfileHeader from "../../components/common/ProfileHeader";
+import ProfileHeader from "../../components/ProfileHeader";
 
 type ContextType = { user: User | null };
 

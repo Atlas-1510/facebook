@@ -7,12 +7,12 @@ import {
   ReactNode,
 } from "react";
 import { MdPhotoLibrary } from "react-icons/md";
-import UserThumbnail from "./UserThumbnail";
-import Modal from "../Modal";
-import PrimaryButton from "../PrimaryButton";
-import { AuthContext } from "../../contexts/Auth";
+import UserThumbnail from "./common/UserThumbnail";
+import Modal from "./Modal";
+import PrimaryButton from "./PrimaryButton";
+import { AuthContext } from "../contexts/Auth";
 import axios from "axios";
-import WhiteBox from "./WhiteBox";
+import WhiteBox from "./common/WhiteBox";
 import { useMutation, useQueryClient } from "react-query";
 
 type uploadData = {

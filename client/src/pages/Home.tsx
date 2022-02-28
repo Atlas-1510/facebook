@@ -1,10 +1,10 @@
 import { FC, useContext } from "react";
-import PostPrompt from "../components/common/PostPrompt";
+import PostPrompt from "../components/PostPrompt";
 import axios from "axios";
 import { useQuery } from "react-query";
-import Post from "../components/common/Post/Post";
+import Post from "../components/Post/Post";
 import { PostInterface } from "../types/PostInterface";
-import SkeletonPost from "../components/common/Post/SkeletonPost";
+import SkeletonPost from "../components/Post/SkeletonPost";
 import { AuthContext } from "../contexts/Auth";
 
 const Home: FC = () => {

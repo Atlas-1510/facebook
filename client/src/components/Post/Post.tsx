@@ -3,15 +3,15 @@ import testPageImage from "../../../images/test_page.jpeg";
 import { HiThumbUp } from "react-icons/hi";
 import { FaRegThumbsUp, FaRegComment } from "react-icons/fa";
 import Comment from "../Comment";
-import UserThumbnail from "../UserThumbnail";
-import { PostInterface } from "../../../types/PostInterface";
+import UserThumbnail from "../common/UserThumbnail";
+import { PostInterface } from "../../types/PostInterface";
 import axios from "axios";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import SkeletonPost from "./SkeletonPost";
-import { CommentInterface } from "../../../types/CommentInterface";
-import getReadableTimestamp from "../../../utils/getReadableTimestamp";
-import { User } from "../../../types/User";
-import { AuthContext } from "../../../contexts/Auth";
+import { CommentInterface } from "../../types/CommentInterface";
+import getReadableTimestamp from "../../utils/getReadableTimestamp";
+import { User } from "../../types/User";
+import { AuthContext } from "../../contexts/Auth";
 import { Link } from "react-router-dom";
 
 type Props = {

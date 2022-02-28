@@ -1,11 +1,11 @@
 import { useContext } from "react";
 import axios from "axios";
-import FriendTile from "../../../components/common/FriendTile/FriendTile";
+import FriendTile from "../../../components/FriendTile/FriendTile";
 import { User } from "../../../types/User";
 import { AuthContext } from "../../../contexts/Auth";
 import { useQuery } from "react-query";
 import { useOutletContext } from "react-router-dom";
-import SkeletonFriendTile from "../../../components/common/FriendTile/SkeletonFriendTile";
+import SkeletonFriendTile from "../../../components/FriendTile/SkeletonFriendTile";
 
 // TODO: Implement pagination
 

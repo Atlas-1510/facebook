@@ -1,7 +1,7 @@
 import { FC, useContext } from "react";
 import SignIn from "./pages/SignIn";
 
-import NavBar from "./components/common/NavBar";
+import NavBar from "./components/NavBar";
 import { Outlet } from "react-router-dom";
 import { AuthContext } from "./contexts/Auth";
 

@@ -1,16 +1,16 @@
 import WhiteBox from "../../components/common/WhiteBox";
 import SecondaryButton from "../../components/common/SecondaryButton";
-import PostStream from "../../components/common/PostStream";
-import PostPrompt from "../../components/common/PostPrompt";
+import PostStream from "../../components/PostStream";
+import PostPrompt from "../../components/PostPrompt";
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "react-query";
 import axios from "axios";
 import { PostInterface } from "../../types/PostInterface";
 import { useReducer, useContext } from "react";
 import Modal from "../../components/Modal";
-import Post from "../../components/common/Post/Post";
+import Post from "../../components/Post/Post";
 import { AuthContext } from "../../contexts/Auth";
-import FriendGrid from "../../components/common/FriendGrid";
+import FriendGrid from "../../components/FriendGrid";
 
 const Posts = () => {
   const { user } = useContext(AuthContext);
