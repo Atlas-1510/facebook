@@ -19,9 +19,13 @@ const PostStream: FC<Props> = ({ id }) => {
     }
   };
 
-  const { status, data: posts } = useQuery("profile posts", getProfilePosts, {
-    enabled: !!id,
-  });
+  const { status, data: posts } = useQuery(
+    `profile posts ${id}`,
+    getProfilePosts,
+    {
+      enabled: !!id,
+    }
+  );
   return (
     <div>
       {status === "loading" && (

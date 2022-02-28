@@ -14,6 +14,7 @@ import FriendGrid from "../../components/FriendGrid";
 
 const ForeignPosts = () => {
   const { uid } = useParams();
+  // console.log(`uid: ${uid}`);
   const getImagePosts = async (imageLimit: number) => {
     try {
       const { data } = await axios.get(`/api/posts/getImagePosts/${uid}`, {
