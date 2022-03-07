@@ -43,7 +43,7 @@ export default function (passport: any) {
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         callbackURL: "/auth/google/redirect",
       },
-      async (accessToken: any, refreshToken: any, profile: any, done: any) => {
+      (accessToken: any, refreshToken: any, profile: any, done: any) => {
         try {
           // Note: Using async/await syntax here leads to an internal server error. For some reason, it must use .then() chaining.
           User.findOne({ googleId: profile.id }).then((currentUser) => {
@@ -55,7 +55,6 @@ export default function (passport: any) {
                 email: profile._json.email,
                 firstName: profile.name.givenName,
                 lastName: profile.name.familyName,
-                thumbnail: profile._json.picture,
               })
                 .save()
                 .then((newUser) => {

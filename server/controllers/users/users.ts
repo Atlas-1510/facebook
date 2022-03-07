@@ -51,7 +51,7 @@ const updateUser = [
   param("uid", "Must provide a valid uid")
     .exists()
     .custom((uid) => isValidObjectId(uid)),
-  body("currentPassword").isString(),
+  // body("currentPassword").isString(),
   processValidation,
   async (req: any, res: express.Response, next: express.NextFunction) => {
     try {
@@ -71,18 +71,23 @@ const updateUser = [
           message: "This user account could not be found.",
         });
       }
-      if (!user.password) {
-        return res.status(404).send({
-          type: "failure",
-          message: "No password stored for this user???",
-        });
-      }
-      const authSuccess = await bcrypt.compare(providedPassword, user.password);
-      if (!authSuccess) {
-        return res.status(200).send({
-          type: "failure",
-          message: "The password you provided was incorrect.",
-        });
+      // if (!user.password) {
+      //   return res.status(404).send({
+      //     type: "failure",
+      //     message: "No password stored for this user???",
+      //   });
+      // }
+      if (!user.googleId && user.password) {
+        const authSuccess = await bcrypt.compare(
+          providedPassword,
+          user.password
+        );
+        if (!authSuccess) {
+          return res.status(200).send({
+            type: "failure",
+            message: "The password you provided was incorrect.",
+          });
+        }
       }
 
       // handle the image if it exists

@@ -7,6 +7,7 @@ import SecondaryButton from "../../components/common/SecondaryButton";
 import { Outlet, useOutletContext } from "react-router-dom";
 import Modal from "../../components/Modal";
 import EditProfile from "./EditProfile";
+import EditGoogleProfile from "./EditGoogleProfile";
 import { User } from "../../types/User";
 import ProfileHeader from "../../components/ProfileHeader";
 
@@ -41,7 +42,7 @@ const Profile = () => {
           }}
           title="Edit Profile"
         >
-          <EditProfile />
+          {!user.googleId ? <EditProfile /> : <EditGoogleProfile />}
         </Modal>
         <div className="grid grid-cols-5 w-full md:w-[60vw] gap-3">
           <Outlet context={{ user: user }} />
