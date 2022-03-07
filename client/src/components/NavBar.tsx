@@ -2,6 +2,7 @@ import { FC, useContext, SyntheticEvent, useState } from "react";
 import { AiOutlineSearch, AiFillBell } from "react-icons/ai";
 import { HiUser, HiUserGroup } from "react-icons/hi";
 import { BsFillCaretDownFill } from "react-icons/bs";
+import { VscSignOut } from "react-icons/vsc";
 import NavButton from "./common/NavButton";
 import { useMediaQuery } from "react-responsive";
 import Logo from "./common/Logo";
@@ -22,7 +23,6 @@ const NavBar: FC = () => {
 
   const handleSignOut = async (e: SyntheticEvent): Promise<void> => {
     const response = await axios.get("/auth/logout");
-    console.log(response);
     getUserState();
     navigate("/");
   };
@@ -36,9 +36,6 @@ const NavBar: FC = () => {
       <header className=" bg-zinc-100 h-14 w-full flex items-center justify-between shadow-md sticky top-0 mb-3">
         <div className="h-full flex items-center mx-1">
           <Logo />
-          <NavButton to="search" className="text-zinc-600 text-xl">
-            <AiOutlineSearch />
-          </NavButton>
         </div>
         <div className="h-full flex items-center mx-1">
           <NavButton to="profile/friends" className="text-zinc-600 text-xl">
@@ -46,12 +43,6 @@ const NavBar: FC = () => {
           </NavButton>
           <NavButton to={`profile`} className="text-zinc-600 text-xl">
             <HiUser />
-          </NavButton>
-          <NavButton to="notifications" className="text-zinc-600 text-xl">
-            <AiFillBell />
-          </NavButton>
-          <NavButton to="options" className="text-zinc-600 text-xl">
-            <BsFillCaretDownFill />
           </NavButton>
         </div>
       </header>
@@ -61,11 +52,6 @@ const NavBar: FC = () => {
       <header className=" bg-zinc-100 h-14 w-full grid grid-cols-3 shadow-md  sticky top-0 z-10 mb-3">
         <div className="h-full flex items-center mx-1">
           <Logo />
-          <SearchBar
-            placeholder="Search Fakebook"
-            value={searchInput}
-            setValue={setSearchInput}
-          />
         </div>
         <ul className="h-full flex items-center justify-center mx-1 w-full">
           <NavTab to="" className="text-zinc-600 text-xl">
@@ -94,13 +80,14 @@ const NavBar: FC = () => {
               {user?.firstName}
             </span>
           </NavLink>
-          <NavButton to="notifications" className="text-zinc-600 text-xl">
-            <AiFillBell />
-          </NavButton>
-          <NavButton to="options" className="text-zinc-600 text-xl">
-            <BsFillCaretDownFill />
-          </NavButton>
-          <button onClick={handleSignOut}>Sign Out</button>
+
+          <button
+            onClick={handleSignOut}
+            className=" flex items-center justify-center bg-zinc-200 hover:bg-zinc-400 rounded-full text-zinc-600 px-3 py-2"
+          >
+            <VscSignOut className=" text-2xl mr-2" />
+            <span>Sign Out</span>
+          </button>
         </div>
       </header>
     );
