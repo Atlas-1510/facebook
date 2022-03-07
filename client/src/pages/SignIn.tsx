@@ -133,11 +133,11 @@ const SignIn: FC = () => {
           <span className="my-2 text-red-500 text-sm">{flash}</span>
 
           {/* TODO: Implement password reset */}
-          <Link to="/passwordreset">
+          {/* <Link to="/passwordreset">
             <span className=" my-2 text-facebook-blue text-sm">
               Forgotten password?
             </span>
-          </Link>
+          </Link> */}
 
           <div className="flex w-full items-center">
             <div className="w-full ml-3 h-px bg-gray-300 box-border"></div>
