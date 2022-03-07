@@ -206,6 +206,7 @@ const SignIn: FC = () => {
           </form>
         </Modal>
       </main>
+      <a href="http://localhost:4567/auth/google">Google Sign In</a>
 
       <footer className="text-stone-500 text-center text-xs w-full flex flex-col items-center justify-end bg-white p-3">
         <span>

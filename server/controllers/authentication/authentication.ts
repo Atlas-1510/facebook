@@ -8,6 +8,9 @@ import bcrypt from "bcryptjs";
 
 const debug = require("debug")("facebook:controllers:authentication");
 
+// Note: Facebook login not possible due to issues with https/http, CORS, and seemingly requiring a full on privacy policy
+// and way for users to delete data just to get a test app going. Google authentication is much simpler.
+
 const tryLogin = (
   req: express.Request,
   res: express.Response,
@@ -110,6 +113,22 @@ const googleAuth = [
 const googleAuthRedirect = [
   passport.authenticate("google"),
   (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    return res.redirect("http://localhost:3000");
+  },
+];
+// facebook auth is disabled, see note at top of this file.
+const facebookAuth = [
+  passport.authenticate("facebook", {
+    scope: ["email"],
+  }),
+];
+// facebook auth is disabled, see note at top of this file.
+const facebookRedirect = [
+  passport.authenticate("facebook", {
+    failureRedirect: "/login",
+    failureMessage: true,
+  }),
+  (req: express.Request, res: express.Response, next: express.NextFunction) => {
     return res.send(req.user);
   },
 ];
@@ -132,5 +151,7 @@ export {
   getAuthStatus,
   googleAuth,
   googleAuthRedirect,
+  facebookAuth,
+  facebookRedirect,
   logout,
 };

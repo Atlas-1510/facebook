@@ -71,6 +71,12 @@ const updateUser = [
           message: "This user account could not be found.",
         });
       }
+      if (!user.password) {
+        return res.status(404).send({
+          type: "failure",
+          message: "No password stored for this user???",
+        });
+      }
       const authSuccess = await bcrypt.compare(providedPassword, user.password);
       if (!authSuccess) {
         return res.status(200).send({

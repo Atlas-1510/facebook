@@ -14,6 +14,7 @@ export interface UserInput {
   inboundFriendRequests?: ObjectId[];
   outboundFriendRequests?: ObjectId[];
   googleId?: string;
+  facebookId?: string;
   displayPhoto?: string;
   password?: string;
 }
@@ -25,9 +26,10 @@ export interface UserDocument extends UserInput, Document {
   friends: ObjectId[];
   inboundFriendRequests: ObjectId[];
   outboundFriendRequests: ObjectId[];
-  googleId: string;
+  googleId?: string;
+  facebookId?: string;
   displayPhoto: string;
-  password: string;
+  password?: string;
 }
 
 const UserSchema = new Schema<UserDocument>(
@@ -38,9 +40,10 @@ const UserSchema = new Schema<UserDocument>(
     friends: { type: [Schema.Types.ObjectId], default: [] },
     inboundFriendRequests: { type: [Schema.Types.ObjectId], default: [] },
     outboundFriendRequests: { type: [Schema.Types.ObjectId], default: [] },
-    googleId: { type: Schema.Types.String },
     displayPhoto: { type: Schema.Types.String },
-    password: { type: Schema.Types.String, required: true },
+    password: { type: Schema.Types.String },
+    facebookId: { type: Schema.Types.String },
+    googleId: { type: Schema.Types.String },
   },
   {
     toJSON: { virtuals: true },

@@ -19,6 +19,11 @@ export default function (passport: any) {
           if (!user) {
             return done(null, false, { message: "Username not found" });
           }
+          if (!user.password) {
+            return done(null, false, {
+              message: "Error, no password defined for this user???",
+            });
+          }
           const loginSuccess = await bcrypt.compare(password, user.password);
           if (loginSuccess) {
             return done(null, user);
@@ -40,19 +45,24 @@ export default function (passport: any) {
       },
       async (accessToken: any, refreshToken: any, profile: any, done: any) => {
         try {
-          const currentUser = await User.findOne({ googleId: profile.id });
-          if (currentUser) {
-            return done(null, currentUser);
-          } else {
-            const newUser = await new User({
-              googleId: profile.id,
-              email: profile._json.email,
-              firstName: profile.name.givenName,
-              lastName: profile.name.familyName,
-              thumbnail: profile._json.picture,
-            }).save();
-            return done(null, newUser);
-          }
+          // Note: Using async/await syntax here leads to an internal server error. For some reason, it must use .then() chaining.
+          User.findOne({ googleId: profile.id }).then((currentUser) => {
+            if (currentUser) {
+              return done(null, currentUser);
+            } else {
+              new User({
+                googleId: profile.id,
+                email: profile._json.email,
+                firstName: profile.name.givenName,
+                lastName: profile.name.familyName,
+                thumbnail: profile._json.picture,
+              })
+                .save()
+                .then((newUser) => {
+                  done(null, newUser);
+                });
+            }
+          });
         } catch (err) {
           return done(err);
         }
