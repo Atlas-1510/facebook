@@ -83,7 +83,7 @@ const Requests = () => {
     <section className="mt-3">
       {status === "loading" && (
         <div className="flex flex-col my-3">
-          <div className=" mt-3 grid grid-cols-2 gap-1">
+          <div className=" mt-3 grid grid-cols-1 md:grid-cols-2 gap-1">
             <SkeletonFriendTile />
             <SkeletonFriendTile />
             <SkeletonFriendTile />

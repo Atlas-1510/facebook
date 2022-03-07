@@ -47,7 +47,7 @@ const AllFriends = () => {
   })();
 
   return (
-    <section className=" mt-3 grid grid-cols-2 gap-1">
+    <section className=" mt-3 grid grid-cols-1 md:grid-cols-2 gap-1">
       {status === "loading" && (
         <>
           <SkeletonFriendTile />
