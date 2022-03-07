@@ -41,10 +41,10 @@ const NavBar: FC = () => {
           </NavButton>
         </div>
         <div className="h-full flex items-center mx-1">
-          <NavButton to="friends" className="text-zinc-600 text-xl">
+          <NavButton to="profile/friends" className="text-zinc-600 text-xl">
             <HiUserGroup />
           </NavButton>
-          <NavButton to={`${user._id}`} className="text-zinc-600 text-xl">
+          <NavButton to={`profile`} className="text-zinc-600 text-xl">
             <HiUser />
           </NavButton>
           <NavButton to="notifications" className="text-zinc-600 text-xl">
