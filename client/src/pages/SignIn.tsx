@@ -79,7 +79,7 @@ const SignIn: FC = () => {
 
   const handleGoogleSignIn = (e: SyntheticEvent) => {
     e.preventDefault();
-    window.location.href = "http://localhost:4567/auth/google";
+    window.location.href = `${process.env.REACT_APP_BASE_URL}/auth/google`;
   };
 
   return (
