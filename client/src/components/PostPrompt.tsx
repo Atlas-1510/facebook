@@ -48,7 +48,7 @@ const PostPrompt = () => {
 
   const mutation = useMutation(publishPost, {
     onSuccess: () => {
-      queryClient.invalidateQueries("profile posts");
+      queryClient.invalidateQueries(`profile posts ${user?._id}`);
       queryClient.invalidateQueries("newsfeed");
       queryClient.invalidateQueries(`imagePosts ${user!._id}`);
 
