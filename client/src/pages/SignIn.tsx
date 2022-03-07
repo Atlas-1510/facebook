@@ -77,6 +77,11 @@ const SignIn: FC = () => {
     }
   };
 
+  const handleGoogleSignIn = (e: SyntheticEvent) => {
+    e.preventDefault();
+    window.location.href = "http://localhost:4567/auth/google";
+  };
+
   return (
     <div className="flex flex-col items-center h-screen bg-neutral-200">
       <main className="w-full flex flex-col md:flex-row items-center p-5 md:p-10 md:justify-around flex-grow max-w-6xl">
@@ -142,12 +147,20 @@ const SignIn: FC = () => {
             </span>
             <div className="w-full mr-3 h-px bg-gray-300"></div>
           </div>
-          <button
-            onClick={() => setSignupOpen(true)}
-            className=" bg-green-500 hover:bg-green-600 rounded font-roboto p-3 my-3 text-white hover:shadow-inner"
-          >
-            Create New Account
-          </button>
+          <div className="flex">
+            <button
+              onClick={() => setSignupOpen(true)}
+              className=" mx-1 bg-green-500 hover:bg-green-600 rounded font-roboto p-3 my-3 text-white hover:shadow-inner"
+            >
+              Create New Account
+            </button>
+            <button
+              onClick={(e) => handleGoogleSignIn(e)}
+              className=" m-1 bg-rose-400 hover:bg-rose-500 rounded font-roboto p-3 my-3 text-white hover:shadow-inner"
+            >
+              Sign In With Google
+            </button>
+          </div>
         </section>
         <Modal
           open={signupOpen}
@@ -206,7 +219,6 @@ const SignIn: FC = () => {
           </form>
         </Modal>
       </main>
-      <a href="http://localhost:4567/auth/google">Google Sign In</a>
 
       <footer className="text-stone-500 text-center text-xs w-full flex flex-col items-center justify-end bg-white p-3">
         <span>
