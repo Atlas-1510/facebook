@@ -24,8 +24,7 @@ const BioModal: FC<Props> = ({ open, onClose, user }) => {
     async () => {
       const formData: FormData = new FormData();
       formData.append("bio", bio);
-      const { data } = await axios.put(`/api/users/${user!._id}`, formData);
-      console.log(data);
+      await axios.put(`/api/users/${user!._id}`, formData);
     },
     {
       onSuccess: () => {
