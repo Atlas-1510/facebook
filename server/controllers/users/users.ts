@@ -102,9 +102,14 @@ const updateUser = [
       //   update[key] = req.body[key];
       // });
 
+      let update = req.body;
+      if (req.file) {
+        update.displayPhoto = req.file.filename;
+      }
+
       const updatedUser = await User.findByIdAndUpdate(
         uid,
-        { ...req.body, displayPhoto: req.file.filename },
+        { ...update },
         {
           returnOriginal: false,
         }

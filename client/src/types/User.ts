@@ -9,4 +9,5 @@ export interface User {
   outboundFriendRequests: string[];
   googleId?: string;
   displayPhoto?: string;
+  bio?: string;
 }

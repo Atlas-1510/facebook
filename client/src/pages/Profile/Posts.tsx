@@ -11,6 +11,9 @@ import Modal from "../../components/Modal";
 import Post from "../../components/Post/Post";
 import { AuthContext } from "../../contexts/Auth";
 import FriendGrid from "../../components/FriendGrid";
+import { useState } from "react";
+import PrimaryButton from "../../components/PrimaryButton";
+import BioModal from "../../components/BioModal";
 
 const Posts = () => {
   const { user } = useContext(AuthContext);
@@ -60,6 +63,7 @@ const Posts = () => {
   };
 
   const [modal, modalDispatch] = useReducer(modalReducer, initialModalState);
+  const [bioModal, setBioModal] = useState(false);
 
   if (!user?._id) {
     return <div>Something Went Wrong...</div>;
@@ -69,12 +73,36 @@ const Posts = () => {
         <div className=" col-span-2 hidden md:flex flex-col justify-end">
           <div className="space-y-3 sticky bottom-3 flex flex-col">
             <WhiteBox>
-              <h2 className=" text-zinc-800 font-medium text-lg mb-2">Intro</h2>
-              <div className=" space-y-3">
-                <SecondaryButton className="w-full">
-                  <span>Add Bio</span>
-                </SecondaryButton>
-              </div>
+              {user.bio ? (
+                <>
+                  <div className="flex justify-between">
+                    <h2 className=" text-zinc-800 font-medium text-lg mb-2">
+                      Intro
+                    </h2>
+                    <button
+                      onClick={() => setBioModal(true)}
+                      className=" text-facebook-blue text-sm m-0 p-0"
+                    >
+                      Edit bio
+                    </button>
+                  </div>
+                  <span>{user.bio}</span>
+                </>
+              ) : (
+                <>
+                  <h2 className=" text-zinc-800 font-medium text-lg mb-2">
+                    Intro
+                  </h2>
+                  <div className=" space-y-3">
+                    <SecondaryButton
+                      className="w-full"
+                      onClick={() => setBioModal(true)}
+                    >
+                      <span>Add Bio</span>
+                    </SecondaryButton>
+                  </div>
+                </>
+              )}
             </WhiteBox>
             <WhiteBox>
               <div className=" flex justify-between items-baseline">
@@ -126,6 +154,13 @@ const Posts = () => {
           >
             <Post initialData={modal.data} />
           </Modal>
+        )}
+        {bioModal && (
+          <BioModal
+            open={bioModal}
+            onClose={() => setBioModal(false)}
+            user={user}
+          />
         )}
       </>
     );

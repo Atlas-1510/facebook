@@ -17,6 +17,7 @@ export interface UserInput {
   facebookId?: string;
   displayPhoto?: string;
   password?: string;
+  bio?: string;
 }
 
 export interface UserDocument extends UserInput, Document {
@@ -30,6 +31,7 @@ export interface UserDocument extends UserInput, Document {
   facebookId?: string;
   displayPhoto: string;
   password?: string;
+  bio?: string;
 }
 
 const UserSchema = new Schema<UserDocument>(
@@ -44,6 +46,7 @@ const UserSchema = new Schema<UserDocument>(
     password: { type: Schema.Types.String },
     facebookId: { type: Schema.Types.String },
     googleId: { type: Schema.Types.String },
+    bio: { type: Schema.Types.String },
   },
   {
     toJSON: { virtuals: true },
