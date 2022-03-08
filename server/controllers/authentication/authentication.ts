@@ -32,6 +32,25 @@ const tryLogin = (
   })(req, res, next);
 };
 
+const demoLogin = async (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) => {
+  try {
+    const demoUser = await User.findById("62269f0f81c08a059dd68851");
+    if (!demoUser) {
+      throw new Error("demo account is missing");
+    }
+    req.login(demoUser, (err) => {
+      if (err) {
+        return res.send(err);
+      }
+    });
+    res.send(demoUser);
+  } catch (err) {}
+};
+
 // TODO: Add stronger password requirements via express-validator
 const signup = [
   body("email", "Please provide an email"),
@@ -146,6 +165,7 @@ const logout = [
 
 export {
   tryLogin,
+  demoLogin,
   signup,
   ensureAuthenticated,
   getAuthStatus,

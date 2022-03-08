@@ -8,11 +8,14 @@ import {
   logout,
   facebookAuth,
   facebookRedirect,
+  demoLogin,
 } from "../../controllers/authentication/authentication";
 const router = Router();
 
 // TODO: Remove login delay timer middleware below
 router.post("/login", tryLogin);
+
+router.get("/demoLogin", demoLogin);
 
 router.post("/signup", signup);
 

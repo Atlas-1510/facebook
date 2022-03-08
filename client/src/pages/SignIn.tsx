@@ -82,6 +82,32 @@ const SignIn: FC = () => {
     window.location.href = `${process.env.REACT_APP_BASE_URL}/auth/google`;
   };
 
+  const handleTestDriveSignIn = async (e: SyntheticEvent): Promise<void> => {
+    try {
+      console.log("clicked");
+      e.preventDefault();
+      setFlash("");
+      setLoading(true);
+
+      const response = await axios.get("/auth/demoLogin");
+      console.log(response);
+
+      const { message, _id }: { message: string; _id: string } = response.data;
+      if (message) {
+        setFlash(message);
+        setLoading(false);
+      } else if (_id) {
+        await getUserState();
+      } else {
+        throw new Error(
+          "Login error, did not receive error message or successful login result"
+        );
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="flex flex-col items-center h-screen bg-neutral-200">
       <main className="w-full flex flex-col md:flex-row items-center p-5 md:p-10 md:justify-around flex-grow max-w-6xl">
@@ -147,19 +173,32 @@ const SignIn: FC = () => {
             </span>
             <div className="w-full mr-3 h-px bg-gray-300"></div>
           </div>
-          <div className="flex">
-            <button
-              onClick={() => setSignupOpen(true)}
-              className=" mx-1 bg-green-500 hover:bg-green-600 rounded font-roboto p-3 my-3 text-white hover:shadow-inner"
-            >
-              Create New Account
-            </button>
-            <button
-              onClick={(e) => handleGoogleSignIn(e)}
-              className=" m-1 bg-rose-400 hover:bg-rose-500 rounded font-roboto p-3 my-3 text-white hover:shadow-inner"
-            >
-              Sign In With Google
-            </button>
+          <div className="flex flex-col justify-center items-center">
+            <div className="flex">
+              <button
+                onClick={() => setSignupOpen(true)}
+                className=" mx-1 bg-green-500 hover:bg-green-600 rounded font-roboto p-3 my-3 text-white hover:shadow-inner"
+              >
+                Create New Account
+              </button>
+              <button
+                onClick={(e) => handleGoogleSignIn(e)}
+                className=" m-1 bg-rose-400 hover:bg-rose-500 rounded font-roboto p-3 my-3 text-white hover:shadow-inner"
+              >
+                Sign In With Google
+              </button>
+            </div>
+            <div className="flex justify-center items-center">
+              <button
+                onClick={(e) => {
+                  handleTestDriveSignIn(e);
+                }}
+                className=" m-1 bg-violet-400 hover:bg-violet-500 rounded font-roboto p-3 text-white hover:shadow-inner"
+              >
+                <span>Go for a test drive</span>
+                <span className=" text-xl"> 🚗</span>
+              </button>
+            </div>
           </div>
         </section>
         <Modal
