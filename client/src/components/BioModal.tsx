@@ -1,5 +1,5 @@
 import Modal from "./Modal";
-import { FC, SyntheticEvent, useState } from "react";
+import { FC, SyntheticEvent, useState, useEffect } from "react";
 import PrimaryButton from "./PrimaryButton";
 import { User } from "../types/User";
 import axios from "axios";
@@ -13,7 +13,13 @@ type Props = {
 
 const BioModal: FC<Props> = ({ open, onClose, user }) => {
   const [bio, setBio] = useState(user.bio ? user.bio : "");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [submitDisabled, setSubmitDisabled] = useState(true);
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    setSubmitDisabled(currentPassword !== "" ? false : true);
+  }, [currentPassword]);
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
@@ -24,6 +30,7 @@ const BioModal: FC<Props> = ({ open, onClose, user }) => {
     async () => {
       const formData: FormData = new FormData();
       formData.append("bio", bio);
+      formData.append("currentPassword", currentPassword);
       await axios.put(`/api/users/${user!._id}`, formData);
     },
     {
@@ -47,7 +54,25 @@ const BioModal: FC<Props> = ({ open, onClose, user }) => {
           required
           value={bio}
         />
-        <PrimaryButton onClick={(e) => handleSubmit(e)}>
+        <div className="w-full my-3 h-px bg-gray-300 box-border"></div>
+        <span className=" text-sm text-center m-1">
+          Please enter your password to save your changes
+        </span>
+        <input
+          aria-label="current password"
+          className="input mb-3 bg-zinc-100"
+          name="password"
+          type="password"
+          placeholder="Password"
+          autoComplete="password"
+          value={currentPassword}
+          onChange={(e) => setCurrentPassword(e.target.value)}
+          required
+        />
+        <PrimaryButton
+          onClick={(e) => handleSubmit(e)}
+          disabled={submitDisabled}
+        >
           <span>Submit</span>
         </PrimaryButton>
       </form>
