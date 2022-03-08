@@ -6,7 +6,8 @@
     "test": "DEBUG=facebook:* DEBUG_HIDE_DATE=yes jest server --watch",
     "test-fe": "cd client && npm test",
     "server": "DEBUG=facebook:* nodemon ./server/server.ts",
-    "start": "node server.js",
+    "start": "tsc && node dist/server/server.js",
+    "postinstall": "tsc",
     "client": "cd client && npm start",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
@@ -54,5 +55,8 @@
     "passport-facebook": "^3.0.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0"
+  },
+  "engines": {
+    "node": "16.13.1"
   }
 }
