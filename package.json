@@ -6,7 +6,7 @@
     "test": "DEBUG=facebook:* DEBUG_HIDE_DATE=yes jest server --watch",
     "test-fe": "cd client && npm test",
     "server": "DEBUG=facebook:* nodemon ./server/server.ts",
-    "start": "tsc && node dist/server/server.js",
+    "start": "node dist/server/server.js",
     "tsc": "tsc",
     "postinstall": "npm run tsc",
     "client": "cd client && npm start",
