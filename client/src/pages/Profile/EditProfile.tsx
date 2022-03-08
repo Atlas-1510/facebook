@@ -7,7 +7,7 @@ import {
   useContext,
   useMemo,
 } from "react";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 
 import PrimaryButton from "../../components/PrimaryButton";
 import { AuthContext } from "../../contexts/Auth";
@@ -84,6 +84,8 @@ const EditProfile = () => {
     }
   };
 
+  const queryClient = useQueryClient();
+
   const mutation = useMutation(
     async () => {
       try {
@@ -108,10 +110,12 @@ const EditProfile = () => {
     },
     {
       onSuccess: (response: flashMessage) => {
+        queryClient.setQueryData(`user ${user?._id}`, response.payload);
         setFlashMessage({
           type: response.type,
           message: response.message,
         });
+
         setSubmitDisabled(true);
         setCurrentPassword("");
       },
