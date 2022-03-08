@@ -4,7 +4,7 @@ import axios from "axios";
 import { AuthContext } from "../contexts/Auth";
 import Modal from "../components/Modal";
 import PrimaryButton from "../components/PrimaryButton";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 
 // TODO: Replace default browser outline on focus of inputs with standard one for all clients via tailwind (use 'ring' class)
 
