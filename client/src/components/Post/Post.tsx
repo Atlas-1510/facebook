@@ -13,6 +13,7 @@ import getReadableTimestamp from "../../utils/getReadableTimestamp";
 import { User } from "../../types/User";
 import { AuthContext } from "../../contexts/Auth";
 import { Link } from "react-router-dom";
+import LikeButton from "./LikeButton";
 
 type Props = {
   initialData: PostInterface;
@@ -51,76 +52,6 @@ const Post: FC<Props> = ({ initialData }) => {
       initialData: initialData,
     }
   );
-
-  // LIKES
-
-  const likeMutation = useMutation(
-    async () => {
-      try {
-        const { data } = await axios.post(
-          `/api/posts/${initialData._id}/likes`
-        );
-        return data;
-      } catch (err) {
-        console.log(err);
-      }
-    },
-    {
-      onSuccess: () =>
-        queryClient.invalidateQueries(`post: ${initialData._id}`),
-    }
-  );
-
-  const removeLikeMutation = useMutation(
-    async () => {
-      try {
-        const { data } = await axios.delete(
-          `/api/posts/${initialData._id}/likes`
-        );
-        return data;
-      } catch (err) {
-        console.log(err);
-      }
-    },
-    {
-      onSuccess: () =>
-        queryClient.invalidateQueries(`post: ${initialData._id}`),
-    }
-  );
-
-  const LikeButton: ReactNode = (() => {
-    if (post.likes.includes(user!._id)) {
-      return (
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            removeLikeMutation.mutate();
-          }}
-          className="flex items-center justify-center w-full my-1 rounded-full bg-blue-200 hover:bg-blue-300"
-        >
-          <FaRegThumbsUp className="text-facebook-blue text-xl" />
-          <span className=" font-roboto font-medium text-facebook-blue pl-3">
-            Liked!
-          </span>
-        </button>
-      );
-    } else {
-      return (
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            likeMutation.mutate();
-          }}
-          className="flex items-center justify-center w-full my-1 rounded-full"
-        >
-          <FaRegThumbsUp className=" text-zinc-500 text-xl" />
-          <span className=" font-roboto font-medium text-zinc-600 pl-3">
-            Like
-          </span>
-        </button>
-      );
-    }
-  })();
 
   // COMMENTS
 
@@ -209,7 +140,7 @@ const Post: FC<Props> = ({ initialData }) => {
           )}
         </div>
         <div className="m-1 h-12 flex border-b border-t border-zinc-300">
-          {LikeButton}
+          <LikeButton initialData={initialData} user={user} post={post} />
           <button
             onClick={handleCommentButtonClick}
             className="flex items-center justify-center w-full rounded-full"
