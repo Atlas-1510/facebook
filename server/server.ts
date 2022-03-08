@@ -13,8 +13,7 @@ if (process.env.NODE_ENV === "production") {
   app.get("*", (req, res, next) => {
     res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
   });
-} else {
-  app.listen(process.env.PORT, () =>
-    debug(`Listening on port ${process.env.PORT}`)
-  );
 }
+app.listen(process.env.PORT, () =>
+  debug(`Listening on port ${process.env.PORT}`)
+);
