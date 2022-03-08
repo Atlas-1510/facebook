@@ -92,14 +92,12 @@ const EditGoogleProfile = () => {
     },
     {
       onSuccess: (response: flashMessage) => {
-        console.log(response);
         setFlashMessage({
           type: response.type,
           message: response.message,
         });
       },
       onError: (response: flashMessage) => {
-        console.log(response);
         setFlashMessage({
           type: response.type,
           message: response.message,

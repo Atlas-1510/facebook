@@ -91,7 +91,7 @@ const updateUser = [
       }
 
       // handle the image if it exists
-      console.log(req.file);
+
       if (req.file) {
         await uploadFile(req.file);
         await unlinkFile(req.file.path);

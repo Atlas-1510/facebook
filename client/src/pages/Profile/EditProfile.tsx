@@ -108,7 +108,6 @@ const EditProfile = () => {
     },
     {
       onSuccess: (response: flashMessage) => {
-        console.log(response);
         setFlashMessage({
           type: response.type,
           message: response.message,

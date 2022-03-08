@@ -84,13 +84,11 @@ const SignIn: FC = () => {
 
   const handleTestDriveSignIn = async (e: SyntheticEvent): Promise<void> => {
     try {
-      console.log("clicked");
       e.preventDefault();
       setFlash("");
       setLoading(true);
 
       const response = await axios.get("/auth/demoLogin");
-      console.log(response);
 
       const { message, _id }: { message: string; _id: string } = response.data;
       if (message) {
