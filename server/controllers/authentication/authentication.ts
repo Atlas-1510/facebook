@@ -132,7 +132,11 @@ const googleAuth = [
 const googleAuthRedirect = [
   passport.authenticate("google"),
   (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    return res.redirect("http://localhost:3000");
+    if (process.env.NODE_ENV === "production") {
+      return res.redirect(`${process.env.DEPLOYED_URL}`);
+    } else {
+      return res.redirect(`http://localhost:${process.env.PORT}`);
+    }
   },
 ];
 // facebook auth is disabled, see note at top of this file.

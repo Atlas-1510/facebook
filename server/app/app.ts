@@ -5,13 +5,14 @@ import passport from "passport";
 import passportConfig from "../passportConfig";
 import session from "cookie-session";
 import cors from "cors";
+import path from "path";
 require("dotenv").config();
 
 const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "*",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     credentials: true,
   })
@@ -29,8 +30,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use("/", routesConfig);
 
-app.use(function (req, res, next) {
-  next(createHttpError(404));
-});
+// app.use(function (req, res, next) {
+//   next(createHttpError(404));
+// });
 
 export default app;
