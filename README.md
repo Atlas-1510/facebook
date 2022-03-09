@@ -4,6 +4,10 @@
 
 Fakebook is a simplified clone of Meta's Facebook platform. Users can create profiles, connect with each other, share messages, post photos, and like and comment on content. I created Facebook as my final project for The Odin Project.
 
+<div className="flex justify-center items-center">
+<img src="https://github.com/Atlas-1510/facebook/blob/1963fe446ecbbc6fdee9a19ddf738c011854e0b4/readme_images/profile_page.png" width="500px">
+</div>
+
 ## Concepts
 
 - **Testing**: A key focus of this project was to use test-driven-development. I started by creating the backend express API, and used superset and mongodb-memory-server to run test suites for most API endpoints.
