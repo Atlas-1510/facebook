@@ -108,7 +108,7 @@ const Post: FC<Props> = ({ initialData }) => {
                 <img
                   src={`/api/images/${author.displayPhoto}`}
                   alt="profile"
-                  className="h-full"
+                  className=""
                 />
               </div>
 

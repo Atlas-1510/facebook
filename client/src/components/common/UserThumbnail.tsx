@@ -31,7 +31,7 @@ const UserThumbnail: FC<Props> = ({ id }) => {
   }
 
   return (
-    <div className="rounded-full h-full aspect-square bg-emerald-400 grid place-items-center overflow-hidden">
+    <div className="rounded-full max-h-full aspect-square bg-emerald-400 grid place-items-center overflow-hidden">
       <img
         src={
           user.displayPhoto
@@ -39,7 +39,7 @@ const UserThumbnail: FC<Props> = ({ id }) => {
             : defaultUserPicture
         }
         alt="user"
-        className=" h-full"
+        className=""
       />
     </div>
   );
