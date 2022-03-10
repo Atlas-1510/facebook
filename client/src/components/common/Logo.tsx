@@ -1,13 +1,10 @@
 import { Link } from "react-router-dom";
+import fbLogo from "../../images/logo-facebook.svg";
 
 const Logo = () => {
   return (
-    <Link to="" className="h-full grid place-items-center mx-2">
-      <div className=" h-[70%] aspect-square  rounded-full mx-1 bg-gradient-to-t from-blue-700 to-blue-400 flex flex-col justify-center items-center overflow-hidden">
-        <span className="font-klavika text-white text-5xl translate-y-2">
-          f
-        </span>
-      </div>
+    <Link to="">
+      <img src={fbLogo} alt="facebook logo" className="h-12 ml-1" />
     </Link>
   );
 };
