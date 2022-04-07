@@ -37,6 +37,8 @@ export default function getReadableTimestamp(timestamp: string): string {
       return `${days} days ago`;
     }
   } else {
-    return new Date(timestamp).toDateString();
+    const epochCount = Date.parse(timestamp);
+    const date = new Date(epochCount * 1000).toLocaleDateString();
+    return date;
   }
 }
