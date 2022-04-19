@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import { useQuery } from "react-query";
 import axios from "axios";
+import { TailSpin } from "react-loader-spinner";
 
 interface Props {
   image: string;
@@ -22,7 +23,11 @@ const PostImage: FC<Props> = ({ postID, image }) => {
   );
 
   if (isLoading) {
-    return <div>LOADING</div>;
+    return (
+      <div className=" flex justify-center items-center p-10">
+        <TailSpin ariaLabel="loading" color="grey" />
+      </div>
+    );
   }
   if (isError) {
     return <div>ERROR</div>;
