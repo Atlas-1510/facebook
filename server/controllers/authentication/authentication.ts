@@ -135,7 +135,7 @@ const googleAuthRedirect = [
     if (process.env.NODE_ENV === "production") {
       return res.redirect(`${process.env.DEPLOYED_URL}`);
     } else {
-      return res.redirect(`http://localhost:${process.env.PORT}`);
+      return res.redirect(`http://localhost:${process.env.CLIENT_PORT}`);
     }
   },
 ];

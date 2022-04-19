@@ -8,8 +8,8 @@ require("dotenv").config();
 
 mongoConfig();
 
-app.listen(process.env.PORT, () =>
-  console.log(`Listening on port ${process.env.PORT}`)
+app.listen(process.env.SERVER_PORT, () =>
+  console.log(`Listening on port ${process.env.SERVER_PORT}`)
 );
 
 if (process.env.NODE_ENV === "production") {
