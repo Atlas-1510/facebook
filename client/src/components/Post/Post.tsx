@@ -14,6 +14,7 @@ import { User } from "../../types/User";
 import { AuthContext } from "../../contexts/Auth";
 import { Link } from "react-router-dom";
 import LikeButton from "./LikeButton";
+import PostImage from "./PostImage";
 
 type Props = {
   initialData: PostInterface;
@@ -87,7 +88,7 @@ const Post: FC<Props> = ({ initialData }) => {
   };
 
   if (!user) {
-    return <div>loading</div>;
+    return null;
   }
 
   if (status === "loading" || authorStatus === "loading") {
@@ -118,13 +119,7 @@ const Post: FC<Props> = ({ initialData }) => {
           </Link>
           <p>{post.content}</p>
         </section>
-        {post.image && (
-          <img
-            src={`/api/images/${post.image}`}
-            alt="test post"
-            className="w-full"
-          />
-        )}
+        {post.image ? <PostImage postID={post._id} image={post.image} /> : null}
         <div className=" flex justify-between m-3 mb-0 pb-2 text-zinc-500 ">
           <div className="flex items-center">
             <HiThumbUp className=" -translate-y-[2px] text-facebook-blue text-xl" />
