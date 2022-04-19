@@ -13,7 +13,6 @@ const PostImage: FC<Props> = ({ postID, image }) => {
     const result = await axios.get(`/api/images/${image}`, {
       responseType: "blob",
     });
-    console.log(result);
     return URL.createObjectURL(result.data);
   };
 
