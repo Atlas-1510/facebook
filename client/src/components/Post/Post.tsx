@@ -2,6 +2,7 @@ import { FC, ReactNode, useContext, useState } from "react";
 import testPageImage from "../../../images/test_page.jpeg";
 import { HiThumbUp } from "react-icons/hi";
 import { FaRegThumbsUp, FaRegComment } from "react-icons/fa";
+import { BsThreeDots } from "react-icons/bs";
 import Comment from "../Comment";
 import UserThumbnail from "../common/UserThumbnail";
 import { PostInterface } from "../../types/PostInterface";
@@ -15,6 +16,9 @@ import { AuthContext } from "../../contexts/Auth";
 import { Link } from "react-router-dom";
 import LikeButton from "./LikeButton";
 import PostImage from "./PostImage";
+import Modal from "../Modal";
+import e from "express";
+import useComponentVisible from "../../hooks/useComponentVisible";
 
 type Props = {
   initialData: PostInterface;
@@ -23,6 +27,8 @@ type Props = {
 const Post: FC<Props> = ({ initialData }) => {
   const { user } = useContext(AuthContext);
   const queryClient = useQueryClient();
+  const [editPostModal, setEditPostModal] = useState(false);
+  const [deletePostModal, setDeletePostModal] = useState(false);
 
   const { data: author, status: authorStatus } = useQuery(
     `postAuthor: ${initialData._id}`,
@@ -87,6 +93,11 @@ const Post: FC<Props> = ({ initialData }) => {
     });
   };
 
+  // EDIT/DELETE MENU
+
+  const { ref, isComponentVisible, setIsComponentVisible } =
+    useComponentVisible(false);
+
   if (!user) {
     return null;
   }
@@ -103,20 +114,58 @@ const Post: FC<Props> = ({ initialData }) => {
     return (
       <article className="bg-zinc-100 shadow-md overflow-auto md:rounded-lg my-3">
         <section className="p-3">
-          <Link to={`/users/${author._id}`}>
-            <div className="flex items-center mb-2">
-              <div className="aspect-square  h-12  mr-2 ">
-                <UserThumbnail id={author._id} />
-              </div>
+          <div className="flex justify-between items-start">
+            <Link to={`/users/${author._id}`}>
+              <div className="flex items-center mb-2">
+                <div className="aspect-square  h-12  mr-2 ">
+                  <UserThumbnail id={author._id} />
+                </div>
 
-              <div className="flex flex-col">
-                <h2 className="font-medium">{author.fullName}</h2>
-                <span className=" text-sm text-zinc-600">
-                  {getReadableTimestamp(post.createdAt)}
-                </span>
+                <div className="flex flex-col">
+                  <h2 className="font-medium">{author.fullName}</h2>
+                  <span className=" text-sm text-zinc-600">
+                    {getReadableTimestamp(post.createdAt)}
+                  </span>
+                </div>
               </div>
-            </div>
-          </Link>
+            </Link>
+
+            {initialData.author === user._id ? (
+              <div ref={ref} className="relative">
+                <button
+                  onClick={() => setIsComponentVisible(true)}
+                  className="m-0 p-0"
+                >
+                  <BsThreeDots className=" text-2xl" />
+                </button>
+                {isComponentVisible ? (
+                  <menu className=" absolute right-3 top-3 bg-white py-1 px-5 rounded-md shadow-md flex flex-col items-center justify-center whitespace-nowrap">
+                    <li className=" border-b p-2">
+                      <button
+                        onClick={() => {
+                          setEditPostModal(true);
+                          setIsComponentVisible(false);
+                        }}
+                      >
+                        Edit Post
+                      </button>
+                    </li>
+                    <li className=" text-red-500 p-2">
+                      <button
+                        onClick={() => {
+                          setDeletePostModal(true);
+                          setIsComponentVisible(false);
+                        }}
+                      >
+                        Delete Post
+                      </button>
+                    </li>
+                  </menu>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
+
           <p>{post.content}</p>
         </section>
         {post.image ? <PostImage postID={post._id} image={post.image} /> : null}
@@ -169,6 +218,19 @@ const Post: FC<Props> = ({ initialData }) => {
             }}
           />
         </form>
+        {editPostModal ? (
+          <Modal open={editPostModal} onClose={() => setEditPostModal(false)}>
+            <div>Edit post form goes here</div>
+          </Modal>
+        ) : null}
+        {deletePostModal ? (
+          <Modal
+            open={deletePostModal}
+            onClose={() => setDeletePostModal(false)}
+          >
+            <div>DELETE POST MODAL</div>
+          </Modal>
+        ) : null}
       </article>
     );
   }
