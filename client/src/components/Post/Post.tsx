@@ -105,11 +105,7 @@ const Post: FC<Props> = ({ initialData }) => {
           <Link to={`/users/${author._id}`}>
             <div className="flex items-center mb-2">
               <div className="aspect-square  h-12  mr-2 ">
-                <img
-                  src={`/api/images/${author.displayPhoto}`}
-                  alt="profile"
-                  className="rounded-full"
-                />
+                <UserThumbnail id={author._id} />
               </div>
 
               <div className="flex flex-col">

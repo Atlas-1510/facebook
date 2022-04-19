@@ -32,5 +32,11 @@ export function getFileStream(fileKey: string) {
     Bucket: bucketName,
   };
 
-  return s3.getObject(downloadParams).createReadStream();
+  if (fileKey && fileKey !== "undefined") {
+    return s3.getObject(downloadParams).createReadStream();
+  } else {
+    console.error(
+      `fileKey is of type ${typeof fileKey} and has value: ${fileKey}`
+    );
+  }
 }
