@@ -99,7 +99,6 @@ const Post: FC<Props> = ({ initialData }) => {
     useComponentVisible(false);
 
   const deletePost = async () => {
-    console.log("delete post");
     await axios.delete(`api/posts/${post?._id}`);
     queryClient.invalidateQueries("newsfeed");
     queryClient.invalidateQueries(`profile posts ${user?._id}`);
@@ -125,7 +124,7 @@ const Post: FC<Props> = ({ initialData }) => {
     isError: isImageError,
     isSuccess: isImageSuccess,
     data: imageData,
-  } = useQuery(`postImage: ${post?._id}`, fetchImage, {
+  } = useQuery(`postID: ${post?._id} - postImage: ${post?.image}`, fetchImage, {
     enabled: !!post?.image,
   });
 
