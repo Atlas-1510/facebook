@@ -1,27 +1,37 @@
 import PostPrompt from "../components/PostPrompt";
-import { AuthProvider } from "../contexts/Auth";
+import { AuthContext } from "../contexts/Auth";
 import { QueryClientProvider, QueryClient } from "react-query";
 import { fireEvent, render, screen } from "@testing-library/react";
 import MockAdapter from "axios-mock-adapter";
 import axios from "axios";
 import userEvent from "@testing-library/user-event";
-import { ReactNode } from "react";
+import { User } from "../types/User";
+
+jest.mock("../components/common/UserThumbnail", () => ({
+  __esModule: true,
+  default: () => <div>MockUserThumbnail</div>,
+}));
 
 const queryClient = new QueryClient();
 
-const mockUser = {
+const mockUser: User = {
   _id: "some_id",
   firstName: "Firsty",
   lastName: "Lasty",
   email: "first@last.com",
+  displayPhoto: "some_photo",
+  fullName: "Firsty Last",
+  friends: [],
+  inboundFriendRequests: [],
+  outboundFriendRequests: [],
 };
 
 function setup() {
   render(
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
+      <AuthContext.Provider value={{ user: mockUser, getUserState: jest.fn() }}>
         <PostPrompt />
-      </AuthProvider>
+      </AuthContext.Provider>
     </QueryClientProvider>
   );
 }
@@ -36,11 +46,13 @@ describe("PostPrompt", () => {
   });
   test("Modal renders with prompt including user's first name", async () => {
     setup();
+    screen.debug();
     const input = await screen.findByText(
       `What's on your mind, ${mockUser.firstName}?`
     );
     expect(input).toBeInTheDocument();
   });
+
   describe("With modal open", () => {
     let postButton: Element;
     let textInput: Element;

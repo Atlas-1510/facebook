@@ -237,6 +237,7 @@ const Post: FC<Props> = ({ initialData }) => {
           </div>
 
           <input
+            aria-label="Add Comment"
             type="text"
             placeholder="Write a comment..."
             className="w-full ml-2 p-2 pl-4 rounded-full bg-zinc-200 font-roboto"

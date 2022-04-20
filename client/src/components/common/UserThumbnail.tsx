@@ -19,7 +19,7 @@ const UserThumbnail: FC<Props> = ({ id }) => {
         return OwnUser;
       }
     } catch (err: any) {
-      console.log(err.response.data);
+      console.log(err);
       throw err;
     }
   };
