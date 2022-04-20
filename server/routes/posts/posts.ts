@@ -31,7 +31,7 @@ router.get("/getImagePosts/:uid", ensureAuthenticated, getImagePosts);
 
 router.post("/", ensureAuthenticated, upload.single("image"), createPost);
 
-router.put("/:pid", ensureAuthenticated, editPost);
+router.put("/:pid", ensureAuthenticated, upload.single("image"), editPost);
 
 router.delete("/:pid", ensureAuthenticated, deletePost);
 

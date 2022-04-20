@@ -105,10 +105,15 @@ const Post: FC<Props> = ({ initialData }) => {
   // POST IMAGE
 
   const fetchImage = async () => {
-    const result = await axios.get(`/api/images/${post?.image}`, {
-      responseType: "blob",
-    });
-    return URL.createObjectURL(result.data);
+    try {
+      const result = await axios.get(`/api/images/${post?.image}`, {
+        responseType: "blob",
+      });
+      console.log(result.data);
+      return URL.createObjectURL(result.data);
+    } catch (err) {
+      throw new Error("Fetch error");
+    }
   };
 
   const {

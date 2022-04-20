@@ -146,7 +146,6 @@ const editPost = [
   ) => {
     try {
       const { pid } = req.params;
-
       const update: any = {};
       Object.keys(req.body).forEach((key) => {
         update[key] = req.body[key];

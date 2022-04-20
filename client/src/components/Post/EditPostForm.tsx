@@ -22,7 +22,7 @@ interface Props {
 const EditPostForm: FC<Props> = ({ post, onClose }) => {
   const { user } = useContext(AuthContext);
   const [postContent, setPostContent] = useState(post.content);
-  const [image, setImage] = useState<string | null>(null);
+  const [image, setImage] = useState<File | null>(null);
   const imageInput = useRef<HTMLInputElement | null>(null);
   const [flash, setFlash] = useState("");
   const queryClient = useQueryClient();
@@ -32,7 +32,7 @@ const EditPostForm: FC<Props> = ({ post, onClose }) => {
       const result = await axios.get(`/api/images/${post?.image}`, {
         responseType: "blob",
       });
-      setImage(URL.createObjectURL(result.data));
+      setImage(result.data);
     };
 
     if (post.image) {
@@ -47,7 +47,7 @@ const EditPostForm: FC<Props> = ({ post, onClose }) => {
         alert("File " + file.name + " is not an image.");
         return;
       }
-      setImage(URL.createObjectURL(file));
+      setImage(file);
     }
   };
 
@@ -59,7 +59,7 @@ const EditPostForm: FC<Props> = ({ post, onClose }) => {
       if (image) {
         formData.append("image", image);
       }
-      console.log(formData);
+      console.log(formData.entries);
       const { data } = await axios.put(`/api/posts/${post._id}`, formData);
       return data;
     } catch (err) {
@@ -72,6 +72,7 @@ const EditPostForm: FC<Props> = ({ post, onClose }) => {
       queryClient.invalidateQueries(`profile posts ${user?._id}`);
       queryClient.invalidateQueries("newsfeed");
       queryClient.invalidateQueries(`imagePosts ${user!._id}`);
+      queryClient.invalidateQueries(`post: ${post._id}`);
       onClose();
     },
     onError: () => {
@@ -113,7 +114,11 @@ const EditPostForm: FC<Props> = ({ post, onClose }) => {
           <span className="my-2 text-red-500 text-sm">{flash}</span>
           {image && (
             <div className="flex items-center justify-center m-3">
-              <img src={image} alt="your chosen file" className="w-[60%]" />
+              <img
+                src={URL.createObjectURL(image)}
+                alt="your chosen file"
+                className="w-[60%]"
+              />
             </div>
           )}
           {/* Add/Change/Remove photo buttons */}
