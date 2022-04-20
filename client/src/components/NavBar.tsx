@@ -1,12 +1,9 @@
 import { FC, useContext, SyntheticEvent, useState } from "react";
-import { AiOutlineSearch, AiFillBell } from "react-icons/ai";
 import { HiUser, HiUserGroup } from "react-icons/hi";
-import { BsFillCaretDownFill } from "react-icons/bs";
 import { VscSignOut } from "react-icons/vsc";
 import NavButton from "./common/NavButton";
 import { useMediaQuery } from "react-responsive";
 import Logo from "./common/Logo";
-import SearchBar from "./SearchBar";
 import { AiFillHome } from "react-icons/ai";
 import { NavLink } from "react-router-dom";
 import NavTab from "./common/NavTab";
@@ -17,12 +14,11 @@ import { useNavigate } from "react-router-dom";
 
 const NavBar: FC = () => {
   const { user, getUserState } = useContext(AuthContext);
-  const [searchInput, setSearchInput] = useState("");
   const isMobileScreen = useMediaQuery({ query: "(max-width: 768px)" });
   const navigate = useNavigate();
 
   const handleSignOut = async (e: SyntheticEvent): Promise<void> => {
-    const response = await axios.get("/auth/logout");
+    await axios.get("/auth/logout");
     getUserState();
     navigate("/");
   };
