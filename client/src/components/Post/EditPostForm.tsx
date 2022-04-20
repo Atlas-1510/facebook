@@ -57,7 +57,10 @@ const EditPostForm: FC<Props> = ({ post, onClose }) => {
       formData.append("content", postContent);
       if (image) {
         formData.append("image", image);
+      } else {
+        formData.append("image", ""); // empty string is only way to send null value to backend
       }
+
       const { data } = await axios.put(`/api/posts/${post._id}`, formData);
       return data;
     } catch (err) {
@@ -68,7 +71,7 @@ const EditPostForm: FC<Props> = ({ post, onClose }) => {
   const mutation = useMutation(publishPost, {
     onSuccess: (data) => {
       queryClient.invalidateQueries(`post: ${post._id}`);
-      // queryClient.invalidateQueries(`imagePosts ${user!._id}`);
+      queryClient.invalidateQueries(`imagePosts ${user!._id}`);
 
       onClose();
     },

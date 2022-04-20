@@ -150,11 +150,15 @@ const editPost = [
       Object.keys(req.body).forEach((key) => {
         update[key] = req.body[key];
       });
+
       if (req.file) {
         await uploadFile(req.file);
         await unlinkFile(req.file.path);
         update.image = req.file?.filename;
+      } else {
+        update.image = null;
       }
+
       const post = await Post.findByIdAndUpdate(pid, update, {
         returnOriginal: false,
       });
