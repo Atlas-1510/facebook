@@ -26,7 +26,6 @@ const Post: FC<Props> = ({ initialData }) => {
   const { user } = useContext(AuthContext);
   const queryClient = useQueryClient();
   const [editPostModal, setEditPostModal] = useState(false);
-  const [deletePostModal, setDeletePostModal] = useState(false);
 
   const { data: author, status: authorStatus } = useQuery(
     `postAuthor: ${initialData._id}`,
@@ -98,6 +97,14 @@ const Post: FC<Props> = ({ initialData }) => {
 
   const { ref, isComponentVisible, setIsComponentVisible } =
     useComponentVisible(false);
+
+  const deletePost = async () => {
+    console.log("delete post");
+    await axios.delete(`api/posts/${post?._id}`);
+    queryClient.invalidateQueries("newsfeed");
+    queryClient.invalidateQueries(`profile posts ${user?._id}`);
+    queryClient.invalidateQueries(`imagePosts ${user!._id}`);
+  };
 
   // IMAGE
 
@@ -176,14 +183,7 @@ const Post: FC<Props> = ({ initialData }) => {
                       </button>
                     </li>
                     <li className=" text-red-500 p-2">
-                      <button
-                        onClick={() => {
-                          setDeletePostModal(true);
-                          setIsComponentVisible(false);
-                        }}
-                      >
-                        Delete Post
-                      </button>
+                      <button onClick={deletePost}>Delete Post</button>
                     </li>
                   </menu>
                 ) : null}
@@ -257,14 +257,6 @@ const Post: FC<Props> = ({ initialData }) => {
             title="Edit Post"
           >
             <EditPostForm post={post} onClose={() => setEditPostModal(false)} />
-          </Modal>
-        ) : null}
-        {deletePostModal ? (
-          <Modal
-            open={deletePostModal}
-            onClose={() => setDeletePostModal(false)}
-          >
-            <div>DELETE POST MODAL</div>
           </Modal>
         ) : null}
       </article>
