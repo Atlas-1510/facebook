@@ -1,7 +1,6 @@
-import { FC, ReactNode, useContext, useState } from "react";
-import testPageImage from "../../../images/test_page.jpeg";
+import { FC, useContext, useState } from "react";
 import { HiThumbUp } from "react-icons/hi";
-import { FaRegThumbsUp, FaRegComment } from "react-icons/fa";
+import { FaRegComment } from "react-icons/fa";
 import { BsThreeDots } from "react-icons/bs";
 import Comment from "../Comment";
 import UserThumbnail from "../common/UserThumbnail";
@@ -11,7 +10,6 @@ import { useQuery, useMutation, useQueryClient } from "react-query";
 import SkeletonPost from "./SkeletonPost";
 import { CommentInterface } from "../../types/CommentInterface";
 import getReadableTimestamp from "../../utils/getReadableTimestamp";
-import { User } from "../../types/User";
 import { AuthContext } from "../../contexts/Auth";
 import { Link } from "react-router-dom";
 import LikeButton from "./LikeButton";
@@ -19,7 +17,6 @@ import PostImage from "./PostImage";
 import Modal from "../Modal";
 import useComponentVisible from "../../hooks/useComponentVisible";
 import EditPostForm from "./EditPostForm";
-import { TailSpin } from "react-loader-spinner";
 
 type Props = {
   initialData: PostInterface;
@@ -102,14 +99,14 @@ const Post: FC<Props> = ({ initialData }) => {
   const { ref, isComponentVisible, setIsComponentVisible } =
     useComponentVisible(false);
 
-  // POST IMAGE
+  // IMAGE
 
   const fetchImage = async () => {
     try {
       const result = await axios.get(`/api/images/${post?.image}`, {
         responseType: "blob",
       });
-      console.log(result.data);
+
       return URL.createObjectURL(result.data);
     } catch (err) {
       throw new Error("Fetch error");
@@ -121,7 +118,9 @@ const Post: FC<Props> = ({ initialData }) => {
     isError: isImageError,
     isSuccess: isImageSuccess,
     data: imageData,
-  } = useQuery(`postImage: ${post?._id}`, fetchImage);
+  } = useQuery(`postImage: ${post?._id}`, fetchImage, {
+    enabled: !!post?.image,
+  });
 
   if (!user) {
     return null;

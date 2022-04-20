@@ -35,6 +35,7 @@ const EditPostForm: FC<Props> = ({ post, onClose }) => {
       setImage(result.data);
     };
 
+    console.log("effect fired");
     if (post.image) {
       fetchImage();
     }
@@ -59,7 +60,6 @@ const EditPostForm: FC<Props> = ({ post, onClose }) => {
       if (image) {
         formData.append("image", image);
       }
-      console.log(formData.entries);
       const { data } = await axios.put(`/api/posts/${post._id}`, formData);
       return data;
     } catch (err) {
@@ -68,11 +68,19 @@ const EditPostForm: FC<Props> = ({ post, onClose }) => {
   };
 
   const mutation = useMutation(publishPost, {
-    onSuccess: () => {
+    onSuccess: (data) => {
+      // console.log(data);
+      // console.log(`postImage: ${post?._id}`);
+      queryClient.invalidateQueries(`postImage: ${post?._id}`);
+      // queryClient.invalidateQueries("newsfeed");
+      // console.log(data);
+      // console.log(`EDITPOSTFORM - postImage: ${post?.image}`);
+      // console.log(`EDITPOSTFORM - post._id: ${post?._id}`);
       queryClient.invalidateQueries(`profile posts ${user?._id}`);
       queryClient.invalidateQueries("newsfeed");
       queryClient.invalidateQueries(`imagePosts ${user!._id}`);
       queryClient.invalidateQueries(`post: ${post._id}`);
+      // // queryClient.invalidateQueries(`postImage: ${post._id}`);
       onClose();
     },
     onError: () => {
