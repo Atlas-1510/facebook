@@ -17,8 +17,9 @@ import { Link } from "react-router-dom";
 import LikeButton from "./LikeButton";
 import PostImage from "./PostImage";
 import Modal from "../Modal";
-import e from "express";
 import useComponentVisible from "../../hooks/useComponentVisible";
+import EditPostForm from "./EditPostForm";
+import { TailSpin } from "react-loader-spinner";
 
 type Props = {
   initialData: PostInterface;
@@ -45,16 +46,19 @@ const Post: FC<Props> = ({ initialData }) => {
     }
   );
 
+  async function fetchPost(): Promise<PostInterface | undefined> {
+    try {
+      const { data } = await axios.get(`/api/posts/${initialData._id}`);
+      return data;
+    } catch (err) {
+      console.log(err);
+      return undefined;
+    }
+  }
+
   const { data: post, status } = useQuery(
     `post: ${initialData._id}`,
-    async () => {
-      try {
-        const { data } = await axios.get(`/api/posts/${initialData._id}`);
-        return data;
-      } catch (err) {
-        console.log(err);
-      }
-    },
+    fetchPost,
     {
       initialData: initialData,
     }
@@ -86,7 +90,7 @@ const Post: FC<Props> = ({ initialData }) => {
   );
 
   const handleCommentButtonClick = () => {
-    const input = document.getElementById(`commentInput-${post._id}`);
+    const input = document.getElementById(`commentInput-${initialData._id}`);
     input?.focus();
     input?.scrollIntoView({
       block: "center",
@@ -97,6 +101,22 @@ const Post: FC<Props> = ({ initialData }) => {
 
   const { ref, isComponentVisible, setIsComponentVisible } =
     useComponentVisible(false);
+
+  // POST IMAGE
+
+  const fetchImage = async () => {
+    const result = await axios.get(`/api/images/${post?.image}`, {
+      responseType: "blob",
+    });
+    return URL.createObjectURL(result.data);
+  };
+
+  const {
+    isLoading: isImageLoading,
+    isError: isImageError,
+    isSuccess: isImageSuccess,
+    data: imageData,
+  } = useQuery(`postImage: ${post?._id}`, fetchImage);
 
   if (!user) {
     return null;
@@ -110,7 +130,8 @@ const Post: FC<Props> = ({ initialData }) => {
   }
   if (authorStatus === "error") {
     return <div>Unable to get post author information</div>;
-  } else {
+  }
+  if (post) {
     return (
       <article className="bg-zinc-100 shadow-md overflow-auto md:rounded-lg my-3">
         <section className="p-3">
@@ -168,7 +189,14 @@ const Post: FC<Props> = ({ initialData }) => {
 
           <p>{post.content}</p>
         </section>
-        {post.image ? <PostImage postID={post._id} image={post.image} /> : null}
+        {post.image ? (
+          <PostImage
+            loading={isImageLoading}
+            error={isImageError}
+            data={imageData}
+            success={isImageSuccess}
+          />
+        ) : null}
         <div className=" flex justify-between m-3 mb-0 pb-2 text-zinc-500 ">
           <div className="flex items-center">
             <HiThumbUp className=" -translate-y-[2px] text-facebook-blue text-xl" />
@@ -219,8 +247,12 @@ const Post: FC<Props> = ({ initialData }) => {
           />
         </form>
         {editPostModal ? (
-          <Modal open={editPostModal} onClose={() => setEditPostModal(false)}>
-            <div>Edit post form goes here</div>
+          <Modal
+            open={editPostModal}
+            onClose={() => setEditPostModal(false)}
+            title="Edit Post"
+          >
+            <EditPostForm post={post} onClose={() => setEditPostModal(false)} />
           </Modal>
         ) : null}
         {deletePostModal ? (
@@ -233,6 +265,8 @@ const Post: FC<Props> = ({ initialData }) => {
         ) : null}
       </article>
     );
+  } else {
+    return null;
   }
 };
 

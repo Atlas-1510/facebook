@@ -1,7 +1,9 @@
+import { CommentInterface } from "./CommentInterface";
+
 export interface PostInterface {
   author: string;
   content: string;
-  comments: [];
+  comments: CommentInterface[];
   likes: string[];
   createdAt: string;
   updatedAt: string;
