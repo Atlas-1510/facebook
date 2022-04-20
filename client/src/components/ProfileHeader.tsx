@@ -6,7 +6,7 @@ import Tab from "./common/Tab";
 type Props = {
   user: User;
   children?: ReactNode;
-  mainURL: string; // this is used for the 'Posts' tab in the profile header. Would either by '/profile' or '/profile/:uid'
+  mainURL: string; // this is used for the 'Posts' tab in the profile header. Would either be '/profile' or '/profile/:uid'
 };
 
 const ProfileHeader: FC<Props> = ({ children, user, mainURL }) => {

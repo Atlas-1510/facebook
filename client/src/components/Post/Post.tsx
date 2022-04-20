@@ -27,6 +27,7 @@ const Post: FC<Props> = ({ initialData }) => {
   const queryClient = useQueryClient();
   const [editPostModal, setEditPostModal] = useState(false);
 
+  // Get post author name, profile image
   const { data: author, status: authorStatus } = useQuery(
     `postAuthor: ${initialData._id}`,
     async () => {
@@ -52,6 +53,7 @@ const Post: FC<Props> = ({ initialData }) => {
     }
   }
 
+  // get post information if it's edited by user later
   const { data: post, status } = useQuery(
     `post: ${initialData._id}`,
     fetchPost,
@@ -60,8 +62,7 @@ const Post: FC<Props> = ({ initialData }) => {
     }
   );
 
-  // COMMENTS
-
+  // Get post comments
   const [commentInput, setCommentInput] = useState("");
   const commentMutation = useMutation(
     async () => {
@@ -95,6 +96,7 @@ const Post: FC<Props> = ({ initialData }) => {
 
   // EDIT/DELETE MENU
 
+  // Hook controls whether menu is visible
   const { ref, isComponentVisible, setIsComponentVisible } =
     useComponentVisible(false);
 
@@ -107,6 +109,8 @@ const Post: FC<Props> = ({ initialData }) => {
 
   // IMAGE
 
+  // Image ID is stored on post object. Actual image file needs to be retrieved
+  // from API using the ID.
   const fetchImage = async () => {
     try {
       const result = await axios.get(`/api/images/${post?.image}`, {

@@ -7,6 +7,9 @@ type Props = {
   setValue: Dispatch<React.SetStateAction<string>>;
 };
 
+// Ended up deciding against including this due to complexity and limited time,
+// but if I do in the future I would link up this searchbar with Algolia (like in the QuickSnap project)
+
 const SearchBar: FC<Props> = ({ placeholder, value, setValue }) => {
   return (
     <section className="h-full w-full flex items-center">
