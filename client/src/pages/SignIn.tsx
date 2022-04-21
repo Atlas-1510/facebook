@@ -79,7 +79,11 @@ const SignIn: FC = () => {
 
   const handleGoogleSignIn = (e: SyntheticEvent) => {
     e.preventDefault();
-    window.location.href = `${process.env.REACT_APP_BASE_URL}/auth/google`;
+    if (process.env.NODE_ENV === "development") {
+      window.location.href = `${process.env.REACT_APP_BASE_URL}/auth/google`;
+    } else {
+      window.location.href = `/auth/google`;
+    }
   };
 
   const handleTestDriveSignIn = async (e: SyntheticEvent): Promise<void> => {
