@@ -38,7 +38,7 @@ const demoLogin = async (
   next: express.NextFunction
 ) => {
   try {
-    const demoUser = await User.findById("62269f0f81c08a059dd68851");
+    const demoUser = await User.findById("6260a70c3f91d20b082881c6");
     if (!demoUser) {
       throw new Error("demo account is missing");
     }
@@ -48,7 +48,9 @@ const demoLogin = async (
       }
     });
     res.send(demoUser);
-  } catch (err) {}
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 // TODO: Add stronger password requirements via express-validator
