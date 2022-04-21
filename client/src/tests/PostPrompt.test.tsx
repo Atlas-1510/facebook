@@ -46,7 +46,6 @@ describe("PostPrompt", () => {
   });
   test("Modal renders with prompt including user's first name", async () => {
     setup();
-    screen.debug();
     const input = await screen.findByText(
       `What's on your mind, ${mockUser.firstName}?`
     );

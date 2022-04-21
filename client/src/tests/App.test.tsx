@@ -6,29 +6,34 @@ import {
 import userEvent from "@testing-library/user-event";
 import App from "../App";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import { AuthProvider } from "../contexts/Auth";
+import { AuthContext, AuthProvider } from "../contexts/Auth";
 import Home from "../pages/Home";
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
 import { QueryClientProvider, QueryClient } from "react-query";
+import generateTestUsers from "../utils/generateTestUsers";
+// import UserThumbnail from "../components/common/UserThumbnail";
 
 // TODO: Change package.json app dev rules back to true before deployment ("testing-library/no-debugging-utils")
 // https://github.com/testing-library/eslint-plugin-testing-library/blob/main/docs/rules/no-debugging-utils.md
+
+jest.mock("../components/common/UserThumbnail", () => ({
+  __esModule: true,
+  default: () => <div>MockUserThumbnail</div>,
+}));
+
+const mockUsers = generateTestUsers();
 
 const queryClient = new QueryClient();
 
 function setup() {
   return render(
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <MemoryRouter>
-          <Routes>
-            <Route path="/" element={<App />}>
-              <Route index element={<Home />} />
-            </Route>
-          </Routes>
-        </MemoryRouter>
-      </AuthProvider>
+      <AuthContext.Provider
+        value={{ user: mockUsers[0], getUserState: jest.fn() }}
+      >
+        <App />
+      </AuthContext.Provider>
     </QueryClientProvider>
   );
 }
@@ -42,13 +47,7 @@ describe("App test", () => {
     axiosMock.onGet("/api/posts/newsfeed").reply(200, []);
   });
   test("Renders home page when user context available", async () => {
-    const user = {
-      _id: "some_id",
-      firstName: "Jason",
-      lastName: "Aravanis",
-      email: "jason@aravanis.com",
-    };
-    axiosMock.onGet("/auth/getAuthStatus").replyOnce(200, user);
+    axiosMock.onGet("/auth/getAuthStatus").replyOnce(200, mockUsers[0]);
     setup();
 
     expect(await screen.findByText("Sign Out")).toBeInTheDocument();
@@ -60,7 +59,7 @@ describe("App test", () => {
 
     expect(
       screen.getByText(
-        "Odinbook helps you connect and share with the people in your life."
+        "Fakebook helps you connect and share with the people in your life."
       )
     ).toBeInTheDocument();
   });
@@ -74,15 +73,9 @@ describe("App test", () => {
       .onGet("/auth/getAuthStatus")
       .replyOnce(200, null)
       .onGet("/auth/getAuthStatus")
-      .replyOnce(200, {
-        firstName: "Jason",
-        _id: "some_id",
-      });
+      .replyOnce(200, mockUsers[0]);
 
-    axiosMock.onPost("/auth/login").replyOnce(200, {
-      firstName: "Jason",
-      _id: "some_id",
-    });
+    axiosMock.onPost("/auth/login").replyOnce(200, mockUsers[0]);
 
     setup();
 
@@ -92,6 +85,7 @@ describe("App test", () => {
     await waitForElementToBeRemoved(() => screen.queryByText("Loading"));
     expect(screen.getByText("Sign Out")).toBeInTheDocument();
   });
+
   // TODO: Add tests for flash message display when login warning
   test("Click on 'Create New Account' button opens modal", async () => {
     axiosMock.onGet("/auth/getAuthStatus").replyOnce(200, null);
@@ -105,6 +99,7 @@ describe("App test", () => {
 
     expect(screen.getByRole("dialog")).toBeInTheDocument();
   });
+
   // TODO: Add tests for behaviour when password is weak
   test("Successful signup redirects to home page", async () => {
     axiosMock
